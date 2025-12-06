@@ -1,0 +1,1870 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Wingston Felix Ng’ambi1">
+<meta name="author" content="Cosmas Zyambo2">
+<meta name="author" content="Adamson Sinjani Muula3-5">
+
+<title>6&nbsp; SME Chapter 5: Precision, Agreement, and Diagnostic Accuracy – Statistical methods in epidemiology: A step-by-step R tutorial</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./sme_r_chapter_06.html" rel="next">
+<link href="./sme_r_chapter_04.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-364982630eef5352dd1537128a8ed5cb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./sme_r_chapter_03.html">Sampling &amp; Basic Methods</a></li><li class="breadcrumb-item"><a href="./sme_r_chapter_05.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">SME Chapter 5: Precision, Agreement, and Diagnostic Accuracy</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Statistical methods in epidemiology: A step-by-step R tutorial</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Statistical methods in epidemiology: A step-by-step R tutorial</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">SME Chapter 1: Introduction to R and Epidemiology</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">SME Chapter 2: AI in R Epidemiologic Computing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Sampling &amp; Basic Methods</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">SME Chapter 3: Sampling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">SME Chapter 4: Confidence Intervals and Standardization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_05.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">SME Chapter 5: Precision, Agreement, and Diagnostic Accuracy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">SME Chapter 6: Measures of Association</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Sensitivity &amp; Confounding</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">SME Chapter 7: Sensitivity Analyses for Bias</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">SME Chapter 8: Confounding and Propensity Scores</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Regression &amp; Model Building</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">SME Chapter 9: Linear Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">SME Chapter 10: Model Building</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">SME Chapter 11: Logistic Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">SME Chapter 12: Ordinal and Multinomial Logistic Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Count, Survival &amp; Clustered Data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">SME Chapter 13: Modelling Count Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_14.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">SME Chapter 14: Modelling Survival Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_15.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">SME Chapter 15: Introduction to Clustered Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_16.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">SME Chapter 16: Multilevel and Mixed Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_17.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">SME Chapter 17: Mixed Models for Discrete Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_18.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">SME Chapter 18: Repeated Measures Data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Bayesian, Spatial &amp; Meta-analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_19.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">SME Chapter 19: Bayesian Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_20.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">SME Chapter 20: Spatial Data Visualisation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_21.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">SME Chapter 21: Meta-analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_22.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">SME Chapter 22: Confounding Detection and Control</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#replication-notes" id="toc-replication-notes" class="nav-link active" data-scroll-target="#replication-notes"><span class="header-section-number">6.1</span> Replication Notes</a></li>
+  <li><a href="#theoretical-background" id="toc-theoretical-background" class="nav-link" data-scroll-target="#theoretical-background"><span class="header-section-number">6.2</span> Theoretical Background</a></li>
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation"><span class="header-section-number">6.3</span> Data Preparation</a></li>
+  <li><a href="#exercise-5.1-precision-of-quantitative-test-results" id="toc-exercise-5.1-precision-of-quantitative-test-results" class="nav-link" data-scroll-target="#exercise-5.1-precision-of-quantitative-test-results"><span class="header-section-number">6.4</span> Exercise 5.1: Precision of Quantitative Test Results</a></li>
+  <li><a href="#exercise-5.2-agreement-for-dichotomous-outcomes" id="toc-exercise-5.2-agreement-for-dichotomous-outcomes" class="nav-link" data-scroll-target="#exercise-5.2-agreement-for-dichotomous-outcomes"><span class="header-section-number">6.5</span> Exercise 5.2: Agreement for Dichotomous Outcomes</a></li>
+  <li><a href="#exercise-5.3-agreement-for-ordinal-outcomes" id="toc-exercise-5.3-agreement-for-ordinal-outcomes" class="nav-link" data-scroll-target="#exercise-5.3-agreement-for-ordinal-outcomes"><span class="header-section-number">6.6</span> Exercise 5.3: Agreement for Ordinal Outcomes</a></li>
+  <li><a href="#exercise-5.4-sensitivity-and-specificity" id="toc-exercise-5.4-sensitivity-and-specificity" class="nav-link" data-scroll-target="#exercise-5.4-sensitivity-and-specificity"><span class="header-section-number">6.7</span> Exercise 5.4: Sensitivity and Specificity</a></li>
+  <li><a href="#figure-5.4-selecting-a-cutpoint" id="toc-figure-5.4-selecting-a-cutpoint" class="nav-link" data-scroll-target="#figure-5.4-selecting-a-cutpoint"><span class="header-section-number">6.8</span> Figure 5.4: Selecting a Cutpoint</a></li>
+  <li><a href="#figure-5.5-and-5.6-roc-analyses" id="toc-figure-5.5-and-5.6-roc-analyses" class="nav-link" data-scroll-target="#figure-5.5-and-5.6-roc-analyses"><span class="header-section-number">6.9</span> Figure 5.5 and 5.6: ROC Analyses</a></li>
+  <li><a href="#exercise-5.7-likelihood-ratios" id="toc-exercise-5.7-likelihood-ratios" class="nav-link" data-scroll-target="#exercise-5.7-likelihood-ratios"><span class="header-section-number">6.10</span> Exercise 5.7: Likelihood Ratios</a></li>
+  <li><a href="#exercise-5.8-parallel-and-serial-interpretation" id="toc-exercise-5.8-parallel-and-serial-interpretation" class="nav-link" data-scroll-target="#exercise-5.8-parallel-and-serial-interpretation"><span class="header-section-number">6.11</span> Exercise 5.8: Parallel and Serial Interpretation</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">6.12</span> Summary</a>
+  <ul class="collapse">
+  <li><a href="#key-concepts" id="toc-key-concepts" class="nav-link" data-scroll-target="#key-concepts"><span class="header-section-number">6.12.1</span> Key Concepts</a></li>
+  <li><a href="#practical-applications" id="toc-practical-applications" class="nav-link" data-scroll-target="#practical-applications"><span class="header-section-number">6.12.2</span> Practical Applications</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">6.13</span> References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./sme_r_chapter_03.html">Sampling &amp; Basic Methods</a></li><li class="breadcrumb-item"><a href="./sme_r_chapter_05.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">SME Chapter 5: Precision, Agreement, and Diagnostic Accuracy</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">SME Chapter 5: Precision, Agreement, and Diagnostic Accuracy</span></h1>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Authors</div>
+  <div class="quarto-title-meta-heading">Affiliations</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Wingston Felix Ng’ambi<sup>1</sup> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Cosmas Zyambo<sup>2</sup> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Adamson Sinjani Muula<sup>3-5</sup> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This Quarto notebook reproduces and expands upon the analyses from the original Methods in Epidemiologic Research (MER) Chapter 5 (Dohoo, Martin, &amp; Stryhn, 2012) using R with data sourced from <code>../mer_data_stata/nv.dta</code>. The chapter covers precision, agreement, and diagnostic accuracy - essential concepts for evaluating diagnostic tests in epidemiology.</p>
+</div>
+</div>
+<section id="replication-notes" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="replication-notes"><span class="header-section-number">6.1</span> Replication Notes</h2>
+<ul>
+<li><strong>Data dependencies:</strong> <code>../mer_data_stata/nv.dta</code>.</li>
+<li><strong>Required R packages:</strong> <code>dplyr</code>, <code>tidyr</code>, <code>haven</code>, <code>matrixStats</code>, <code>epiR</code>, <code>irr</code>, <code>DescTools</code>, <code>BlandAltmanLeh</code>, <code>pROC</code>, <code>boot</code>, <code>glue</code>, <code>ggplot2</code>, <code>purrr</code>, <code>janitor</code>.</li>
+<li><strong>Setup tips:</strong> Install packages via <code>install.packages(c("dplyr","tidyr","haven","matrixStats","epiR","irr","DescTools","BlandAltmanLeh","pROC","boot","glue","ggplot2","purrr","janitor"))</code>.</li>
+<li><strong>Execution:</strong> Knit or run chunk-by-chunk; the code recalculates every statistic and figure directly from the source dataset.</li>
+</ul>
+</section>
+<section id="theoretical-background" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="theoretical-background"><span class="header-section-number">6.2</span> Theoretical Background</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Understanding Diagnostic Tests: Precision, Agreement, and Accuracy
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Before analyzing diagnostic test data, let’s understand what makes a good test. These concepts are fundamental to diagnostic epidemiology and are covered in standard texts (Dohoo, Martin, &amp; Stryhn, 2012; Rothman, Huybrechts, &amp; Murray, 2024; Kirkwood &amp; Sterne, 2003):</p>
+<section id="what-makes-a-good-diagnostic-test" class="level3" data-number="6.2.1">
+<h3 data-number="6.2.1" class="anchored" data-anchor-id="what-makes-a-good-diagnostic-test"><span class="header-section-number">6.2.1</span> What Makes a Good Diagnostic Test?</h3>
+<p>Imagine you have a medical test that’s supposed to detect a disease. You want to know: Is this test any good? To answer this, we need to understand three key concepts:</p>
+</section>
+<section id="precision-reliability" class="level3" data-number="6.2.2">
+<h3 data-number="6.2.2" class="anchored" data-anchor-id="precision-reliability"><span class="header-section-number">6.2.2</span> 1. Precision (Reliability)</h3>
+<p><strong>Precision</strong> asks: “If I test the same sample multiple times, do I get the same result?” It’s like asking if a scale gives the same weight when you weigh something three times.</p>
+<ul>
+<li><strong>High precision</strong>: The test gives consistent results (like a reliable scale)</li>
+<li><strong>Low precision</strong>: The test gives different results each time (like a broken scale)</li>
+</ul>
+<p><strong>Why it matters</strong>: A test that’s not precise is unreliable - you can’t trust its results, even if it’s sometimes right.</p>
+</section>
+<section id="agreement-inter-rater-reliability" class="level3" data-number="6.2.3">
+<h3 data-number="6.2.3" class="anchored" data-anchor-id="agreement-inter-rater-reliability"><span class="header-section-number">6.2.3</span> 2. Agreement (Inter-rater Reliability)</h3>
+<p><strong>Agreement</strong> asks: “Do different people (or different tests) agree when measuring the same thing?” It’s like asking if two doctors examining the same patient would give the same diagnosis.</p>
+<ul>
+<li><strong>High agreement</strong>: Different observers get similar results</li>
+<li><strong>Low agreement</strong>: Different observers disagree</li>
+</ul>
+<p><strong>Why it matters</strong>: If different people can’t agree on the results, the test isn’t useful in practice.</p>
+</section>
+<section id="accuracy-validity" class="level3" data-number="6.2.4">
+<h3 data-number="6.2.4" class="anchored" data-anchor-id="accuracy-validity"><span class="header-section-number">6.2.4</span> 3. Accuracy (Validity)</h3>
+<p><strong>Accuracy</strong> asks: “Does the test correctly identify who has the disease and who doesn’t?” This is about being right, not just consistent.</p>
+<p><strong>Key measures:</strong> - <strong>Sensitivity</strong>: Can the test find people who really have the disease? (True positive rate) - <strong>Specificity</strong>: Can the test correctly identify people who don’t have the disease? (True negative rate) - <strong>ROC Curve</strong>: A graph showing how sensitivity and specificity trade off at different cutoffs</p>
+</section>
+<section id="understanding-these-concepts" class="level3" data-number="6.2.5">
+<h3 data-number="6.2.5" class="anchored" data-anchor-id="understanding-these-concepts"><span class="header-section-number">6.2.5</span> Understanding These Concepts</h3>
+<p>Think of it like a security system: - <strong>Precision</strong>: Does the alarm go off consistently when you test it? - <strong>Agreement</strong>: Do different security guards agree when the alarm goes off? - <strong>Accuracy</strong>: Does the alarm go off for real threats and not for false alarms?</p>
+</section>
+<section id="why-all-three-matter" class="level3" data-number="6.2.6">
+<h3 data-number="6.2.6" class="anchored" data-anchor-id="why-all-three-matter"><span class="header-section-number">6.2.6</span> Why All Three Matter</h3>
+<p>A test can be precise (consistent) but inaccurate (wrong). Or it can be accurate on average but imprecise (sometimes right, sometimes wrong). For a test to be truly useful, it needs to be precise, show good agreement, AND be accurate.</p>
+<p><strong>In simple terms</strong>: Precision is about consistency - does the test give the same answer when repeated? Agreement is about consensus - do different people/tests agree? Accuracy is about correctness - does the test correctly identify disease? All three are needed for a trustworthy diagnostic test (Dohoo, Martin, &amp; Stryhn, 2012).</p>
+<p><strong>References</strong>: The concepts of diagnostic test evaluation are thoroughly explained in epidemiological texts (Rothman, Huybrechts, &amp; Murray, 2024; Dohoo, Martin, &amp; Stryhn, 2012). For practical R implementations, see the Epidemiologist R Handbook (Batra et al., 2021).</p>
+</section>
+</div>
+</div>
+</section>
+<section id="data-preparation" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="data-preparation"><span class="header-section-number">6.3</span> Data Preparation</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section loads diagnostic test data. Think of it like getting medical test results ready to analyze:</p>
+<ol type="1">
+<li><strong>Loading tools</strong>: Getting the R packages we need for analysis</li>
+<li><strong>Reading the data</strong>: Opening the file with test results</li>
+<li><strong>Cleaning the data</strong>: Removing incomplete records (people missing test results)</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re getting our diagnostic test data ready to see how accurate and reliable the tests are.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiR)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(irr)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DescTools)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BlandAltmanLeh)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pROC)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(boot)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glue)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>data_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">".."</span>, <span class="st">"mer_data_stata"</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>nv <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="fu">file.path</span>(data_dir, <span class="st">"nv.dta"</span>))</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>nv_clean <span class="ot">&lt;-</span> nv <span class="sc">|&gt;</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(gs), <span class="sc">!</span><span class="fu">is.na</span>(eiafin))</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>nv <span class="sc">|&gt;</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 188
+Columns: 11
+$ sp_id     &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 1…
+$ out_id    &lt;dbl&gt; 1, 2, 3, 4, 4, 5, 5, 6, 7, 8, 9, 9, 10, 11, 11, 12, 13, 13, …
+$ gs        &lt;dbl&gt; 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, …
+$ pcr       &lt;dbl&gt; NA, NA, 16.2, NA, NA, NA, NA, NA, 23.5, 20.7, NA, NA, NA, NA…
+$ pcr_c2    &lt;dbl&gt; 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, …
+$ eia1      &lt;dbl&gt; -0.001, 0.009, 2.847, NA, NA, NA, NA, 0.035, NA, NA, NA, NA,…
+$ eia2      &lt;dbl&gt; 0.015, 0.016, 2.516, NA, NA, NA, NA, 0.025, NA, NA, NA, NA, …
+$ eia3      &lt;dbl&gt; 0.006, 0.014, 2.837, 0.027, 0.048, 0.039, 0.040, -0.002, 1.3…
+$ eiafin    &lt;dbl&gt; 0.006, 0.014, 2.837, 0.027, 0.048, 0.039, 0.040, -0.002, 1.3…
+$ eiafin_c2 &lt;dbl&gt; 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, …
+$ em        &lt;dbl&gt; 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, …</code></pre>
+</div>
+</div>
+</section>
+<section id="exercise-5.1-precision-of-quantitative-test-results" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="exercise-5.1-precision-of-quantitative-test-results"><span class="header-section-number">6.4</span> Exercise 5.1: Precision of Quantitative Test Results</h2>
+<p>This section demonstrates how to measure the precision (reliability) of quantitative diagnostic tests (Dohoo, Martin, &amp; Stryhn, 2012; Kirkwood &amp; Sterne, 2003). Precision measures how consistent results are when the same sample is tested multiple times.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section measures how consistent and reliable a test is when you run it multiple times (Dohoo, Martin, &amp; Stryhn, 2012). Think of it like checking if a scale gives the same weight when you weigh something three times:</p>
+<ol type="1">
+<li><strong>Coefficient of Variation (CV)</strong>: Measures how much the results vary relative to the average (like asking “how much do the three measurements differ?”)</li>
+<li><strong>Correlation</strong>: Measures how similar results are between different test runs (like asking “if one run gives a high value, do the other runs also give high values?”)</li>
+<li><strong>Concordance Correlation Coefficient (CCC)</strong>: A more sophisticated measure that checks both accuracy and precision (like checking if the measurements are both consistent AND close to the true value)</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re checking if the test is reliable - do you get similar results when you test the same sample multiple times? A good test should give consistent results.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>nv_precision <span class="ot">&lt;-</span> nv <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg =</span> <span class="fu">rowMeans</span>(<span class="fu">across</span>(<span class="fu">c</span>(eia1, eia2, eia3)), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd =</span> matrixStats<span class="sc">::</span><span class="fu">rowSds</span>(<span class="fu">as.matrix</span>(<span class="fu">across</span>(<span class="fu">c</span>(eia1, eia2, eia3))), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cv =</span> sd <span class="sc">/</span> avg</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>mean_cv <span class="ot">&lt;-</span> <span class="fu">mean</span>(nv_precision<span class="sc">$</span>cv, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>correlations <span class="ot">&lt;-</span> nv <span class="sc">|&gt;</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(eia1, eia2, eia3) <span class="sc">|&gt;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>(<span class="at">use =</span> <span class="st">"pairwise.complete.obs"</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>ccc_12 <span class="ot">&lt;-</span> <span class="fu">epi.ccc</span>(</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> nv<span class="sc">$</span>eia1,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> nv<span class="sc">$</span>eia2,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci =</span> <span class="st">"z-transform"</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">conf.level =</span> <span class="fl">0.95</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>ccc_13 <span class="ot">&lt;-</span> <span class="fu">epi.ccc</span>(</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> nv<span class="sc">$</span>eia1,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> nv<span class="sc">$</span>eia3,</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci =</span> <span class="st">"z-transform"</span>,</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">conf.level =</span> <span class="fl">0.95</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean_cv =</span> mean_cv,</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">correlations =</span> correlations,</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">ccc_eia1_eia2 =</span> ccc_12,</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">ccc_eia1_eia3 =</span> ccc_13</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$mean_cv
+[1] 0.3866178
+
+$correlations
+          eia1      eia2      eia3
+eia1 1.0000000 0.9667647 0.9612950
+eia2 0.9667647 1.0000000 0.9797451
+eia3 0.9612950 0.9797451 1.0000000
+
+$ccc_eia1_eia2
+$ccc_eia1_eia2$rho.c
+        est     lower     upper
+1 0.9657503 0.9327124 0.9827118
+
+$ccc_eia1_eia2$s.shift
+[1] 1.000398
+
+$ccc_eia1_eia2$l.shift
+[1] 0.04583344
+
+$ccc_eia1_eia2$C.b
+[1] 0.9989507
+
+$ccc_eia1_eia2$blalt
+       mean        delta
+1    0.0070 -0.016000000
+2    0.0125 -0.007000001
+3    2.6815  0.330999851
+8    0.0300  0.010000000
+25   3.3845 -0.178999901
+26   0.0090  0.012000000
+28   0.0205 -0.005000001
+35   0.0115  0.011000001
+36   1.6660 -0.009999990
+51   0.0090 -0.022000000
+54   0.1265  0.112999998
+61   0.5480 -0.155999988
+69   0.2810 -0.151999995
+70   2.0950  0.598000050
+85   0.1160 -0.096000001
+86   0.1445  0.137000002
+88   0.1120  0.048000008
+89   1.0410 -0.435999930
+90   0.0790  0.070000000
+91   0.1140 -0.061999999
+107  0.1455 -0.107000001
+108  0.0190  0.041999999
+110  0.4900 -0.324000001
+111  0.4270  0.313999981
+112  0.4575 -0.221000016
+118 -0.0015 -0.003000000
+121  2.3620 -0.458000183
+122  0.1380 -0.022000000
+130  0.6390 -0.491999984
+131  0.2265 -0.028999999
+135  0.9840 -0.416000009
+136  0.5685  0.097000003
+146  1.0930  0.127999902
+153  0.2650 -0.031999990
+
+$ccc_eia1_eia2$sblalt
+         est  delta.sd      lower     upper
+1 -0.0392353 0.2240227 -0.4783118 0.3998412
+
+$ccc_eia1_eia2$nmissing
+[1] 154
+
+
+$ccc_eia1_eia3
+$ccc_eia1_eia3$rho.c
+        est     lower    upper
+1 0.9603708 0.9227429 0.979864
+
+$ccc_eia1_eia3$s.shift
+[1] 0.9645583
+
+$ccc_eia1_eia3$l.shift
+[1] -0.02494815
+
+$ccc_eia1_eia3$C.b
+[1] 0.9990386
+
+$ccc_eia1_eia3$blalt
+       mean        delta
+1    0.0025 -0.007000000
+2    0.0115 -0.005000001
+3    2.8420  0.009999990
+8    0.0165  0.037000000
+25   3.3830 -0.175999880
+26   0.0120  0.006000000
+28   0.0145  0.006999999
+35   0.0135  0.007000001
+36   1.6225  0.077000022
+51   0.0090 -0.022000000
+54   0.1300  0.105999999
+61   0.4865 -0.033000022
+69   0.2645 -0.119000003
+70   1.9140  0.960000038
+85   0.1190 -0.101999998
+86   0.1555  0.115000002
+88   0.0935  0.085000008
+89   0.8290 -0.011999965
+90   0.0805  0.067000002
+91   0.0710  0.023999996
+107  0.1005 -0.016999997
+108  0.0225  0.034999999
+110  0.4630 -0.269999981
+111  0.4390  0.289999992
+112  0.4410 -0.188000023
+118 -0.0050  0.004000000
+121  2.0245  0.216999888
+122  0.0945  0.065000005
+130  0.7615 -0.736999989
+131  0.2205 -0.017000005
+135  0.8350 -0.117999971
+136  0.4940  0.245999992
+146  1.1340  0.046000004
+153  0.1830  0.131999999
+
+$ccc_eia1_eia3$sblalt
+         est  delta.sd      lower    upper
+1 0.02097059 0.2393735 -0.4481928 0.490134
+
+$ccc_eia1_eia3$nmissing
+[1] 154</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>nv_precision <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> eia1, <span class="at">y =</span> eia3)) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Adjusted OD - sample 1"</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Adjusted OD - sample 3"</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="sme_r_chapter_05_files/figure-html/concordance-plot-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Concordance between EIA sample 1 and sample 3</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bland-Altman plot shows how much two measurements differ from each other</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># It's like comparing two scales - the plot shows if they agree and by how much</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The "limits of agreement" tell us the range where 95% of differences should fall</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>nv_ba <span class="ot">&lt;-</span> nv <span class="sc">|&gt;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(eia1), <span class="sc">!</span><span class="fu">is.na</span>(eia3)) <span class="sc">|&gt;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_pair =</span> (eia1 <span class="sc">+</span> eia3) <span class="sc">/</span> <span class="dv">2</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">diff_pair =</span> eia1 <span class="sc">-</span> eia3</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>mean_diff <span class="ot">&lt;-</span> <span class="fu">mean</span>(nv_ba<span class="sc">$</span>diff_pair)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>sd_diff <span class="ot">&lt;-</span> <span class="fu">sd</span>(nv_ba<span class="sc">$</span>diff_pair)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>loa_high <span class="ot">&lt;-</span> mean_diff <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> sd_diff</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>loa_low <span class="ot">&lt;-</span> mean_diff <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> sd_diff</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>nv_ba <span class="sc">|&gt;</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> mean_pair, <span class="at">y =</span> diff_pair)) <span class="sc">+</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> mean_diff, <span class="at">linetype =</span> <span class="st">"solid"</span>) <span class="sc">+</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> loa_high, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> loa_low, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="cn">Inf</span>, <span class="at">y =</span> mean_diff, <span class="at">hjust =</span> <span class="fl">1.05</span>, <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>,</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> <span class="fu">glue</span>(<span class="st">"Mean diff = {round(mean_diff, 3)}"</span>)) <span class="sc">+</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="cn">Inf</span>, <span class="at">y =</span> loa_high, <span class="at">hjust =</span> <span class="fl">1.05</span>, <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>,</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> <span class="fu">glue</span>(<span class="st">"Upper LOA = {round(loa_high, 3)}"</span>)) <span class="sc">+</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="cn">Inf</span>, <span class="at">y =</span> loa_low, <span class="at">hjust =</span> <span class="fl">1.05</span>, <span class="at">vjust =</span> <span class="fl">1.5</span>,</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> <span class="fu">glue</span>(<span class="st">"Lower LOA = {round(loa_low, 3)}"</span>)) <span class="sc">+</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Mean value"</span>, <span class="at">y =</span> <span class="st">"Difference between values"</span>) <span class="sc">+</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="sme_r_chapter_05_files/figure-html/bland-altman-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Limits of agreement plot for EIA sample 1 vs sample 3</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="exercise-5.2-agreement-for-dichotomous-outcomes" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="exercise-5.2-agreement-for-dichotomous-outcomes"><span class="header-section-number">6.5</span> Exercise 5.2: Agreement for Dichotomous Outcomes</h2>
+<p>This section demonstrates methods for measuring agreement between two tests or raters when outcomes are binary (yes/no, positive/negative) (Dohoo, Martin, &amp; Stryhn, 2012; Kirkwood &amp; Sterne, 2003). Agreement measures are essential for evaluating diagnostic tests and inter-rater reliability.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section measures how well two tests agree when the result is just “yes” or “no” (Dohoo, Martin, &amp; Stryhn, 2012) (like positive/negative). Think of it like comparing two doctors’ diagnoses:</p>
+<ol type="1">
+<li><strong>Kappa</strong>: Measures agreement beyond what you’d expect by chance (like asking “do the doctors agree more than if they were just guessing?”)</li>
+<li><strong>McNemar’s test</strong>: Checks if the tests disagree in a systematic way (like asking “when they disagree, is one test always more likely to say positive?”)</li>
+<li><strong>Bootstrap confidence intervals</strong>: Uses computer simulation to estimate how confident we are in our kappa value</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re checking if two tests (or two raters) give the same answer. High agreement means they usually agree; low agreement means they often disagree.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>tbl_pcr_eia <span class="ot">&lt;-</span> <span class="fu">table</span>(nv<span class="sc">$</span>pcr_c2, nv<span class="sc">$</span>eiafin_c2)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>mcnemar_result <span class="ot">&lt;-</span> <span class="fu">mcnemar.test</span>(tbl_pcr_eia)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>kappa_unweighted <span class="ot">&lt;-</span> irr<span class="sc">::</span><span class="fu">kappa2</span>(</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  nv <span class="sc">|&gt;</span> <span class="fu">select</span>(pcr_c2, eiafin_c2),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">weight =</span> <span class="st">"unweighted"</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>cohen_ci <span class="ot">&lt;-</span> psych<span class="sc">::</span><span class="fu">cohen.kappa</span>(tbl_pcr_eia)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>kappa_boot <span class="ot">&lt;-</span> <span class="fu">boot</span>(</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> nv <span class="sc">|&gt;</span> <span class="fu">select</span>(pcr_c2, eiafin_c2),</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">statistic =</span> <span class="cf">function</span>(data, index) {</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">kappa2</span>(data[index, ], <span class="at">weight =</span> <span class="st">"unweighted"</span>)<span class="sc">$</span>value</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  },</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">R =</span> <span class="dv">1000</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>boot_ci <span class="ot">&lt;-</span> <span class="fu">boot.ci</span>(kappa_boot, <span class="at">type =</span> <span class="fu">c</span>(<span class="st">"perc"</span>, <span class="st">"basic"</span>))</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">mcnemar =</span> mcnemar_result,</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">kappa =</span> kappa_unweighted,</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">cohen_ci =</span> cohen_ci,</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">kappa_boot_ci =</span> boot_ci</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$mcnemar
+
+    McNemar's Chi-squared test with continuity correction
+
+data:  tbl_pcr_eia
+McNemar's chi-squared = 11.281, df = 1, p-value = 0.0007829
+
+
+$kappa
+ Cohen's Kappa for 2 Raters (Weights: unweighted)
+
+ Subjects = 188 
+   Raters = 2 
+    Kappa = 0.66 
+
+        z = 9.26 
+  p-value = 0 
+
+$cohen_ci
+Call: cohen.kappa1(x = x, w = w, n.obs = n.obs, alpha = alpha, levels = levels, 
+    w.exp = w.exp)
+
+Cohen Kappa and Weighted Kappa correlation coefficients and confidence boundaries 
+                 lower estimate upper
+unweighted kappa  0.55     0.66  0.76
+weighted kappa    0.55     0.66  0.76
+
+ Number of subjects = 188 
+
+$kappa_boot_ci
+BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+Based on 1000 bootstrap replicates
+
+CALL : 
+boot.ci(boot.out = kappa_boot, type = c("perc", "basic"))
+
+Intervals : 
+Level      Basic              Percentile     
+95%   ( 0.5532,  0.7740 )   ( 0.5452,  0.7660 )  
+Calculations and Intervals on Original Scale</code></pre>
+</div>
+</div>
+</section>
+<section id="exercise-5.3-agreement-for-ordinal-outcomes" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="exercise-5.3-agreement-for-ordinal-outcomes"><span class="header-section-number">6.6</span> Exercise 5.3: Agreement for Ordinal Outcomes</h2>
+<p>This section demonstrates agreement measures for ordinal (ordered categorical) outcomes, such as disease severity scales (Dohoo, Martin, &amp; Stryhn, 2012). Weighted kappa accounts for the ordering of categories.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section measures agreement when results are in categories with an order (Dohoo, Martin, &amp; Stryhn, 2012) (like “low”, “medium”, “high”). Think of it like comparing two teachers’ letter grades:</p>
+<ol type="1">
+<li><strong>Unweighted kappa</strong>: Treats all disagreements equally (like treating “A vs B” the same as “A vs F”)</li>
+<li><strong>Weighted kappa</strong>: Gives more credit for being close (like giving more credit if one teacher says “B” and the other says “C” than if one says “A” and the other says “F”)</li>
+</ol>
+<p><strong>In simple terms</strong>: When results are ordered categories, we want to know if the tests agree, and we care more about being close than being far apart.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>nv_ord <span class="ot">&lt;-</span> nv <span class="sc">|&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">pcr_c3 =</span> <span class="fu">case_when</span>(</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">is.na</span>(pcr) <span class="sc">~</span> <span class="dv">0</span>L,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>      pcr <span class="sc">&gt;=</span> <span class="dv">1</span> <span class="sc">&amp;</span> pcr <span class="sc">&lt;</span> <span class="dv">27</span> <span class="sc">~</span> <span class="dv">2</span>L,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>      pcr <span class="sc">&gt;=</span> <span class="dv">27</span> <span class="sc">&amp;</span> pcr <span class="sc">&lt;=</span> <span class="dv">50</span> <span class="sc">~</span> <span class="dv">1</span>L,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span>L</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">eiafin_c3 =</span> <span class="fu">case_when</span>(</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">is.na</span>(eiafin) <span class="sc">~</span> <span class="cn">NA_integer_</span>,</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>      eiafin <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="dv">0</span>L,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>      eiafin <span class="sc">&lt;</span> <span class="fl">0.09</span> <span class="sc">~</span> <span class="dv">1</span>L,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>      eiafin <span class="sc">&lt;</span> <span class="fl">0.11</span> <span class="sc">~</span> <span class="dv">2</span>L,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">2</span>L</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>nv_ord <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">count</span>(pcr_c3, eiafin_c3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 3
+  pcr_c3 eiafin_c3     n
+   &lt;int&gt;     &lt;int&gt; &lt;int&gt;
+1      0         0     7
+2      0         1    79
+3      0         2     8
+4      1         1     5
+5      1         2     3
+6      2         1    19
+7      2         2    67</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>tab_ord <span class="ot">&lt;-</span> nv_ord <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(pcr_c3, eiafin_c3) <span class="sc">|&gt;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>()</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>kappa_ordinal <span class="ot">&lt;-</span> irr<span class="sc">::</span><span class="fu">kappa2</span>(tab_ord, <span class="at">weight =</span> <span class="st">"unweighted"</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>weights_matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.5</span>, <span class="dv">0</span>, <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="fl">0.5</span>, <span class="dv">0</span>, <span class="fl">0.5</span>, <span class="dv">1</span>),</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> <span class="dv">3</span>,</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>kappa_weighted <span class="ot">&lt;-</span> DescTools<span class="sc">::</span><span class="fu">CohenKappa</span>(</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">table</span>(tab_ord<span class="sc">$</span>pcr_c3, tab_ord<span class="sc">$</span>eiafin_c3),</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">weights =</span> weights_matrix,</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">conf.level =</span> <span class="fl">0.95</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">kappa_ordinal =</span> kappa_ordinal,</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">kappa_weighted =</span> kappa_weighted</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$kappa_ordinal
+ Cohen's Kappa for 2 Raters (Weights: unweighted)
+
+ Subjects = 188 
+   Raters = 2 
+    Kappa = 0.245 
+
+        z = 8.34 
+  p-value = 0 
+
+$kappa_weighted
+    kappa    lwr.ci    upr.ci 
+0.3731190 0.3084292 0.4378089 </code></pre>
+</div>
+</div>
+</section>
+<section id="exercise-5.4-sensitivity-and-specificity" class="level2" data-number="6.7">
+<h2 data-number="6.7" class="anchored" data-anchor-id="exercise-5.4-sensitivity-and-specificity"><span class="header-section-number">6.7</span> Exercise 5.4: Sensitivity and Specificity</h2>
+<p>This section demonstrates how to calculate sensitivity, specificity, and predictive values - the fundamental measures of diagnostic test accuracy (Dohoo, Martin, &amp; Stryhn, 2012; Rothman, Huybrechts, &amp; Murray, 2024; Kirkwood &amp; Sterne, 2003). These measures are essential for evaluating any diagnostic test.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section measures how good a test is at detecting disease (Dohoo, Martin, &amp; Stryhn, 2012; Kirkwood &amp; Sterne, 2003). Think of it like evaluating a security system:</p>
+<ol type="1">
+<li><strong>Sensitivity</strong>: How good is the test at finding people who really have the disease? (like asking “does the alarm go off when there’s really a break-in?”)</li>
+<li><strong>Specificity</strong>: How good is the test at correctly identifying people who don’t have the disease? (like asking “does the alarm stay quiet when there’s no break-in?”)</li>
+<li><strong>Positive Predictive Value</strong>: If the test says positive, how likely is it that the person really has the disease?</li>
+<li><strong>Negative Predictive Value</strong>: If the test says negative, how likely is it that the person really doesn’t have the disease?</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re checking how accurate the test is - does it correctly identify who has the disease and who doesn’t?</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>diag_em <span class="ot">&lt;-</span> <span class="fu">epi.tests</span>(<span class="fu">table</span>(nv<span class="sc">$</span>gs, nv<span class="sc">$</span>em))</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>diag_pcr <span class="ot">&lt;-</span> <span class="fu">epi.tests</span>(<span class="fu">table</span>(nv<span class="sc">$</span>gs, nv<span class="sc">$</span>pcr_c2))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>diag_eia <span class="ot">&lt;-</span> <span class="fu">epi.tests</span>(<span class="fu">table</span>(nv<span class="sc">$</span>gs, nv<span class="sc">$</span>eiafin_c2))</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">em =</span> diag_em,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">pcr =</span> diag_pcr,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">eia =</span> diag_eia</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$em
+          Outcome +    Outcome -      Total
+Test +          106            0        106
+Test -           68           14         82
+Total           174           14        188
+
+Point estimates and 95% CIs:
+--------------------------------------------------------------
+Apparent prevalence *                  0.56 (0.49, 0.64)
+True prevalence *                      0.93 (0.88, 0.96)
+Sensitivity *                          0.61 (0.53, 0.68)
+Specificity *                          1.00 (0.77, 1.00)
+Positive predictive value *            1.00 (0.97, 1.00)
+Negative predictive value *            0.17 (0.10, 0.27)
+Positive likelihood ratio              Inf (NaN, Inf)
+Negative likelihood ratio              0.39 (0.32, 0.47)
+False T+ proportion for true D- *      0.00 (0.00, 0.23)
+False T- proportion for true D+ *      0.39 (0.32, 0.47)
+False T+ proportion for T+ *           0.00 (0.00, 0.03)
+False T- proportion for T- *           0.83 (0.73, 0.90)
+Correctly classified proportion *      0.64 (0.57, 0.71)
+--------------------------------------------------------------
+* Exact CIs
+
+$pcr
+          Outcome +    Outcome -      Total
+Test +           91           15        106
+Test -            3           79         82
+Total            94           94        188
+
+Point estimates and 95% CIs:
+--------------------------------------------------------------
+Apparent prevalence *                  0.56 (0.49, 0.64)
+True prevalence *                      0.50 (0.43, 0.57)
+Sensitivity *                          0.97 (0.91, 0.99)
+Specificity *                          0.84 (0.75, 0.91)
+Positive predictive value *            0.86 (0.78, 0.92)
+Negative predictive value *            0.96 (0.90, 0.99)
+Positive likelihood ratio              6.07 (3.81, 9.66)
+Negative likelihood ratio              0.04 (0.01, 0.12)
+False T+ proportion for true D- *      0.16 (0.09, 0.25)
+False T- proportion for true D+ *      0.03 (0.01, 0.09)
+False T+ proportion for T+ *           0.14 (0.08, 0.22)
+False T- proportion for T- *           0.04 (0.01, 0.10)
+Correctly classified proportion *      0.90 (0.85, 0.94)
+--------------------------------------------------------------
+* Exact CIs
+
+$eia
+          Outcome +    Outcome -      Total
+Test +          103            3        106
+Test -           11           71         82
+Total           114           74        188
+
+Point estimates and 95% CIs:
+--------------------------------------------------------------
+Apparent prevalence *                  0.56 (0.49, 0.64)
+True prevalence *                      0.61 (0.53, 0.68)
+Sensitivity *                          0.90 (0.83, 0.95)
+Specificity *                          0.96 (0.89, 0.99)
+Positive predictive value *            0.97 (0.92, 0.99)
+Negative predictive value *            0.87 (0.77, 0.93)
+Positive likelihood ratio              22.29 (7.34, 67.63)
+Negative likelihood ratio              0.10 (0.06, 0.18)
+False T+ proportion for true D- *      0.04 (0.01, 0.11)
+False T- proportion for true D+ *      0.10 (0.05, 0.17)
+False T+ proportion for T+ *           0.03 (0.01, 0.08)
+False T- proportion for T- *           0.13 (0.07, 0.23)
+Correctly classified proportion *      0.93 (0.88, 0.96)
+--------------------------------------------------------------
+* Exact CIs</code></pre>
+</div>
+</div>
+</section>
+<section id="figure-5.4-selecting-a-cutpoint" class="level2" data-number="6.8">
+<h2 data-number="6.8" class="anchored" data-anchor-id="figure-5.4-selecting-a-cutpoint"><span class="header-section-number">6.8</span> Figure 5.4: Selecting a Cutpoint</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section shows how to choose the “cutoff” value that separates “positive” from “negative” test results. Think of it like setting the passing grade for an exam:</p>
+<ul>
+<li>If you set it too low, almost everyone passes (high sensitivity, but many false positives)</li>
+<li>If you set it too high, almost no one passes (high specificity, but many false negatives)</li>
+<li>The cutpoint is where the two curves (diseased vs healthy) overlap - this is where you have to make a decision</li>
+</ul>
+<p><strong>In simple terms</strong>: We’re figuring out where to draw the line between “positive” and “negative” test results. The best cutpoint balances finding true cases while avoiding false alarms.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>curve_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">50</span>, <span class="at">by =</span> <span class="fl">0.1</span>),</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">diseased =</span> <span class="fu">dnorm</span>(x, <span class="at">mean =</span> <span class="dv">32</span>, <span class="at">sd =</span> <span class="dv">3</span>),</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">healthy =</span> <span class="fu">dnorm</span>(x, <span class="at">mean =</span> <span class="dv">20</span>, <span class="at">sd =</span> <span class="dv">5</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>curve_data <span class="sc">|&gt;</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"diseased"</span>, <span class="st">"healthy"</span>), <span class="at">names_to =</span> <span class="st">"group"</span>, <span class="at">values_to =</span> <span class="st">"density"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> density, <span class="at">fill =</span> group, <span class="at">colour =</span> group)) <span class="sc">+</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_area</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">28</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Adjusted OD"</span>, <span class="at">y =</span> <span class="st">"Density"</span>, <span class="at">fill =</span> <span class="st">"Group"</span>, <span class="at">colour =</span> <span class="st">"Group"</span>) <span class="sc">+</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">28</span>, <span class="at">y =</span> <span class="fl">0.01</span>, <span class="at">label =</span> <span class="st">"Cutpoint"</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="sme_r_chapter_05_files/figure-html/cutpoint-figure-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Density functions illustrating cutpoint selection</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="figure-5.5-and-5.6-roc-analyses" class="level2" data-number="6.9">
+<h2 data-number="6.9" class="anchored" data-anchor-id="figure-5.5-and-5.6-roc-analyses"><span class="header-section-number">6.9</span> Figure 5.5 and 5.6: ROC Analyses</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section creates ROC (Receiver Operating Characteristic) curves, which show how well a test performs across all possible cutpoints. Think of it like testing a radar system at different sensitivity settings:</p>
+<ol type="1">
+<li><strong>ROC curve</strong>: Plots sensitivity vs (1 - specificity) for all possible cutpoints</li>
+<li><strong>Area Under the Curve (AUC)</strong>: A single number that summarizes how good the test is overall (1.0 = perfect, 0.5 = no better than guessing)</li>
+<li><strong>Cutpoint selection</strong>: Helps you choose the best threshold based on whether you care more about finding all cases or avoiding false alarms</li>
+</ol>
+<p><strong>In simple terms</strong>: The ROC curve shows you all the trade-offs between sensitivity and specificity. A curve that goes up and to the left is better - it means you can have high sensitivity without sacrificing too much specificity.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>nv_roc <span class="ot">&lt;-</span> nv <span class="sc">|&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(eiafin), eiafin <span class="sc">&lt;</span> <span class="dv">1</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>roc_obj <span class="ot">&lt;-</span> <span class="fu">roc</span>(<span class="at">response =</span> nv_roc<span class="sc">$</span>gs, <span class="at">predictor =</span> nv_roc<span class="sc">$</span>eiafin, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>roc_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">threshold =</span> roc_obj<span class="sc">$</span>thresholds,</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">sensitivity =</span> roc_obj<span class="sc">$</span>sensitivities,</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">specificity =</span> roc_obj<span class="sc">$</span>specificities</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>roc_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 107 × 3
+   threshold sensitivity specificity
+       &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;
+ 1 -Inf                1     0      
+ 2   -0.015            1     0.00943
+ 3   -0.0085           1     0.0377 
+ 4   -0.0045           1     0.0566 
+ 5   -0.001            1     0.0660 
+ 6    0.0005           1     0.0943 
+ 7    0.0015           1     0.104  
+ 8    0.0025           1     0.113  
+ 9    0.0035           1     0.123  
+10    0.0045           1     0.132  
+# ℹ 97 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>roc_df <span class="sc">|&gt;</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">specificity =</span> specificity <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">sensitivity =</span> sensitivity <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">threshold =</span> <span class="fu">replace_na</span>(threshold, <span class="dv">0</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> threshold)) <span class="sc">+</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> sensitivity, <span class="at">colour =</span> <span class="st">"Sensitivity"</span>)) <span class="sc">+</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> specificity, <span class="at">colour =</span> <span class="st">"Specificity"</span>)) <span class="sc">+</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Sensitivity"</span> <span class="ot">=</span> <span class="st">"black"</span>, <span class="st">"Specificity"</span> <span class="ot">=</span> <span class="st">"grey40"</span>)) <span class="sc">+</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Cutpoint (OD)"</span>,</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Sensitivity / Specificity (%)"</span>,</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="cn">NULL</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="sme_r_chapter_05_files/figure-html/roc-two-graph-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Sensitivity and specificity by cutpoint</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">fpr =</span> <span class="dv">1</span> <span class="sc">-</span> roc_obj<span class="sc">$</span>specificities,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">tpr =</span> roc_obj<span class="sc">$</span>sensitivities</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>), <span class="fu">aes</span>(<span class="at">x =</span> fpr, <span class="at">y =</span> tpr)) <span class="sc">+</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">colour =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"False positive rate"</span>, <span class="at">y =</span> <span class="st">"True positive rate"</span>) <span class="sc">+</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="sme_r_chapter_05_files/figure-html/roc-curve-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>ROC curve for EIA (non-parametric)</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="exercise-5.7-likelihood-ratios" class="level2" data-number="6.10">
+<h2 data-number="6.10" class="anchored" data-anchor-id="exercise-5.7-likelihood-ratios"><span class="header-section-number">6.10</span> Exercise 5.7: Likelihood Ratios</h2>
+<p>This section demonstrates likelihood ratios, which quantify how much a test result changes the probability of disease (Dohoo, Martin, &amp; Stryhn, 2012; Kirkwood &amp; Sterne, 2003). Likelihood ratios are particularly useful for interpreting test results in clinical practice.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section calculates likelihood ratios (Dohoo, Martin, &amp; Stryhn, 2012), which tell you how much a test result changes the probability of disease. Think of it like updating your belief based on new evidence:</p>
+<ol type="1">
+<li><strong>Positive Likelihood Ratio (LR+)</strong>: How much more likely is disease if the test is positive? (like asking “if the test is positive, how much does that increase the chance of disease?”)</li>
+<li><strong>Negative Likelihood Ratio (LR-)</strong>: How much less likely is disease if the test is negative? (like asking “if the test is negative, how much does that decrease the chance of disease?”)</li>
+</ol>
+<p><strong>In simple terms</strong>: Likelihood ratios help you interpret test results in context. A high LR+ means a positive test is strong evidence for disease. A low LR- means a negative test is strong evidence against disease.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>thresholds <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.10</span>, <span class="fl">0.30</span>, <span class="fl">0.70</span>, <span class="fl">1.50</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>lr_results <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map_dfr</span>(thresholds, <span class="cf">function</span>(cutpoint) {</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  classification <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">if_else</span>(nv_clean<span class="sc">$</span>eiafin <span class="sc">&gt;=</span> cutpoint, <span class="dv">1</span>L, <span class="dv">0</span>L, <span class="at">missing =</span> <span class="cn">NA_integer_</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  outcome <span class="ot">&lt;-</span> <span class="fu">factor</span>(nv_clean<span class="sc">$</span>gs, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  tbl <span class="ot">&lt;-</span> <span class="fu">table</span>(outcome, classification)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">any</span>(tbl <span class="sc">==</span> <span class="dv">0</span>)) {</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">tibble</span>(</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">cutpoint =</span> cutpoint,</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">sensitivity =</span> <span class="cn">NA_real_</span>,</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">specificity =</span> <span class="cn">NA_real_</span>,</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">lr_pos =</span> <span class="cn">NA_real_</span>,</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">lr_neg =</span> <span class="cn">NA_real_</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>  diag <span class="ot">&lt;-</span> <span class="fu">suppressWarnings</span>(<span class="fu">epi.tests</span>(tbl))</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">cutpoint =</span> cutpoint,</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">sensitivity =</span> diag<span class="sc">$</span>detail<span class="sc">$</span>se,</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">specificity =</span> diag<span class="sc">$</span>detail<span class="sc">$</span>sp,</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">lr_pos =</span> diag<span class="sc">$</span>detail<span class="sc">$</span>lr.pos,</span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">lr_neg =</span> diag<span class="sc">$</span>detail<span class="sc">$</span>lr.neg</span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>nv_clean <span class="ot">&lt;-</span> nv_clean <span class="sc">|&gt;</span></span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">eiafin_c7 =</span> <span class="fu">cut</span>(</span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>      eiafin,</span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.10</span>, <span class="fl">0.30</span>, <span class="fl">0.70</span>, <span class="fl">1.50</span>, <span class="cn">Inf</span>),</span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">right =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">paste0</span>(<span class="st">"cut"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>)</span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>category_lr <span class="ot">&lt;-</span> nv_clean <span class="sc">|&gt;</span></span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(eiafin_c7, gs) <span class="sc">|&gt;</span></span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(eiafin_c7) <span class="sc">|&gt;</span></span>
+<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prop =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n)) <span class="sc">|&gt;</span></span>
+<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> gs, <span class="at">values_from =</span> prop, <span class="at">values_fill =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">lr =</span> <span class="st">`</span><span class="at">1</span><span class="st">`</span> <span class="sc">/</span> <span class="st">`</span><span class="at">0</span><span class="st">`</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(eiafin_c7, lr)</span>
+<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">cutpoint_specific =</span> lr_results,</span>
+<span id="cb20-46"><a href="#cb20-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">category_specific =</span> category_lr</span>
+<span id="cb20-47"><a href="#cb20-47" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$cutpoint_specific
+# A tibble: 7 × 5
+  cutpoint sensitivity specificity lr_pos lr_neg
+     &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1    -1             NA          NA     NA     NA
+2     0.01          NA          NA     NA     NA
+3     0.05          NA          NA     NA     NA
+4     0.1           NA          NA     NA     NA
+5     0.3           NA          NA     NA     NA
+6     0.7           NA          NA     NA     NA
+7     1.5           NA          NA     NA     NA
+
+$category_specific
+# A tibble: 11 × 2
+# Groups:   eiafin_c7 [7]
+   eiafin_c7    lr
+   &lt;fct&gt;     &lt;dbl&gt;
+ 1 cut1          0
+ 2 cut2          0
+ 3 cut2        Inf
+ 4 cut3          0
+ 5 cut3        Inf
+ 6 cut4          0
+ 7 cut4        Inf
+ 8 cut5          0
+ 9 cut5        Inf
+10 cut6        Inf
+11 cut7        Inf</code></pre>
+</div>
+</div>
+</section>
+<section id="exercise-5.8-parallel-and-serial-interpretation" class="level2" data-number="6.11">
+<h2 data-number="6.11" class="anchored" data-anchor-id="exercise-5.8-parallel-and-serial-interpretation"><span class="header-section-number">6.11</span> Exercise 5.8: Parallel and Serial Interpretation</h2>
+<p>This section demonstrates how to combine multiple diagnostic tests using parallel or serial testing strategies (Dohoo, Martin, &amp; Stryhn, 2012). These strategies allow you to optimize sensitivity or specificity depending on your clinical needs.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section shows two ways to combine multiple tests (Dohoo, Martin, &amp; Stryhn, 2012):</p>
+<ol type="1">
+<li><strong>Parallel testing</strong>: A person is considered positive if ANY test is positive (like “if either test says positive, we treat it as positive”). This increases sensitivity but decreases specificity.</li>
+<li><strong>Serial testing</strong>: A person is only considered positive if ALL tests are positive (like “both tests must be positive”). This increases specificity but decreases sensitivity.</li>
+</ol>
+<p><strong>In simple terms</strong>: If you have two tests, you can use them together. Parallel testing is like “better safe than sorry” - you catch more cases but get more false alarms. Serial testing is more conservative - you’re more certain when you say positive, but you might miss some cases.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>nv_series <span class="ot">&lt;-</span> nv <span class="sc">|&gt;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">series =</span> <span class="fu">if_else</span>(pcr_c2 <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> eiafin_c2 <span class="sc">==</span> <span class="dv">1</span>, <span class="dv">1</span>L, <span class="dv">0</span>L, <span class="at">missing =</span> <span class="cn">NA_integer_</span>),</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">parallel =</span> <span class="fu">if_else</span>(pcr_c2 <span class="sc">==</span> <span class="dv">1</span> <span class="sc">|</span> eiafin_c2 <span class="sc">==</span> <span class="dv">1</span>, <span class="dv">1</span>L, <span class="dv">0</span>L, <span class="at">missing =</span> <span class="cn">NA_integer_</span>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>diag_series <span class="ot">&lt;-</span> <span class="fu">epi.tests</span>(<span class="fu">table</span>(nv_series<span class="sc">$</span>gs, nv_series<span class="sc">$</span>series))</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>diag_parallel <span class="ot">&lt;-</span> <span class="fu">epi.tests</span>(<span class="fu">table</span>(nv_series<span class="sc">$</span>gs, nv_series<span class="sc">$</span>parallel))</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">series =</span> diag_series,</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">parallel =</span> diag_parallel</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$series
+          Outcome +    Outcome -      Total
+Test +          106            0        106
+Test -           14           68         82
+Total           120           68        188
+
+Point estimates and 95% CIs:
+--------------------------------------------------------------
+Apparent prevalence *                  0.56 (0.49, 0.64)
+True prevalence *                      0.64 (0.57, 0.71)
+Sensitivity *                          0.88 (0.81, 0.93)
+Specificity *                          1.00 (0.95, 1.00)
+Positive predictive value *            1.00 (0.97, 1.00)
+Negative predictive value *            0.83 (0.73, 0.90)
+Positive likelihood ratio              Inf (NaN, Inf)
+Negative likelihood ratio              0.12 (0.07, 0.19)
+False T+ proportion for true D- *      0.00 (0.00, 0.05)
+False T- proportion for true D+ *      0.12 (0.07, 0.19)
+False T+ proportion for T+ *           0.00 (0.00, 0.03)
+False T- proportion for T- *           0.17 (0.10, 0.27)
+Correctly classified proportion *      0.93 (0.88, 0.96)
+--------------------------------------------------------------
+* Exact CIs
+
+$parallel
+          Outcome +    Outcome -      Total
+Test +           88           18        106
+Test -            0           82         82
+Total            88          100        188
+
+Point estimates and 95% CIs:
+--------------------------------------------------------------
+Apparent prevalence *                  0.56 (0.49, 0.64)
+True prevalence *                      0.47 (0.40, 0.54)
+Sensitivity *                          1.00 (0.96, 1.00)
+Specificity *                          0.82 (0.73, 0.89)
+Positive predictive value *            0.83 (0.74, 0.90)
+Negative predictive value *            1.00 (0.96, 1.00)
+Positive likelihood ratio              5.56 (3.66, 8.44)
+Negative likelihood ratio              0.00 (0.00, NaN)
+False T+ proportion for true D- *      0.18 (0.11, 0.27)
+False T- proportion for true D+ *      0.00 (0.00, 0.04)
+False T+ proportion for T+ *           0.17 (0.10, 0.26)
+False T- proportion for T- *           0.00 (0.00, 0.04)
+Correctly classified proportion *      0.90 (0.85, 0.94)
+--------------------------------------------------------------
+* Exact CIs</code></pre>
+</div>
+</div>
+</section>
+<section id="summary" class="level2" data-number="6.12">
+<h2 data-number="6.12" class="anchored" data-anchor-id="summary"><span class="header-section-number">6.12</span> Summary</h2>
+<p>This chapter has covered the fundamental concepts for evaluating diagnostic tests in epidemiology (Dohoo, Martin, &amp; Stryhn, 2012; Rothman, Huybrechts, &amp; Murray, 2024):</p>
+<section id="key-concepts" class="level3" data-number="6.12.1">
+<h3 data-number="6.12.1" class="anchored" data-anchor-id="key-concepts"><span class="header-section-number">6.12.1</span> Key Concepts</h3>
+<ol type="1">
+<li><p><strong>Precision (Reliability)</strong>: Measures how consistent a test is when repeated on the same sample. High precision means consistent results (Dohoo, Martin, &amp; Stryhn, 2012).</p></li>
+<li><p><strong>Agreement</strong>: Measures how well different tests or raters agree. Essential for inter-rater reliability and test validation (Kirkwood &amp; Sterne, 2003).</p></li>
+<li><p><strong>Sensitivity and Specificity</strong>: Fundamental measures of diagnostic accuracy:</p>
+<ul>
+<li><strong>Sensitivity</strong>: Ability to detect true cases (true positive rate)</li>
+<li><strong>Specificity</strong>: Ability to correctly identify non-cases (true negative rate)</li>
+</ul></li>
+<li><p><strong>ROC Curves</strong>: Graphical representation of the trade-off between sensitivity and specificity at different cutpoints (Dohoo, Martin, &amp; Stryhn, 2012).</p></li>
+<li><p><strong>Likelihood Ratios</strong>: Quantify how much a test result changes disease probability, useful for clinical interpretation (Kirkwood &amp; Sterne, 2003).</p></li>
+<li><p><strong>Parallel and Serial Testing</strong>: Strategies for combining multiple tests to optimize sensitivity or specificity (Dohoo, Martin, &amp; Stryhn, 2012).</p></li>
+</ol>
+</section>
+<section id="practical-applications" class="level3" data-number="6.12.2">
+<h3 data-number="6.12.2" class="anchored" data-anchor-id="practical-applications"><span class="header-section-number">6.12.2</span> Practical Applications</h3>
+<p>These methods are essential for: - Validating new diagnostic tests - Comparing different diagnostic methods - Setting appropriate test cutpoints - Interpreting test results in clinical practice - Quality assurance in diagnostic laboratories</p>
+<p>For more detailed examples and R code implementations, see the Epidemiologist R Handbook (Batra et al., 2021) and R4SME resources (Mazzella, n.d.).</p>
+</section>
+</section>
+<section id="references" class="level2" data-number="6.13">
+<h2 data-number="6.13" class="anchored" data-anchor-id="references"><span class="header-section-number">6.13</span> References</h2>
+<ol type="1">
+<li><p>Dohoo, I., Martin, W., &amp; Stryhn, H. Methods in Epidemiologic Research. University of Prince Edward Island, 2012. Available at: https://projects.upei.ca/mer/</p></li>
+<li><p>Kirkwood, B. R., &amp; Sterne, J. A. C. Essential Medical Statistics, 2nd Edition. Wiley-Blackwell, 2003. Available at: https://bcs.wiley.com/he-bcs/Books?action=index&amp;bcsId=11848&amp;itemId=0865428719</p></li>
+<li><p>Batra, N., et al.&nbsp;The Epidemiologist R Handbook. Applied Epi Incorporated, 2021. Available at: https://www.epirhandbook.com/en/</p></li>
+<li><p>Rothman KJ, Huybrechts KF, Murray EJ. Epidemiology. 3rd ed.&nbsp;Oxford University Press; 2024. ISBN: 9780197751541.</p></li>
+<li><p>Jordan RA, Celeste RK, Bernabe E, Schwendicke F. Big Data in Epidemiology: Brave New World? J Dent Res. 2024 Oct;103(11):1047-1050. doi: 10.1177/00220345241272034. Epub 2024 Oct 2. PMID: 39359106; PMCID: PMC11653310.</p></li>
+<li><p>Mazzella, A. R4SME: R for Statistical Methods in Epidemiology. GitHub repository. Available at: https://github.com/andreamazzella/R4SME</p></li>
+<li><p>Mazzella, A. R4ASME: R for Advanced Statistical Methods in Epidemiology. GitHub repository. Available at: https://github.com/andreamazzella/r4asme</p></li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./sme_r_chapter_04.html" class="pagination-link" aria-label="SME Chapter 4: Confidence Intervals and Standardization">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">SME Chapter 4: Confidence Intervals and Standardization</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./sme_r_chapter_06.html" class="pagination-link" aria-label="SME Chapter 6: Measures of Association">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">SME Chapter 6: Measures of Association</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

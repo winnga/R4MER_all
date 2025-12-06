@@ -1,0 +1,1957 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Wingston Felix Ng’ambi1">
+<meta name="author" content="Cosmas Zyambo2">
+<meta name="author" content="Adamson Sinjani Muula3-5">
+
+<title>19&nbsp; SME Chapter 18: Repeated Measures Data – Statistical methods in epidemiology: A step-by-step R tutorial</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./sme_r_chapter_19.html" rel="next">
+<link href="./sme_r_chapter_17.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-364982630eef5352dd1537128a8ed5cb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./sme_r_chapter_13.html">Count, Survival &amp; Clustered Data</a></li><li class="breadcrumb-item"><a href="./sme_r_chapter_18.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">SME Chapter 18: Repeated Measures Data</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Statistical methods in epidemiology: A step-by-step R tutorial</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Statistical methods in epidemiology: A step-by-step R tutorial</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">SME Chapter 1: Introduction to R and Epidemiology</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">SME Chapter 2: AI in R Epidemiologic Computing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Sampling &amp; Basic Methods</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">SME Chapter 3: Sampling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">SME Chapter 4: Confidence Intervals and Standardization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">SME Chapter 5: Precision, Agreement, and Diagnostic Accuracy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">SME Chapter 6: Measures of Association</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Sensitivity &amp; Confounding</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">SME Chapter 7: Sensitivity Analyses for Bias</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">SME Chapter 8: Confounding and Propensity Scores</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Regression &amp; Model Building</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">SME Chapter 9: Linear Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">SME Chapter 10: Model Building</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">SME Chapter 11: Logistic Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">SME Chapter 12: Ordinal and Multinomial Logistic Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Count, Survival &amp; Clustered Data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">SME Chapter 13: Modelling Count Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_14.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">SME Chapter 14: Modelling Survival Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_15.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">SME Chapter 15: Introduction to Clustered Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_16.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">SME Chapter 16: Multilevel and Mixed Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_17.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">SME Chapter 17: Mixed Models for Discrete Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_18.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">SME Chapter 18: Repeated Measures Data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Bayesian, Spatial &amp; Meta-analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_19.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">SME Chapter 19: Bayesian Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_20.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">SME Chapter 20: Spatial Data Visualisation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_21.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">SME Chapter 21: Meta-analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_22.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">SME Chapter 22: Confounding Detection and Control</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#replication-notes" id="toc-replication-notes" class="nav-link active" data-scroll-target="#replication-notes"><span class="header-section-number">19.1</span> Replication Notes</a></li>
+  <li><a href="#theoretical-background" id="toc-theoretical-background" class="nav-link" data-scroll-target="#theoretical-background"><span class="header-section-number">19.2</span> Theoretical Background</a></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup"><span class="header-section-number">19.3</span> Setup</a></li>
+  <li><a href="#example-23.1-descriptive-statistics-and-graphs" id="toc-example-23.1-descriptive-statistics-and-graphs" class="nav-link" data-scroll-target="#example-23.1-descriptive-statistics-and-graphs"><span class="header-section-number">19.4</span> Example 23.1: Descriptive Statistics and Graphs</a></li>
+  <li><a href="#example-23.2-incomplete-series-profiles" id="toc-example-23.2-incomplete-series-profiles" class="nav-link" data-scroll-target="#example-23.2-incomplete-series-profiles"><span class="header-section-number">19.5</span> Example 23.2: Incomplete Series Profiles</a></li>
+  <li><a href="#example-23.3-univariate-summary-analyses" id="toc-example-23.3-univariate-summary-analyses" class="nav-link" data-scroll-target="#example-23.3-univariate-summary-analyses"><span class="header-section-number">19.6</span> Example 23.3: Univariate Summary Analyses</a></li>
+  <li><a href="#example-23.4-manova-and-repeated-measures-mixed-models" id="toc-example-23.4-manova-and-repeated-measures-mixed-models" class="nav-link" data-scroll-target="#example-23.4-manova-and-repeated-measures-mixed-models"><span class="header-section-number">19.7</span> Example 23.4: MANOVA and Repeated-Measures Mixed Models</a></li>
+  <li><a href="#example-23.5-mixed-models-with-correlation-structures" id="toc-example-23.5-mixed-models-with-correlation-structures" class="nav-link" data-scroll-target="#example-23.5-mixed-models-with-correlation-structures"><span class="header-section-number">19.8</span> Example 23.5: Mixed Models with Correlation Structures</a></li>
+  <li><a href="#example-23.6-trend-models-with-random-slopes" id="toc-example-23.6-trend-models-with-random-slopes" class="nav-link" data-scroll-target="#example-23.6-trend-models-with-random-slopes"><span class="header-section-number">19.9</span> Example 23.6: Trend Models with Random Slopes</a></li>
+  <li><a href="#example-23.7-glmms-for-high-blood-pressure" id="toc-example-23.7-glmms-for-high-blood-pressure" class="nav-link" data-scroll-target="#example-23.7-glmms-for-high-blood-pressure"><span class="header-section-number">19.10</span> Example 23.7: GLMMs for High Blood Pressure</a></li>
+  <li><a href="#example-23.8-gee-analyses-for-diarrhoea-data" id="toc-example-23.8-gee-analyses-for-diarrhoea-data" class="nav-link" data-scroll-target="#example-23.8-gee-analyses-for-diarrhoea-data"><span class="header-section-number">19.11</span> Example 23.8: GEE Analyses for Diarrhoea Data</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">19.12</span> References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./sme_r_chapter_13.html">Count, Survival &amp; Clustered Data</a></li><li class="breadcrumb-item"><a href="./sme_r_chapter_18.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">SME Chapter 18: Repeated Measures Data</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">SME Chapter 18: Repeated Measures Data</span></h1>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Authors</div>
+  <div class="quarto-title-meta-heading">Affiliations</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Wingston Felix Ng’ambi<sup>1</sup> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Cosmas Zyambo<sup>2</sup> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Adamson Sinjani Muula<sup>3-5</sup> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This chapter reproduces and expands upon the analyses from the original Methods in Epidemiologic Research (MER) Chapter 23 (Dohoo, Martin, &amp; Stryhn, 2012) using R with data sourced from <code>../mer_data_stata/</code>. The chapter covers repeated measures analysis - essential methods for analyzing data where the same subjects are measured multiple times over time.</p>
+</div>
+</div>
+<section id="replication-notes" class="level2" data-number="19.1">
+<h2 data-number="19.1" class="anchored" data-anchor-id="replication-notes"><span class="header-section-number">19.1</span> Replication Notes</h2>
+<ul>
+<li><strong>Data dependencies:</strong> <code>../mer_data_stata/bp.dta</code> and <code>../mer_data_stata/brazil_smpl.dta</code>.</li>
+<li><strong>Required R packages:</strong> <code>dplyr</code>, <code>tidyr</code>, <code>haven</code>, <code>forcats</code>, <code>ggplot2</code>, <code>purrr</code>, <code>lme4</code>, <code>nlme</code>, <code>emmeans</code>, <code>geepack</code>, <code>broom</code>, <code>broom.mixed</code>, <code>performance</code>, <code>corrr</code>.</li>
+<li><strong>Setup tips:</strong> Install with <code>install.packages(c("dplyr","tidyr","haven","forcats","ggplot2","purrr","lme4","nlme","emmeans","geepack","broom","broom.mixed","performance","corrr"))</code>.</li>
+<li><strong>Execution:</strong> Run the notebook in order to reproduce descriptive plots, repeated-measures ANOVA comparisons, mixed models, and GEE analyses.</li>
+</ul>
+</section>
+<section id="theoretical-background" class="level2" data-number="19.2">
+<h2 data-number="19.2" class="anchored" data-anchor-id="theoretical-background"><span class="header-section-number">19.2</span> Theoretical Background</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Understanding Repeated Measures Analysis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Before we analyze repeated measures data, let’s understand what makes it special and how to analyze it. Repeated measures data is common in longitudinal epidemiological studies and requires special analytical methods (Dohoo, Martin, &amp; Stryhn, 2012; Kirkwood &amp; Sterne, 2003):</p>
+<section id="what-is-repeated-measures-data" class="level3" data-number="19.2.1">
+<h3 data-number="19.2.1" class="anchored" data-anchor-id="what-is-repeated-measures-data"><span class="header-section-number">19.2.1</span> What is Repeated Measures Data?</h3>
+<p><strong>Repeated measures</strong> means you measure the same people (or units) multiple times. Like: - Measuring blood pressure at visit 1, visit 2, visit 3… - Following patients over time - Measuring the same subjects under different conditions</p>
+<p><strong>Key feature</strong>: Measurements from the same person are correlated - they’re more similar to each other than to measurements from other people.</p>
+</section>
+<section id="why-this-matters" class="level3" data-number="19.2.2">
+<h3 data-number="19.2.2" class="anchored" data-anchor-id="why-this-matters"><span class="header-section-number">19.2.2</span> Why This Matters</h3>
+<p>Regular statistics assume observations are independent. But repeated measures violate this: - Your blood pressure today is related to your blood pressure yesterday - Measurements from the same person share characteristics - This correlation needs to be accounted for</p>
+</section>
+<section id="the-problem-with-ignoring-correlation" class="level3" data-number="19.2.3">
+<h3 data-number="19.2.3" class="anchored" data-anchor-id="the-problem-with-ignoring-correlation"><span class="header-section-number">19.2.3</span> The Problem with Ignoring Correlation</h3>
+<p>If you ignore correlation and analyze each visit separately: - You lose information (don’t use the fact that it’s the same people) - You might get wrong answers (standard errors are wrong) - You miss patterns (like trends over time)</p>
+</section>
+<section id="solutions-for-repeated-measures" class="level3" data-number="19.2.4">
+<h3 data-number="19.2.4" class="anchored" data-anchor-id="solutions-for-repeated-measures"><span class="header-section-number">19.2.4</span> Solutions for Repeated Measures</h3>
+</section>
+<section id="manova-multivariate-anova" class="level3" data-number="19.2.5">
+<h3 data-number="19.2.5" class="anchored" data-anchor-id="manova-multivariate-anova"><span class="header-section-number">19.2.5</span> 1. MANOVA (Multivariate ANOVA)</h3>
+<p><strong>MANOVA</strong> analyzes all visits simultaneously. It accounts for correlations between visits and tests if groups differ across all visits together.</p>
+<p><strong>Think of it like</strong>: Analyzing the whole pattern at once, not visit by visit.</p>
+<p><strong>Limitations</strong>: Requires complete data (all visits for all people) and assumes specific correlation structures.</p>
+</section>
+<section id="mixed-effects-models" class="level3" data-number="19.2.6">
+<h3 data-number="19.2.6" class="anchored" data-anchor-id="mixed-effects-models"><span class="header-section-number">19.2.6</span> 2. Mixed-Effects Models</h3>
+<p><strong>Mixed models</strong> account for repeated measures by including random effects for subjects. Like: “Each person has their own baseline and their own trend over time.”</p>
+<p><strong>Advantages</strong>: - Handles missing data naturally - Flexible correlation structures - Can model individual trends</p>
+</section>
+<section id="gee-generalized-estimating-equations" class="level3" data-number="19.2.7">
+<h3 data-number="19.2.7" class="anchored" data-anchor-id="gee-generalized-estimating-equations"><span class="header-section-number">19.2.7</span> 3. GEE (Generalized Estimating Equations)</h3>
+<p><strong>GEE</strong> accounts for correlations by adjusting standard errors. It gives population-averaged estimates (like “on average, what’s the treatment effect?”).</p>
+<p><strong>Advantages</strong>: - Robust to correlation structure misspecification - Good for population-level questions - Simpler than mixed models in some ways</p>
+</section>
+<section id="correlation-structures" class="level3" data-number="19.2.8">
+<h3 data-number="19.2.8" class="anchored" data-anchor-id="correlation-structures"><span class="header-section-number">19.2.8</span> Correlation Structures</h3>
+<p>Different ways to model how measurements are related:</p>
+<ul>
+<li><strong>Independence</strong>: Measurements are unrelated (usually wrong for repeated measures)</li>
+<li><strong>Exchangeable</strong>: All measurements equally correlated (like “all visits are equally similar”)</li>
+<li><strong>AR1 (Autoregressive)</strong>: Closer visits are more correlated (like “today is more related to yesterday than last week”)</li>
+<li><strong>Unstructured</strong>: Any correlation pattern (most flexible)</li>
+</ul>
+</section>
+<section id="types-of-analyses" class="level3" data-number="19.2.9">
+<h3 data-number="19.2.9" class="anchored" data-anchor-id="types-of-analyses"><span class="header-section-number">19.2.9</span> Types of Analyses</h3>
+</section>
+<section id="univariate-visit-by-visit" class="level3" data-number="19.2.10">
+<h3 data-number="19.2.10" class="anchored" data-anchor-id="univariate-visit-by-visit"><span class="header-section-number">19.2.10</span> 1. Univariate (Visit-by-Visit)</h3>
+<p>Analyze each visit separately. Simple but doesn’t use all information and doesn’t account for correlations.</p>
+</section>
+<section id="change-from-baseline" class="level3" data-number="19.2.11">
+<h3 data-number="19.2.11" class="anchored" data-anchor-id="change-from-baseline"><span class="header-section-number">19.2.11</span> 2. Change from Baseline</h3>
+<p>Analyze how much each person changed. Accounts for baseline differences but loses information about patterns over time.</p>
+</section>
+<section id="trend-analysis" class="level3" data-number="19.2.12">
+<h3 data-number="19.2.12" class="anchored" data-anchor-id="trend-analysis"><span class="header-section-number">19.2.12</span> 3. Trend Analysis</h3>
+<p>Model how outcomes change over time. Can include individual trends (random slopes).</p>
+</section>
+<section id="model-selection" class="level3" data-number="19.2.13">
+<h3 data-number="19.2.13" class="anchored" data-anchor-id="model-selection"><span class="header-section-number">19.2.13</span> Model Selection</h3>
+<p>We choose methods based on: - <strong>Type of outcome</strong>: Continuous, binary, count - <strong>Missing data</strong>: How much and what pattern - <strong>Question</strong>: Individual-level or population-level? - <strong>Correlation structure</strong>: What pattern do correlations follow?</p>
+</section>
+<section id="common-issues" class="level3" data-number="19.2.14">
+<h3 data-number="19.2.14" class="anchored" data-anchor-id="common-issues"><span class="header-section-number">19.2.14</span> Common Issues</h3>
+<ul>
+<li><strong>Missing data</strong>: People drop out or miss visits (need methods that handle this)</li>
+<li><strong>Time-varying covariates</strong>: Things that change over time (like treatment status)</li>
+<li><strong>Non-linearity</strong>: Relationships might be curved, not straight</li>
+</ul>
+<p><strong>In simple terms</strong>: Repeated measures data means measuring the same people multiple times. This creates correlations that need special methods. We can use MANOVA (for complete data), mixed models (for flexible modeling), or GEE (for population estimates). The key is accounting for the fact that measurements from the same person are related. Different correlation structures (like AR1 or unstructured) model this relationship differently.</p>
+</section>
+</div>
+</div>
+</section>
+<section id="setup" class="level2" data-number="19.3">
+<h2 data-number="19.3" class="anchored" data-anchor-id="setup"><span class="header-section-number">19.3</span> Setup</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section prepares for analyzing repeated measures data - data where the same people are measured multiple times. Think of it like tracking changes over time:</p>
+<ol type="1">
+<li><strong>Loading libraries</strong>: Getting tools for repeated measures analysis (mixed models, GEE)</li>
+<li><strong>Reading data</strong>: Opening longitudinal datasets (like blood pressure measured at multiple visits)</li>
+<li><strong>Data preparation</strong>: Organizing data for repeated measures analysis</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re preparing to analyze data where we measure the same people multiple times (like blood pressure at visits 1, 2, 3, 4). This requires special methods because measurements from the same person are correlated.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forcats)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nlme)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(geepack)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom.mixed)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(performance)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrr)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_minimal</span>())</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>data_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">".."</span>, <span class="st">"mer_data_stata"</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>bp <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="fu">file.path</span>(data_dir, <span class="st">"bp.dta"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">where</span>(haven<span class="sc">::</span>is.labelled), haven<span class="sc">::</span>as_factor),</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">tx =</span> <span class="fu">factor</span>(tx),</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">centre =</span> <span class="fu">factor</span>(centre),</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">patient =</span> <span class="fu">factor</span>(patient),</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">visit =</span> <span class="fu">as.integer</span>(visit)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>brazil_smpl <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="fu">file.path</span>(data_dir, <span class="st">"brazil_smpl.dta"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(haven<span class="sc">::</span>is.labelled), haven<span class="sc">::</span>as_factor))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="example-23.1-descriptive-statistics-and-graphs" class="level2" data-number="19.4">
+<h2 data-number="19.4" class="anchored" data-anchor-id="example-23.1-descriptive-statistics-and-graphs"><span class="header-section-number">19.4</span> Example 23.1: Descriptive Statistics and Graphs</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section creates descriptive statistics and graphs for repeated measures data. Think of it like summarizing how measurements change over time:</p>
+<ol type="1">
+<li><strong>Wide format</strong>: Converting data so each row is a person with columns for each visit</li>
+<li><strong>Descriptive statistics</strong>: Summarizing measurements at each time point</li>
+<li><strong>Graphs</strong>: Visualizing how outcomes change over time (like blood pressure trends)</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re organizing and visualizing repeated measures data - showing how outcomes (like blood pressure) change across multiple visits for the same people.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>complete_wide <span class="ot">&lt;-</span> bp <span class="sc">|&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(centre, patient, tx, visit, dbp) <span class="sc">|&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> visit, <span class="at">values_from =</span> dbp, <span class="at">names_prefix =</span> <span class="st">"dbp"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Check which dbp columns actually exist</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>dbp_cols <span class="ot">&lt;-</span> <span class="fu">names</span>(complete_wide)[<span class="fu">grepl</span>(<span class="st">"^dbp"</span>, <span class="fu">names</span>(complete_wide))]</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Try to drop NA for specific columns if they exist, otherwise use all dbp columns</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>target_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"dbp1"</span>, <span class="st">"dbp3"</span>, <span class="st">"dbp4"</span>, <span class="st">"dbp5"</span>, <span class="st">"dbp6"</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>existing_target_cols <span class="ot">&lt;-</span> <span class="fu">intersect</span>(target_cols, dbp_cols)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(existing_target_cols) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  complete_wide <span class="ot">&lt;-</span> complete_wide <span class="sc">|&gt;</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>(<span class="fu">all_of</span>(existing_target_cols))</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># If none of the target columns exist, use all available dbp columns</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">"Target columns (dbp1, dbp3, dbp4, dbp5, dbp6) not found. Using all available dbp columns."</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(dbp_cols) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    complete_wide <span class="ot">&lt;-</span> complete_wide <span class="sc">|&gt;</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">drop_na</span>(<span class="fu">all_of</span>(dbp_cols))</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>summary_stats <span class="ot">&lt;-</span> complete_wide <span class="sc">|&gt;</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(tx) <span class="sc">|&gt;</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"dbp"</span>), <span class="fu">list</span>(<span class="at">mean =</span> mean, <span class="at">sd =</span> sd), <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>cor_matrix <span class="ot">&lt;-</span> complete_wide <span class="sc">|&gt;</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"dbp"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">correlate</span>() <span class="sc">|&gt;</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shave</span>()</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>cov_matrix <span class="ot">&lt;-</span> complete_wide <span class="sc">|&gt;</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"dbp"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cov</span>(<span class="at">use =</span> <span class="st">"complete.obs"</span>)</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">summary =</span> summary_stats,</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">correlations =</span> cor_matrix,</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">covariances =</span> cov_matrix</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$summary
+# A tibble: 3 × 9
+  tx     dbp3_mean dbp3_sd dbp4_mean dbp4_sd dbp5_mean dbp5_sd dbp6_mean dbp6_sd
+  &lt;fct&gt;      &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+1 Carve…      94.8    8.44      92.3    8.38      92.4    8.79      90.4    8.84
+2 Nifed…      92.8    9.31      91.9    8.62      89.5    8.81      90.1    7.79
+3 Ateno…      91.4    9.26      91.1    9.20      88.4    9.68      88.6    8.73
+
+$correlations
+# A tibble: 4 × 5
+  term    dbp3   dbp4   dbp5  dbp6
+  &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1 dbp3  NA     NA     NA        NA
+2 dbp4   0.570 NA     NA        NA
+3 dbp5   0.511  0.624 NA        NA
+4 dbp6   0.477  0.518  0.607    NA
+
+$covariances
+         dbp3     dbp4     dbp5     dbp6
+dbp3 82.60876 45.28039 42.95922 36.75083
+dbp4 45.28039 76.29020 50.39118 38.33824
+dbp5 42.95922 50.39118 85.41383 47.53555
+dbp6 36.75083 38.33824 47.53555 71.85918</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>selected_patients <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">80</span>, <span class="dv">81</span>, <span class="dv">274</span>, <span class="dv">84</span>, <span class="dv">181</span>, <span class="dv">182</span>, <span class="dv">183</span>, <span class="dv">185</span>, <span class="dv">186</span>, <span class="dv">187</span>, <span class="dv">189</span>, <span class="dv">190</span>, <span class="dv">192</span>, <span class="dv">262</span>, <span class="dv">263</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>bp_profiles <span class="ot">&lt;-</span> bp <span class="sc">|&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(patient <span class="sc">%in%</span> selected_patients) <span class="sc">|&gt;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(patient) <span class="sc">|&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(visit)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bp_profiles, <span class="fu">aes</span>(<span class="at">x =</span> visit, <span class="at">y =</span> dbp, <span class="at">group =</span> patient)) <span class="sc">+</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">colour =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Visit number"</span>, <span class="at">y =</span> <span class="st">"Diastolic blood pressure"</span>) <span class="sc">+</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="sme_r_chapter_18_files/figure-html/example23-1-plots-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Profile plot for selected patients</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mean_profiles <span class="ot">&lt;-</span> bp <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(tx, visit) <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_dbp =</span> <span class="fu">mean</span>(dbp, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mean_profiles, <span class="fu">aes</span>(<span class="at">x =</span> visit, <span class="at">y =</span> mean_dbp, <span class="at">linetype =</span> tx)) <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">colour =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Visit"</span>, <span class="at">y =</span> <span class="st">"Mean diastolic blood pressure"</span>, <span class="at">linetype =</span> <span class="st">"Treatment"</span>) <span class="sc">+</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="sme_r_chapter_18_files/figure-html/example23-1-mean-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Mean profile plot by treatment</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="example-23.2-incomplete-series-profiles" class="level2" data-number="19.5">
+<h2 data-number="19.5" class="anchored" data-anchor-id="example-23.2-incomplete-series-profiles"><span class="header-section-number">19.5</span> Example 23.2: Incomplete Series Profiles</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section examines patterns of missing data in repeated measures. Think of it like tracking who showed up for which visits:</p>
+<ol type="1">
+<li><strong>Profile codes</strong>: A way to categorize which visits each person has (like “has visit 3 and 4, missing 5 and 6”)</li>
+<li><strong>Missing data patterns</strong>: Understanding how data is missing (like “do people drop out early or late?”)</li>
+<li><strong>Treatment comparison</strong>: Seeing if missing data patterns differ by treatment</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re examining who has data at which visits. Some people might have all visits, others might be missing some. Understanding these patterns helps us know if missing data might bias our results.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>profiles <span class="ot">&lt;-</span> bp <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(patient, tx, visit, dbp) <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> visit, <span class="at">values_from =</span> dbp, <span class="at">names_prefix =</span> <span class="st">"dbp"</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>profiles <span class="ot">&lt;-</span> profiles <span class="sc">|&gt;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">profile_code =</span> <span class="dv">1000</span> <span class="sc">*</span> (<span class="sc">!</span><span class="fu">is.na</span>(dbp3)) <span class="sc">+</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>      <span class="dv">100</span> <span class="sc">*</span> (<span class="sc">!</span><span class="fu">is.na</span>(dbp4)) <span class="sc">+</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>      <span class="dv">10</span> <span class="sc">*</span> (<span class="sc">!</span><span class="fu">is.na</span>(dbp5)) <span class="sc">+</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>      <span class="dv">1</span> <span class="sc">*</span> (<span class="fu">is.na</span>(dbp6))</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>profile_table <span class="ot">&lt;-</span> profiles <span class="sc">|&gt;</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(tx, profile_code) <span class="sc">|&gt;</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(tx, profile_code)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>profile_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 14 × 3
+   tx         profile_code     n
+   &lt;fct&gt;             &lt;dbl&gt; &lt;int&gt;
+ 1 Carvedilol         1001     5
+ 2 Carvedilol         1010     1
+ 3 Carvedilol         1101     8
+ 4 Carvedilol         1110    82
+ 5 Carvedilol         1111     4
+ 6 Nifedipine         1001     2
+ 7 Nifedipine         1101     3
+ 8 Nifedipine         1110    84
+ 9 Nifedipine         1111     4
+10 Atenolol            110     1
+11 Atenolol           1001     1
+12 Atenolol           1101     1
+13 Atenolol           1110    90
+14 Atenolol           1111     2</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>selected_incomplete <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">22</span>, <span class="dv">59</span>, <span class="dv">69</span>, <span class="dv">79</span>, <span class="dv">91</span>, <span class="dv">121</span>, <span class="dv">148</span>, <span class="dv">151</span>, <span class="dv">164</span>, <span class="dv">209</span>, <span class="dv">211</span>, <span class="dv">215</span>, <span class="dv">235</span>, <span class="dv">236</span>, <span class="dv">238</span>, <span class="dv">254</span>, <span class="dv">289</span>, <span class="dv">318</span>, <span class="dv">321</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>bp_incomplete <span class="ot">&lt;-</span> bp <span class="sc">|&gt;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(patient <span class="sc">%in%</span> selected_incomplete)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bp_incomplete, <span class="fu">aes</span>(<span class="at">x =</span> visit, <span class="at">y =</span> dbp, <span class="at">group =</span> patient)) <span class="sc">+</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">colour =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Visit number"</span>, <span class="at">y =</span> <span class="st">"Diastolic blood pressure"</span>) <span class="sc">+</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="sme_r_chapter_18_files/figure-html/example23-2-plot-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Profile plot highlighting incomplete series</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="example-23.3-univariate-summary-analyses" class="level2" data-number="19.6">
+<h2 data-number="19.6" class="anchored" data-anchor-id="example-23.3-univariate-summary-analyses"><span class="header-section-number">19.6</span> Example 23.3: Univariate Summary Analyses</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section analyzes each visit separately. Think of it like analyzing each time point independently:</p>
+<ol type="1">
+<li><strong>ANOVA at each visit</strong>: Comparing treatment groups at each visit separately</li>
+<li><strong>Change from baseline</strong>: Looking at how much each person changed from their starting point</li>
+<li><strong>Visit-by-visit comparison</strong>: Seeing if treatment effects are consistent across visits</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re analyzing each visit separately to see if treatment effects are consistent over time. This is simpler than analyzing all visits together, but doesn’t account for correlations between visits.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check which dbp columns exist</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>dbp_cols <span class="ot">&lt;-</span> <span class="fu">names</span>(complete_wide)[<span class="fu">grepl</span>(<span class="st">"^dbp"</span>, <span class="fu">names</span>(complete_wide))]</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>dbp_cols_sorted <span class="ot">&lt;-</span> <span class="fu">sort</span>(dbp_cols)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the first available dbp column as baseline (or dbp1 if it exists)</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>baseline_col <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="st">"dbp1"</span> <span class="sc">%in%</span> dbp_cols) <span class="st">"dbp1"</span> <span class="cf">else</span> dbp_cols_sorted[<span class="dv">1</span>]</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(baseline_col) <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;&amp;</span> baseline_col <span class="sc">%in%</span> <span class="fu">names</span>(complete_wide)) {</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create centered baseline variable</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  complete_wide<span class="sc">$</span>dbp1c <span class="ot">&lt;-</span> complete_wide[[baseline_col]] <span class="sc">-</span> <span class="fu">median</span>(complete_wide[[baseline_col]], <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Build ANOVA results for available visits</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  anova_results_list <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Visit 1 (baseline) ANOVA</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="st">"dbp1"</span> <span class="sc">%in%</span> dbp_cols) {</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    anova_results_list[[<span class="st">"Visit 1"</span>]] <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">list</span>(<span class="fu">summary</span>(<span class="fu">aov</span>(dbp1 <span class="sc">~</span> tx, <span class="at">data =</span> complete_wide))),</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">error =</span> <span class="cf">function</span>(e) <span class="fu">list</span>(<span class="fu">paste</span>(<span class="st">"Error:"</span>, <span class="fu">conditionMessage</span>(e)))</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Other visits with baseline adjustment</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (visit_num <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>)) {</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>    visit_col <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"dbp"</span>, visit_num)</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (visit_col <span class="sc">%in%</span> dbp_cols) {</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>      anova_results_list[[<span class="fu">paste</span>(<span class="st">"Visit"</span>, visit_num)]] <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>        <span class="fu">list</span>(<span class="fu">summary</span>(<span class="fu">aov</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(visit_col, <span class="st">"~ tx + dbp1c"</span>)), <span class="at">data =</span> complete_wide))),</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">error =</span> <span class="cf">function</span>(e) <span class="fu">list</span>(<span class="fu">paste</span>(<span class="st">"Error:"</span>, <span class="fu">conditionMessage</span>(e)))</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>  anova_results <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(anova_results_list)</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">"No dbp columns found for ANOVA analysis"</span>)</span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>  anova_results <span class="ot">&lt;-</span> <span class="fu">tibble</span>()</span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Gain from baseline to visit 3</span></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="st">"dbp1"</span> <span class="sc">%in%</span> dbp_cols <span class="sc">&amp;&amp;</span> <span class="st">"dbp3"</span> <span class="sc">%in%</span> dbp_cols) {</span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>  gain13 <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(</span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aov</span>(<span class="fu">I</span>(dbp3 <span class="sc">-</span> dbp1) <span class="sc">~</span> tx, <span class="at">data =</span> complete_wide),</span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>      <span class="fu">warning</span>(<span class="st">"Could not compute gain13 ANOVA: "</span>, <span class="fu">conditionMessage</span>(e))</span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>      <span class="cn">NULL</span></span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">"dbp1 or dbp3 not available for gain analysis"</span>)</span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>  gain13 <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>slopes <span class="ot">&lt;-</span> complete_wide <span class="sc">|&gt;</span></span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(patient, <span class="fu">starts_with</span>(<span class="st">"dbp"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>patient, <span class="at">names_to =</span> <span class="st">"visit"</span>, <span class="at">values_to =</span> <span class="st">"dbp"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">visit_num =</span> <span class="fu">as.integer</span>(<span class="fu">gsub</span>(<span class="st">"dbp"</span>, <span class="st">""</span>, visit))) <span class="sc">|&gt;</span></span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(visit_num <span class="sc">&gt;=</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(patient) <span class="sc">|&gt;</span></span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">slope =</span> <span class="fu">coef</span>(<span class="fu">lm</span>(dbp <span class="sc">~</span> visit_num))[<span class="dv">2</span>], <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(complete_wide <span class="sc">|&gt;</span> <span class="fu">select</span>(patient, tx), <span class="at">by =</span> <span class="st">"patient"</span>)</span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>slope_anova <span class="ot">&lt;-</span> <span class="fu">summary</span>(<span class="fu">aov</span>(slope <span class="sc">~</span> tx, <span class="at">data =</span> slopes))</span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>  <span class="at">anova_visits =</span> anova_results,</span>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a>  <span class="at">gain13 =</span> <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(gain13)) <span class="fu">summary</span>(gain13) <span class="cf">else</span> <span class="st">"Not available (dbp1 or dbp3 missing)"</span>,</span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a>  <span class="at">slopes =</span> slope_anova</span>
+<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$anova_visits
+# A tibble: 1 × 4
+  `Visit 3`  `Visit 4`  `Visit 5`  `Visit 6` 
+  &lt;list&gt;     &lt;list&gt;     &lt;list&gt;     &lt;list&gt;    
+1 &lt;summry.v&gt; &lt;summry.v&gt; &lt;summry.v&gt; &lt;summry.v&gt;
+
+$gain13
+[1] "Not available (dbp1 or dbp3 missing)"
+
+$slopes
+             Df Sum Sq Mean Sq F value Pr(&gt;F)
+tx            2    2.8   1.377   0.159  0.853
+Residuals   253 2187.0   8.644               </code></pre>
+</div>
+</div>
+</section>
+<section id="example-23.4-manova-and-repeated-measures-mixed-models" class="level2" data-number="19.7">
+<h2 data-number="19.7" class="anchored" data-anchor-id="example-23.4-manova-and-repeated-measures-mixed-models"><span class="header-section-number">19.7</span> Example 23.4: MANOVA and Repeated-Measures Mixed Models</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section analyzes all visits together using advanced methods. Think of it like analyzing the whole pattern at once:</p>
+<ol type="1">
+<li><strong>MANOVA</strong>: Multivariate ANOVA - analyzes all visits simultaneously, accounting for correlations</li>
+<li><strong>Mixed models</strong>: Accounts for repeated measures and correlations between visits</li>
+<li><strong>Unstructured correlation</strong>: Allows correlations between visits to vary freely (like “visit 3 and 4 might be more correlated than visit 3 and 6”)</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re analyzing all visits together, accounting for the fact that measurements from the same person are correlated. This is more sophisticated than analyzing visits separately and gives us better answers.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check which dbp columns exist for MANOVA</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>dbp_cols <span class="ot">&lt;-</span> <span class="fu">names</span>(complete_wide)[<span class="fu">grepl</span>(<span class="st">"^dbp"</span>, <span class="fu">names</span>(complete_wide))]</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>dbp_cols_sorted <span class="ot">&lt;-</span> <span class="fu">sort</span>(dbp_cols)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># MANOVA with all available visits</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Need at least as many observations as variables (plus groups) for MANOVA</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(dbp_cols) <span class="sc">&gt;=</span> <span class="dv">2</span>) {</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Check for complete cases in the MANOVA variables</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  manova_data <span class="ot">&lt;-</span> complete_wide[, <span class="fu">c</span>(<span class="st">"tx"</span>, dbp_cols_sorted), drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  manova_data_complete <span class="ot">&lt;-</span> manova_data[<span class="fu">complete.cases</span>(manova_data), , drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  n_obs <span class="ot">&lt;-</span> <span class="fu">nrow</span>(manova_data_complete)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  n_vars <span class="ot">&lt;-</span> <span class="fu">length</span>(dbp_cols_sorted)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  n_groups <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(manova_data_complete<span class="sc">$</span>tx))</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (n_obs <span class="sc">&gt;=</span> n_vars <span class="sc">+</span> n_groups) {</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    manova_formula <span class="ot">&lt;-</span> <span class="fu">as.formula</span>(<span class="fu">paste</span>(<span class="st">"cbind("</span>, <span class="fu">paste</span>(dbp_cols_sorted, <span class="at">collapse =</span> <span class="st">", "</span>), <span class="st">") ~ tx"</span>))</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    manova_all <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">manova</span>(manova_formula, <span class="at">data =</span> manova_data_complete),</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>        <span class="fu">warning</span>(<span class="st">"MANOVA failed: "</span>, <span class="fu">conditionMessage</span>(e))</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>        <span class="cn">NULL</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">warning</span>(<span class="fu">paste</span>(<span class="st">"Insufficient observations for MANOVA:"</span>, n_obs, <span class="st">"observations but need at least"</span>, n_vars <span class="sc">+</span> n_groups))</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>    manova_all <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">"Insufficient dbp columns for MANOVA (need at least 2)"</span>)</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>  manova_all <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a><span class="co"># MANOVA for visits 3-6 if they exist</span></span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>visits_3_6 <span class="ot">&lt;-</span> <span class="fu">intersect</span>(<span class="fu">c</span>(<span class="st">"dbp3"</span>, <span class="st">"dbp4"</span>, <span class="st">"dbp5"</span>, <span class="st">"dbp6"</span>), dbp_cols)</span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(visits_3_6) <span class="sc">&gt;=</span> <span class="dv">2</span>) {</span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Check for complete cases</span></span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>  manova_data_3_6 <span class="ot">&lt;-</span> complete_wide[, <span class="fu">c</span>(<span class="st">"tx"</span>, <span class="fu">sort</span>(visits_3_6)), drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>  manova_data_3_6_complete <span class="ot">&lt;-</span> manova_data_3_6[<span class="fu">complete.cases</span>(manova_data_3_6), , drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a>  n_obs_3_6 <span class="ot">&lt;-</span> <span class="fu">nrow</span>(manova_data_3_6_complete)</span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a>  n_vars_3_6 <span class="ot">&lt;-</span> <span class="fu">length</span>(visits_3_6)</span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>  n_groups_3_6 <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(manova_data_3_6_complete<span class="sc">$</span>tx))</span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (n_obs_3_6 <span class="sc">&gt;=</span> n_vars_3_6 <span class="sc">+</span> n_groups_3_6) {</span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a>    manova_formula_3_6 <span class="ot">&lt;-</span> <span class="fu">as.formula</span>(<span class="fu">paste</span>(<span class="st">"cbind("</span>, <span class="fu">paste</span>(<span class="fu">sort</span>(visits_3_6), <span class="at">collapse =</span> <span class="st">", "</span>), <span class="st">") ~ tx"</span>))</span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>    manova_3_6 <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(</span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a>      <span class="fu">manova</span>(manova_formula_3_6, <span class="at">data =</span> manova_data_3_6_complete),</span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a>      <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a>        <span class="fu">warning</span>(<span class="st">"MANOVA for visits 3-6 failed: "</span>, <span class="fu">conditionMessage</span>(e))</span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a>        <span class="cn">NULL</span></span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>    <span class="fu">warning</span>(<span class="fu">paste</span>(<span class="st">"Insufficient observations for MANOVA 3-6:"</span>, n_obs_3_6, <span class="st">"observations but need at least"</span>, n_vars_3_6 <span class="sc">+</span> n_groups_3_6))</span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a>    manova_3_6 <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">"Insufficient visits 3-6 for MANOVA"</span>)</span>
+<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a>  manova_3_6 <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a>reshape_long <span class="ot">&lt;-</span> complete_wide <span class="sc">|&gt;</span></span>
+<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"dbp"</span>), <span class="at">names_to =</span> <span class="st">"visit"</span>, <span class="at">values_to =</span> <span class="st">"dbp"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">visit =</span> <span class="fu">as.integer</span>(<span class="fu">gsub</span>(<span class="st">"dbp"</span>, <span class="st">""</span>, visit))) <span class="sc">|&gt;</span></span>
+<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove rows with missing values for mixed models</span></span>
+<span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(dbp), <span class="sc">!</span><span class="fu">is.na</span>(tx), <span class="sc">!</span><span class="fu">is.na</span>(visit), <span class="sc">!</span><span class="fu">is.na</span>(patient))</span>
+<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-67"><a href="#cb11-67" aria-hidden="true" tabindex="-1"></a>mixed_random_intercept <span class="ot">&lt;-</span> <span class="fu">lmer</span>(dbp <span class="sc">~</span> tx <span class="sc">*</span> visit <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> patient), <span class="at">data =</span> reshape_long)</span>
+<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-69"><a href="#cb11-69" aria-hidden="true" tabindex="-1"></a><span class="co"># lme() requires complete cases - filter and set na.action</span></span>
+<span id="cb11-70"><a href="#cb11-70" aria-hidden="true" tabindex="-1"></a>reshape_long_complete <span class="ot">&lt;-</span> reshape_long <span class="sc">|&gt;</span></span>
+<span id="cb11-71"><a href="#cb11-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">complete.cases</span>(dbp, tx, visit, patient))</span>
+<span id="cb11-72"><a href="#cb11-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-73"><a href="#cb11-73" aria-hidden="true" tabindex="-1"></a>mixed_unstructured <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({</span>
+<span id="cb11-74"><a href="#cb11-74" aria-hidden="true" tabindex="-1"></a>  nlme<span class="sc">::</span><span class="fu">lme</span>(</span>
+<span id="cb11-75"><a href="#cb11-75" aria-hidden="true" tabindex="-1"></a>    dbp <span class="sc">~</span> tx <span class="sc">*</span> visit,</span>
+<span id="cb11-76"><a href="#cb11-76" aria-hidden="true" tabindex="-1"></a>    <span class="at">random =</span> <span class="sc">~</span> <span class="dv">1</span> <span class="sc">|</span> patient,</span>
+<span id="cb11-77"><a href="#cb11-77" aria-hidden="true" tabindex="-1"></a>    <span class="at">correlation =</span> <span class="fu">corSymm</span>(<span class="at">form =</span> <span class="sc">~</span> visit <span class="sc">|</span> patient),</span>
+<span id="cb11-78"><a href="#cb11-78" aria-hidden="true" tabindex="-1"></a>    <span class="at">weights =</span> <span class="fu">varIdent</span>(<span class="at">form =</span> <span class="sc">~</span> <span class="dv">1</span> <span class="sc">|</span> visit),</span>
+<span id="cb11-79"><a href="#cb11-79" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> reshape_long_complete,</span>
+<span id="cb11-80"><a href="#cb11-80" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"REML"</span>,</span>
+<span id="cb11-81"><a href="#cb11-81" aria-hidden="true" tabindex="-1"></a>    <span class="at">na.action =</span> na.omit,</span>
+<span id="cb11-82"><a href="#cb11-82" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">lmeControl</span>(<span class="at">msVerbose =</span> <span class="cn">FALSE</span>, <span class="at">opt =</span> <span class="st">"optim"</span>)</span>
+<span id="cb11-83"><a href="#cb11-83" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-84"><a href="#cb11-84" aria-hidden="true" tabindex="-1"></a>}, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb11-85"><a href="#cb11-85" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">"lme() model failed: "</span>, <span class="fu">conditionMessage</span>(e))</span>
+<span id="cb11-86"><a href="#cb11-86" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NULL</span></span>
+<span id="cb11-87"><a href="#cb11-87" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb11-88"><a href="#cb11-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-89"><a href="#cb11-89" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb11-90"><a href="#cb11-90" aria-hidden="true" tabindex="-1"></a>  <span class="at">manova_all =</span> <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(manova_all)) {</span>
+<span id="cb11-91"><a href="#cb11-91" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tryCatch</span>(</span>
+<span id="cb11-92"><a href="#cb11-92" aria-hidden="true" tabindex="-1"></a>      <span class="fu">summary</span>(manova_all),</span>
+<span id="cb11-93"><a href="#cb11-93" aria-hidden="true" tabindex="-1"></a>      <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb11-94"><a href="#cb11-94" aria-hidden="true" tabindex="-1"></a>        <span class="fu">warning</span>(<span class="st">"MANOVA summary failed: "</span>, <span class="fu">conditionMessage</span>(e))</span>
+<span id="cb11-95"><a href="#cb11-95" aria-hidden="true" tabindex="-1"></a>        <span class="fu">paste</span>(<span class="st">"MANOVA model fitted but summary failed:"</span>, <span class="fu">conditionMessage</span>(e))</span>
+<span id="cb11-96"><a href="#cb11-96" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb11-97"><a href="#cb11-97" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb11-98"><a href="#cb11-98" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb11-99"><a href="#cb11-99" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Not available"</span></span>
+<span id="cb11-100"><a href="#cb11-100" aria-hidden="true" tabindex="-1"></a>  },</span>
+<span id="cb11-101"><a href="#cb11-101" aria-hidden="true" tabindex="-1"></a>  <span class="at">manova_3_6 =</span> <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(manova_3_6)) {</span>
+<span id="cb11-102"><a href="#cb11-102" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tryCatch</span>(</span>
+<span id="cb11-103"><a href="#cb11-103" aria-hidden="true" tabindex="-1"></a>      <span class="fu">summary</span>(manova_3_6),</span>
+<span id="cb11-104"><a href="#cb11-104" aria-hidden="true" tabindex="-1"></a>      <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb11-105"><a href="#cb11-105" aria-hidden="true" tabindex="-1"></a>        <span class="fu">warning</span>(<span class="st">"MANOVA 3-6 summary failed: "</span>, <span class="fu">conditionMessage</span>(e))</span>
+<span id="cb11-106"><a href="#cb11-106" aria-hidden="true" tabindex="-1"></a>        <span class="fu">paste</span>(<span class="st">"MANOVA model fitted but summary failed:"</span>, <span class="fu">conditionMessage</span>(e))</span>
+<span id="cb11-107"><a href="#cb11-107" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb11-108"><a href="#cb11-108" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb11-109"><a href="#cb11-109" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb11-110"><a href="#cb11-110" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Not available"</span></span>
+<span id="cb11-111"><a href="#cb11-111" aria-hidden="true" tabindex="-1"></a>  },</span>
+<span id="cb11-112"><a href="#cb11-112" aria-hidden="true" tabindex="-1"></a>  <span class="at">mixed_random_intercept =</span> <span class="fu">tidy</span>(mixed_random_intercept, <span class="at">effects =</span> <span class="st">"fixed"</span>),</span>
+<span id="cb11-113"><a href="#cb11-113" aria-hidden="true" tabindex="-1"></a>  <span class="at">mixed_unstructured =</span> <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(mixed_unstructured)) <span class="fu">summary</span>(mixed_unstructured) <span class="cf">else</span> <span class="st">"Not available (model failed)"</span></span>
+<span id="cb11-114"><a href="#cb11-114" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$manova_all
+[1] "MANOVA model fitted but summary failed: residuals have rank 4 &lt; 5"
+
+$manova_3_6
+           Df   Pillai approx F num Df den Df Pr(&gt;F)  
+tx          2 0.056599   1.8275      8    502 0.0697 .
+Residuals 253                                         
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+$mixed_random_intercept
+# A tibble: 6 × 5
+  effect term               estimate std.error statistic
+  &lt;chr&gt;  &lt;chr&gt;                 &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 fixed  (Intercept)          98.3       1.55     63.6  
+2 fixed  txNifedipine         -2.58      2.17     -1.19 
+3 fixed  txAtenolol           -3.31      2.14     -1.55 
+4 fixed  visit                -1.29      0.295    -4.38 
+5 fixed  txNifedipine:visit    0.256     0.414     0.617
+6 fixed  txAtenolol:visit      0.156     0.407     0.382
+
+$mixed_unstructured
+[1] "Not available (model failed)"</code></pre>
+</div>
+</div>
+</section>
+<section id="example-23.5-mixed-models-with-correlation-structures" class="level2" data-number="19.8">
+<h2 data-number="19.8" class="anchored" data-anchor-id="example-23.5-mixed-models-with-correlation-structures"><span class="header-section-number">19.8</span> Example 23.5: Mixed Models with Correlation Structures</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section tries different ways to model correlations between visits. Think of it like trying different patterns for how measurements relate over time:</p>
+<ol type="1">
+<li><strong>AR1 (autoregressive)</strong>: Assumes visits closer together are more correlated (like “today’s blood pressure is more related to yesterday’s than last week’s”)</li>
+<li><strong>Unstructured</strong>: Allows any correlation pattern</li>
+<li><strong>Comparing models</strong>: Seeing which correlation structure fits best</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re trying different ways to model how measurements at different visits are related. AR1 assumes closer visits are more related. Unstructured allows any pattern. We pick the one that fits best.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>bp_full <span class="ot">&lt;-</span> bp <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">week =</span> <span class="fu">if_else</span>(visit <span class="sc">==</span> <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">2</span> <span class="sc">*</span> (visit <span class="sc">-</span> <span class="dv">2</span>))</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>random_intercept <span class="ot">&lt;-</span> <span class="fu">lmer</span>(dbp <span class="sc">~</span> tx <span class="sc">+</span> visit <span class="sc">+</span> dbp1 <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> centre) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> patient), <span class="at">data =</span> bp_full)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>ar1_model <span class="ot">&lt;-</span> nlme<span class="sc">::</span><span class="fu">lme</span>(</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  dbp <span class="sc">~</span> tx <span class="sc">+</span> visit <span class="sc">+</span> dbp1,</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">random =</span> <span class="sc">~</span> <span class="dv">1</span> <span class="sc">|</span> patient,</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">correlation =</span> <span class="fu">corAR1</span>(<span class="at">form =</span> <span class="sc">~</span> visit <span class="sc">|</span> patient),</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> bp_full</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>toeplitz_model <span class="ot">&lt;-</span> nlme<span class="sc">::</span><span class="fu">lme</span>(</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  dbp <span class="sc">~</span> tx <span class="sc">+</span> visit <span class="sc">+</span> dbp1,</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">random =</span> <span class="sc">~</span> <span class="dv">1</span> <span class="sc">|</span> patient,</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">correlation =</span> <span class="fu">corARMA</span>(<span class="at">p =</span> <span class="dv">1</span>, <span class="at">q =</span> <span class="dv">1</span>, <span class="at">form =</span> <span class="sc">~</span> visit <span class="sc">|</span> patient),</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> bp_full</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">random_intercept =</span> <span class="fu">tidy</span>(random_intercept, <span class="at">effects =</span> <span class="st">"fixed"</span>),</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">ar1 =</span> <span class="fu">summary</span>(ar1_model),</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">toeplitz =</span> <span class="fu">summary</span>(toeplitz_model)</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$random_intercept
+# A tibble: 5 × 5
+  effect term         estimate std.error statistic
+  &lt;chr&gt;  &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 fixed  (Intercept)    49.6      8.94        5.55
+2 fixed  txNifedipine   -1.25     0.975      -1.28
+3 fixed  txAtenolol     -3.01     0.965      -3.11
+4 fixed  visit          -1.10     0.165      -6.67
+5 fixed  dbp1            0.474    0.0859      5.52
+
+$ar1
+Linear mixed-effects model fit by REML
+  Data: bp_full 
+       AIC      BIC    logLik
+  7492.637 7532.567 -3738.319
+
+Random effects:
+ Formula: ~1 | patient
+        (Intercept) Residual
+StdDev:    5.946938 6.401583
+
+Correlation Structure: ARMA(1,0)
+ Formula: ~visit | patient 
+ Parameter estimate(s):
+    Phi1 
+0.194056 
+Fixed effects:  dbp ~ tx + visit + dbp1 
+                Value Std.Error  DF   t-value p-value
+(Intercept)  48.00323  9.081268 803  5.285962  0.0000
+txNifedipine -1.20702  1.023122 284 -1.179745  0.2391
+txAtenolol   -3.00761  1.013349 284 -2.967995  0.0033
+visit        -1.08714  0.180420 803 -6.025606  0.0000
+dbp1          0.48287  0.087450 284  5.521681  0.0000
+ Correlation: 
+             (Intr) txNfdp txAtnl visit 
+txNifedipine -0.117                     
+txAtenolol   -0.047  0.489              
+visit        -0.096 -0.011 -0.020       
+dbp1         -0.993  0.064 -0.006  0.010
+
+Standardized Within-Group Residuals:
+        Min          Q1         Med          Q3         Max 
+-4.01965012 -0.54532775 -0.02808366  0.50677584  3.68226053 
+
+Number of Observations: 1092
+Number of Groups: 288 
+
+$toeplitz
+Linear mixed-effects model fit by REML
+  Data: bp_full 
+       AIC      BIC    logLik
+  7494.605 7539.525 -3738.302
+
+Random effects:
+ Formula: ~1 | patient
+        (Intercept) Residual
+StdDev:    5.881125 6.461587
+
+Correlation Structure: ARMA(1,1)
+ Formula: ~visit | patient 
+ Parameter estimate(s):
+       Phi1      Theta1 
+ 0.28352257 -0.07768212 
+Fixed effects:  dbp ~ tx + visit + dbp1 
+                Value Std.Error  DF   t-value p-value
+(Intercept)  48.04735  9.080071 803  5.291517  0.0000
+txNifedipine -1.20500  1.022957 284 -1.177954  0.2398
+txAtenolol   -3.00668  1.013181 284 -2.967568  0.0033
+visit        -1.08810  0.180980 803 -6.012258  0.0000
+dbp1          0.48248  0.087436 284  5.518126  0.0000
+ Correlation: 
+             (Intr) txNfdp txAtnl visit 
+txNifedipine -0.117                     
+txAtenolol   -0.047  0.489              
+visit        -0.097 -0.011 -0.020       
+dbp1         -0.993  0.064 -0.006  0.010
+
+Standardized Within-Group Residuals:
+        Min          Q1         Med          Q3         Max 
+-3.98968920 -0.53045796 -0.02365349  0.49371680  3.71434711 
+
+Number of Observations: 1092
+Number of Groups: 288 </code></pre>
+</div>
+</div>
+</section>
+<section id="example-23.6-trend-models-with-random-slopes" class="level2" data-number="19.9">
+<h2 data-number="19.9" class="anchored" data-anchor-id="example-23.6-trend-models-with-random-slopes"><span class="header-section-number">19.9</span> Example 23.6: Trend Models with Random Slopes</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section allows each person to have their own trend over time. Think of it like recognizing that people change at different rates:</p>
+<ol type="1">
+<li><strong>Random slopes</strong>: Allows each person’s change over time to differ (like “some people’s blood pressure drops fast, others slowly”)</li>
+<li><strong>Trend modeling</strong>: Models how outcomes change over time</li>
+<li><strong>AR1 correlation</strong>: Accounts for correlations between visits while allowing individual trends</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re allowing each person to have their own rate of change over time. Some people might improve quickly, others slowly. This model accounts for that individual variation.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>trend_data <span class="ot">&lt;-</span> bp_full <span class="sc">|&gt;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">visitc3 =</span> visit <span class="sc">-</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filter for complete cases</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">complete.cases</span>(dbp, tx, visit, dbp1, visitc3, patient, centre))</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>trend_model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  dbp <span class="sc">~</span> tx <span class="sc">+</span> visit <span class="sc">+</span> dbp1 <span class="sc">+</span> (visitc3 <span class="sc">|</span> patient) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> centre),</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> trend_data</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Robust optimization controls for lme()</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>lme_control <span class="ot">&lt;-</span> <span class="fu">lmeControl</span>(</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">maxIter =</span> <span class="dv">200</span>,</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">msMaxIter =</span> <span class="dv">200</span>,</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">tolerance =</span> <span class="fl">1e-6</span>,</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">msTol =</span> <span class="fl">1e-6</span>,</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">opt =</span> <span class="st">"optim"</span>,</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">optimMethod =</span> <span class="st">"BFGS"</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>trend_model_ar1 <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>  nlme<span class="sc">::</span><span class="fu">lme</span>(</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>    dbp <span class="sc">~</span> tx <span class="sc">+</span> visit <span class="sc">+</span> dbp1,</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">random =</span> <span class="sc">~</span> visitc3 <span class="sc">|</span> patient,</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">correlation =</span> <span class="fu">corAR1</span>(<span class="at">form =</span> <span class="sc">~</span> visit <span class="sc">|</span> patient),</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> trend_data,</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"REML"</span>,</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">na.action =</span> na.omit,</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> lme_control</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>}, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Try with simpler optimizer if first attempt fails</span></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">"First lme() attempt failed: "</span>, <span class="fu">conditionMessage</span>(e), <span class="st">". Trying alternative optimizer."</span>)</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tryCatch</span>({</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>    nlme<span class="sc">::</span><span class="fu">lme</span>(</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>      dbp <span class="sc">~</span> tx <span class="sc">+</span> visit <span class="sc">+</span> dbp1,</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>      <span class="at">random =</span> <span class="sc">~</span> visitc3 <span class="sc">|</span> patient,</span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>      <span class="at">correlation =</span> <span class="fu">corAR1</span>(<span class="at">form =</span> <span class="sc">~</span> visit <span class="sc">|</span> patient),</span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">data =</span> trend_data,</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>      <span class="at">method =</span> <span class="st">"REML"</span>,</span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>      <span class="at">na.action =</span> na.omit,</span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>      <span class="at">control =</span> <span class="fu">lmeControl</span>(<span class="at">opt =</span> <span class="st">"optim"</span>, <span class="at">optimMethod =</span> <span class="st">"L-BFGS-B"</span>)</span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">error =</span> <span class="cf">function</span>(e2) {</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>    <span class="fu">warning</span>(<span class="st">"lme() model failed with all optimizers: "</span>, <span class="fu">conditionMessage</span>(e2))</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>    <span class="cn">NULL</span></span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a>  <span class="at">lmer_model =</span> <span class="fu">tidy</span>(trend_model, <span class="at">effects =</span> <span class="st">"fixed"</span>),</span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>  <span class="at">lme_ar1_model =</span> <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(trend_model_ar1)) <span class="fu">summary</span>(trend_model_ar1) <span class="cf">else</span> <span class="st">"Model failed to converge"</span></span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$lmer_model
+# A tibble: 5 × 5
+  effect term         estimate std.error statistic
+  &lt;chr&gt;  &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 fixed  (Intercept)    49.1      8.95        5.49
+2 fixed  txNifedipine   -1.27     0.977      -1.30
+3 fixed  txAtenolol     -3.03     0.966      -3.13
+4 fixed  visit          -1.09     0.180      -6.09
+5 fixed  dbp1            0.479    0.0860      5.57
+
+$lme_ar1_model
+Linear mixed-effects model fit by REML
+  Data: trend_data 
+       AIC      BIC    logLik
+  7496.614 7546.526 -3738.307
+
+Random effects:
+ Formula: ~visitc3 | patient
+ Structure: General positive-definite, Log-Cholesky parametrization
+            StdDev    Corr  
+(Intercept) 5.9555786 (Intr)
+visitc3     0.2402104 -0.025
+Residual    6.3859462       
+
+Correlation Structure: ARMA(1,0)
+ Formula: ~visit | patient 
+ Parameter estimate(s):
+     Phi1 
+0.1909244 
+Fixed effects:  dbp ~ tx + visit + dbp1 
+                Value Std.Error  DF   t-value p-value
+(Intercept)  47.94275  9.080338 803  5.279842  0.0000
+txNifedipine -1.20885  1.023048 284 -1.181618  0.2383
+txAtenolol   -3.00945  1.013295 284 -2.969963  0.0032
+visit        -1.08721  0.180553 803 -6.021532  0.0000
+dbp1          0.48347  0.087442 284  5.529092  0.0000
+ Correlation: 
+             (Intr) txNfdp txAtnl visit 
+txNifedipine -0.117                     
+txAtenolol   -0.047  0.489              
+visit        -0.096 -0.011 -0.020       
+dbp1         -0.993  0.064 -0.006  0.010
+
+Standardized Within-Group Residuals:
+        Min          Q1         Med          Q3         Max 
+-4.01598294 -0.54715563 -0.02560704  0.50533423  3.67379780 
+
+Number of Observations: 1092
+Number of Groups: 288 </code></pre>
+</div>
+</div>
+</section>
+<section id="example-23.7-glmms-for-high-blood-pressure" class="level2" data-number="19.10">
+<h2 data-number="19.10" class="anchored" data-anchor-id="example-23.7-glmms-for-high-blood-pressure"><span class="header-section-number">19.10</span> Example 23.7: GLMMs for High Blood Pressure</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section models binary outcomes (high blood pressure: yes/no) in repeated measures. Think of it like predicting whether someone has high blood pressure at each visit:</p>
+<ol type="1">
+<li><strong>Binary outcome</strong>: Converting continuous blood pressure into “high or not high”</li>
+<li><strong>GLMM</strong>: Generalized Linear Mixed Model - accounts for repeated measures and clustering</li>
+<li><strong>Lag effects</strong>: Including previous visit’s status as a predictor (like “if you had high BP last visit, are you more likely to have it this visit?”)</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re modeling whether people have high blood pressure at each visit, accounting for the fact that we measure the same people multiple times. We also check if having high BP at one visit predicts having it at the next.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>bp_binary <span class="ot">&lt;-</span> bp_full <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">highdbp =</span> <span class="fu">as.integer</span>(dbp <span class="sc">&gt;=</span> <span class="dv">90</span>),</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">lag_highdbp =</span> <span class="fu">ave</span>(highdbp, patient, <span class="at">FUN =</span> <span class="cf">function</span>(x) <span class="fu">c</span>(<span class="cn">NA</span>, <span class="fu">head</span>(x, <span class="sc">-</span><span class="dv">1</span>)))</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>random_intercept_glmm <span class="ot">&lt;-</span> <span class="fu">glmer</span>(</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  highdbp <span class="sc">~</span> tx <span class="sc">+</span> visit <span class="sc">+</span> dbp1 <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> centre) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> patient),</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> bp_binary,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>()</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>transitional_glmm <span class="ot">&lt;-</span> <span class="fu">glmer</span>(</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  highdbp <span class="sc">~</span> tx <span class="sc">+</span> visit <span class="sc">+</span> dbp1 <span class="sc">+</span> lag_highdbp <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> centre) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> patient),</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> bp_binary,</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>(),</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.action =</span> na.exclude</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>trend_glmm <span class="ot">&lt;-</span> <span class="fu">glmer</span>(</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>  highdbp <span class="sc">~</span> tx <span class="sc">+</span> visit <span class="sc">+</span> dbp1 <span class="sc">+</span> visitc3 <span class="sc">+</span> (visitc3 <span class="sc">|</span> patient) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> centre),</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> trend_data <span class="sc">|&gt;</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">highdbp =</span> <span class="fu">as.integer</span>(dbp <span class="sc">&gt;=</span> <span class="dv">90</span>)),</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>()</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">random_intercept =</span> <span class="fu">tidy</span>(random_intercept_glmm, <span class="at">effects =</span> <span class="st">"fixed"</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">transitional =</span> <span class="fu">tidy</span>(transitional_glmm, <span class="at">effects =</span> <span class="st">"fixed"</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">trend =</span> <span class="fu">tidy</span>(trend_glmm, <span class="at">effects =</span> <span class="st">"fixed"</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$random_intercept
+# A tibble: 5 × 8
+  effect term         estimate std.error statistic  p.value conf.low conf.high
+  &lt;chr&gt;  &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 fixed  (Intercept)    -9.32     2.84       -3.28 1.04e- 3 -14.9      -3.75  
+2 fixed  txNifedipine   -0.309    0.291      -1.06 2.89e- 1  -0.880     0.262 
+3 fixed  txAtenolol     -0.511    0.290      -1.76 7.80e- 2  -1.08      0.0573
+4 fixed  visit          -0.494    0.0746     -6.63 3.38e-11  -0.640    -0.348 
+5 fixed  dbp1            0.125    0.0277      4.49 6.96e- 6   0.0702    0.179 
+
+$transitional
+# A tibble: 6 × 8
+  effect term         estimate std.error statistic    p.value conf.low conf.high
+  &lt;chr&gt;  &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 fixed  (Intercept)   -5.97      2.26      -2.65  0.00810    -10.4      -1.55  
+2 fixed  txNifedipine  -0.0424    0.222     -0.191 0.849       -0.478     0.393 
+3 fixed  txAtenolol    -0.207     0.221     -0.934 0.350       -0.640     0.227 
+4 fixed  visit         -0.259     0.110     -2.35  0.0187      -0.475    -0.0431
+5 fixed  dbp1           0.0698    0.0230     3.03  0.00247      0.0246    0.115 
+6 fixed  lag_highdbp    1.20      0.248      4.83  0.00000138   0.711     1.68  
+
+$trend
+# A tibble: 5 × 8
+  effect term         estimate std.error statistic    p.value conf.low conf.high
+  &lt;chr&gt;  &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 fixed  (Intercept)   -11.2      2.96       -3.79 0.000152   -17.0     -5.40   
+2 fixed  txNifedipine   -0.445    0.298      -1.49 0.135       -1.03     0.139  
+3 fixed  txAtenolol     -0.579    0.294      -1.97 0.0487      -1.15    -0.00337
+4 fixed  visit          -0.396    0.0870     -4.55 0.00000549  -0.566   -0.225  
+5 fixed  dbp1            0.139    0.0288      4.81 0.00000148   0.0822   0.195  </code></pre>
+</div>
+</div>
+</section>
+<section id="example-23.8-gee-analyses-for-diarrhoea-data" class="level2" data-number="19.11">
+<h2 data-number="19.11" class="anchored" data-anchor-id="example-23.8-gee-analyses-for-diarrhoea-data"><span class="header-section-number">19.11</span> Example 23.8: GEE Analyses for Diarrhoea Data</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section uses GEE (Generalized Estimating Equations) to analyze repeated measures binary data. Think of it like another way to account for repeated measures:</p>
+<ol type="1">
+<li><strong>GEE</strong>: A method that accounts for correlations between repeated measures</li>
+<li><strong>Population-averaged</strong>: Gives population-level estimates (like “on average, what’s the effect?”)</li>
+<li><strong>Correlation structures</strong>: Different ways to model how measurements are related over time</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re using GEE to analyze repeated measures diarrhea data. GEE is different from mixed models - it gives population-averaged estimates rather than subject-specific estimates. Both are valid, but answer slightly different questions.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>family_level <span class="ot">&lt;-</span> brazil_smpl <span class="sc">|&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">diarr_num =</span> <span class="fu">case_when</span>(</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as.character</span>(diarr) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Yes"</span>, <span class="st">"1"</span>, <span class="st">"yes"</span>, <span class="st">"TRUE"</span>) <span class="sc">~</span> <span class="dv">1</span>L,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as.character</span>(diarr) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"0"</span>, <span class="st">"no"</span>, <span class="st">"FALSE"</span>) <span class="sc">~</span> <span class="dv">0</span>L,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="cn">NA_integer_</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(mun, comm, fam) <span class="sc">|&gt;</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">famdiarr =</span> <span class="fu">max</span>(diarr_num, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">cistern =</span> <span class="fu">first</span>(cistern),</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">age5 =</span> <span class="fu">as.integer</span>(<span class="fu">mean</span>(age <span class="sc">&lt;=</span> <span class="dv">5</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">smsize =</span> <span class="fu">mean</span>((<span class="fu">as.numeric</span>(m_pop_families) <span class="sc">-</span> <span class="dv">2000</span>) <span class="sc">/</span> <span class="dv">1000</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove rows with missing values in key variables</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(famdiarr), <span class="sc">!</span><span class="fu">is.na</span>(cistern), <span class="sc">!</span><span class="fu">is.na</span>(age5), <span class="sc">!</span><span class="fu">is.na</span>(smsize)) <span class="sc">|&gt;</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Ensure id variables are numeric for geeglm</span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">mun =</span> <span class="fu">as.numeric</span>(<span class="fu">as.factor</span>(mun)),</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">comm =</span> <span class="fu">as.numeric</span>(<span class="fu">as.factor</span>(comm))</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Check cluster sizes and filter clusters with insufficient observations</span></span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a><span class="co"># GEE requires at least 2 observations per cluster to estimate correlation</span></span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a><span class="co"># For municipality-level clustering</span></span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>family_level_mun <span class="ot">&lt;-</span> family_level <span class="sc">|&gt;</span></span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(mun) <span class="sc">|&gt;</span></span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">n</span>() <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a><span class="co"># For community-level clustering  </span></span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a>family_level_comm <span class="ot">&lt;-</span> family_level <span class="sc">|&gt;</span></span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(comm) <span class="sc">|&gt;</span></span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">n</span>() <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit GEE models with error handling</span></span>
+<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Try full model first, fall back to simpler model if rank deficient</span></span>
+<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a>gee_mun <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({</span>
+<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geeglm</span>(famdiarr <span class="sc">~</span> cistern <span class="sc">+</span> age5 <span class="sc">+</span> smsize, <span class="at">data =</span> family_level_mun, </span>
+<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a>         <span class="at">id =</span> mun, <span class="at">family =</span> <span class="fu">binomial</span>(), <span class="at">corstr =</span> <span class="st">"exchangeable"</span>)</span>
+<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a>}, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a>  err_msg <span class="ot">&lt;-</span> <span class="fu">conditionMessage</span>(e)</span>
+<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">grepl</span>(<span class="st">"rank deficient"</span>, err_msg, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb19-47"><a href="#cb19-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If rank deficient, try with just cistern (matching original Stata example)</span></span>
+<span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geeglm</span>(famdiarr <span class="sc">~</span> cistern, <span class="at">data =</span> family_level_mun, </span>
+<span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a>           <span class="at">id =</span> mun, <span class="at">family =</span> <span class="fu">binomial</span>(), <span class="at">corstr =</span> <span class="st">"exchangeable"</span>)</span>
+<span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(e)</span>
+<span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb19-53"><a href="#cb19-53" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  (Intercept) cisternYes age5 smsize
+1           1          1    0 -0.215
+2           1          0    0 -0.215
+3           1          1    0 -0.215
+4           1          0    0 -0.215
+5           1          1    0 -0.215
+6           1          0    0 -0.215</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>gee_comm <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geeglm</span>(famdiarr <span class="sc">~</span> cistern <span class="sc">+</span> age5 <span class="sc">+</span> smsize, <span class="at">data =</span> family_level_comm, </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">id =</span> comm, <span class="at">family =</span> <span class="fu">binomial</span>(), <span class="at">corstr =</span> <span class="st">"exchangeable"</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>}, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  err_msg <span class="ot">&lt;-</span> <span class="fu">conditionMessage</span>(e)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">grepl</span>(<span class="st">"rank deficient"</span>, err_msg, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If rank deficient, try with just cistern (matching original Stata example)</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geeglm</span>(famdiarr <span class="sc">~</span> cistern, <span class="at">data =</span> family_level_comm, </span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">id =</span> comm, <span class="at">family =</span> <span class="fu">binomial</span>(), <span class="at">corstr =</span> <span class="st">"exchangeable"</span>)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(e)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  (Intercept) cisternYes age5 smsize
+1           1          1    0 -0.215
+2           1          0    0 -0.215
+3           1          1    0 -0.215
+4           1          0    0 -0.215
+5           1          1    0 -0.215
+6           1          0    0 -0.215</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">gee_municipality =</span> <span class="fu">tidy</span>(gee_mun, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">gee_community =</span> <span class="fu">tidy</span>(gee_comm, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$gee_municipality
+# A tibble: 2 × 7
+  term        estimate std.error statistic p.value conf.low conf.high
+  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)    0.884     0.193     0.407 0.524      0.606     1.29 
+2 cisternYes     0.542     0.216     8.05  0.00455    0.355     0.828
+
+$gee_community
+# A tibble: 2 × 7
+  term        estimate std.error statistic p.value conf.low conf.high
+  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)    0.865     0.133      1.20 0.273      0.667     1.12 
+2 cisternYes     0.577     0.187      8.61 0.00335    0.400     0.833</code></pre>
+</div>
+</div>
+</section>
+<section id="references" class="level2" data-number="19.12">
+<h2 data-number="19.12" class="anchored" data-anchor-id="references"><span class="header-section-number">19.12</span> References</h2>
+<ol type="1">
+<li><p>Dohoo, I., Martin, W., &amp; Stryhn, H. Methods in Epidemiologic Research. University of Prince Edward Island, 2012. Available at: https://projects.upei.ca/mer/</p></li>
+<li><p>Kirkwood, B. R., &amp; Sterne, J. A. C. Essential Medical Statistics, 2nd Edition. Wiley-Blackwell, 2003. Available at: https://bcs.wiley.com/he-bcs/Books?action=index&amp;bcsId=11848&amp;itemId=0865428719</p></li>
+<li><p>Batra, N., et al.&nbsp;The Epidemiologist R Handbook. Applied Epi Incorporated, 2021. Available at: https://www.epirhandbook.com/en/</p></li>
+<li><p>Rothman KJ, Huybrechts KF, Murray EJ. Epidemiology. 3rd ed.&nbsp;Oxford University Press; 2024. ISBN: 9780197751541.</p></li>
+<li><p>Jordan RA, Celeste RK, Bernabe E, Schwendicke F. Big Data in Epidemiology: Brave New World? J Dent Res. 2024 Oct;103(11):1047-1050. doi: 10.1177/00220345241272034. Epub 2024 Oct 2. PMID: 39359106; PMCID: PMC11653310.</p></li>
+<li><p>Mazzella, A. R4SME: R for Statistical Methods in Epidemiology. GitHub repository. Available at: https://github.com/andreamazzella/R4SME</p></li>
+<li><p>Mazzella, A. R4ASME: R for Advanced Statistical Methods in Epidemiology. GitHub repository. Available at: https://github.com/andreamazzella/r4asme</p></li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./sme_r_chapter_17.html" class="pagination-link" aria-label="SME Chapter 17: Mixed Models for Discrete Data">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">SME Chapter 17: Mixed Models for Discrete Data</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./sme_r_chapter_19.html" class="pagination-link" aria-label="SME Chapter 19: Bayesian Analysis">
+        <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">SME Chapter 19: Bayesian Analysis</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

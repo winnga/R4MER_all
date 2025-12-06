@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Wingston Felix Ng’ambi1">
+<meta name="author" content="Cosmas Zyambo2">
+<meta name="author" content="Adamson Sinjani Muula3-5">
+
+<title>17&nbsp; SME Chapter 16: Multilevel and Mixed Models – Statistical methods in epidemiology: A step-by-step R tutorial</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./sme_r_chapter_17.html" rel="next">
+<link href="./sme_r_chapter_15.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-364982630eef5352dd1537128a8ed5cb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./sme_r_chapter_13.html">Count, Survival &amp; Clustered Data</a></li><li class="breadcrumb-item"><a href="./sme_r_chapter_16.html"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">SME Chapter 16: Multilevel and Mixed Models</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Statistical methods in epidemiology: A step-by-step R tutorial</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Statistical methods in epidemiology: A step-by-step R tutorial</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">SME Chapter 1: Introduction to R and Epidemiology</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">SME Chapter 2: AI in R Epidemiologic Computing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Sampling &amp; Basic Methods</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">SME Chapter 3: Sampling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">SME Chapter 4: Confidence Intervals and Standardization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">SME Chapter 5: Precision, Agreement, and Diagnostic Accuracy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">SME Chapter 6: Measures of Association</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Sensitivity &amp; Confounding</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">SME Chapter 7: Sensitivity Analyses for Bias</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">SME Chapter 8: Confounding and Propensity Scores</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Regression &amp; Model Building</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">SME Chapter 9: Linear Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">SME Chapter 10: Model Building</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">SME Chapter 11: Logistic Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">SME Chapter 12: Ordinal and Multinomial Logistic Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Count, Survival &amp; Clustered Data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">SME Chapter 13: Modelling Count Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_14.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">SME Chapter 14: Modelling Survival Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_15.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">SME Chapter 15: Introduction to Clustered Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_16.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">SME Chapter 16: Multilevel and Mixed Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_17.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">SME Chapter 17: Mixed Models for Discrete Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_18.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">SME Chapter 18: Repeated Measures Data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Bayesian, Spatial &amp; Meta-analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_19.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">SME Chapter 19: Bayesian Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_20.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">SME Chapter 20: Spatial Data Visualisation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_21.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">SME Chapter 21: Meta-analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_22.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">SME Chapter 22: Confounding Detection and Control</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#replication-notes" id="toc-replication-notes" class="nav-link active" data-scroll-target="#replication-notes"><span class="header-section-number">17.1</span> Replication Notes</a></li>
+  <li><a href="#theoretical-background" id="toc-theoretical-background" class="nav-link" data-scroll-target="#theoretical-background"><span class="header-section-number">17.2</span> Theoretical Background</a></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup"><span class="header-section-number">17.3</span> Setup</a></li>
+  <li><a href="#example-21.1-variance-components-and-icc" id="toc-example-21.1-variance-components-and-icc" class="nav-link" data-scroll-target="#example-21.1-variance-components-and-icc"><span class="header-section-number">17.4</span> Example 21.1: Variance Components and ICC</a></li>
+  <li><a href="#example-21.2-two-level-mixed-model-with-predictors" id="toc-example-21.2-two-level-mixed-model-with-predictors" class="nav-link" data-scroll-target="#example-21.2-two-level-mixed-model-with-predictors"><span class="header-section-number">17.5</span> Example 21.2: Two-Level Mixed Model with Predictors</a></li>
+  <li><a href="#figure-21.1-interaction-illustration" id="toc-figure-21.1-interaction-illustration" class="nav-link" data-scroll-target="#figure-21.1-interaction-illustration"><span class="header-section-number">17.6</span> Figure 21.1: Interaction Illustration</a></li>
+  <li><a href="#example-21.4-random-slopes-for-dbp1c" id="toc-example-21.4-random-slopes-for-dbp1c" class="nav-link" data-scroll-target="#example-21.4-random-slopes-for-dbp1c"><span class="header-section-number">17.7</span> Example 21.4: Random Slopes for <code>dbp1c</code></a></li>
+  <li><a href="#figure-21.2-variance-function-for-random-slopes-model" id="toc-figure-21.2-variance-function-for-random-slopes-model" class="nav-link" data-scroll-target="#figure-21.2-variance-function-for-random-slopes-model"><span class="header-section-number">17.8</span> Figure 21.2: Variance Function for Random Slopes Model</a></li>
+  <li><a href="#example-21.5-random-slopes-for-treatment" id="toc-example-21.5-random-slopes-for-treatment" class="nav-link" data-scroll-target="#example-21.5-random-slopes-for-treatment"><span class="header-section-number">17.9</span> Example 21.5: Random Slopes for Treatment</a></li>
+  <li><a href="#example-21.6-contextual-effects" id="toc-example-21.6-contextual-effects" class="nav-link" data-scroll-target="#example-21.6-contextual-effects"><span class="header-section-number">17.10</span> Example 21.6: Contextual Effects</a></li>
+  <li><a href="#example-21.7-inference-for-fixed-effects" id="toc-example-21.7-inference-for-fixed-effects" class="nav-link" data-scroll-target="#example-21.7-inference-for-fixed-effects"><span class="header-section-number">17.11</span> Example 21.7: Inference for Fixed Effects</a></li>
+  <li><a href="#example-21.8-inference-for-random-effects" id="toc-example-21.8-inference-for-random-effects" class="nav-link" data-scroll-target="#example-21.8-inference-for-random-effects"><span class="header-section-number">17.12</span> Example 21.8: Inference for Random Effects</a></li>
+  <li><a href="#example-21.9-residuals-and-diagnostics" id="toc-example-21.9-residuals-and-diagnostics" class="nav-link" data-scroll-target="#example-21.9-residuals-and-diagnostics"><span class="header-section-number">17.13</span> Example 21.9: Residuals and Diagnostics</a></li>
+  <li><a href="#example-21.10-boxcox-profile" id="toc-example-21.10-boxcox-profile" class="nav-link" data-scroll-target="#example-21.10-boxcox-profile"><span class="header-section-number">17.14</span> Example 21.10: Box–Cox Profile</a></li>
+  <li><a href="#section-21.5.7-hausman-test" id="toc-section-21.5.7-hausman-test" class="nav-link" data-scroll-target="#section-21.5.7-hausman-test"><span class="header-section-number">17.15</span> Section 21.5.7: Hausman Test</a></li>
+  <li><a href="#section-21.5.8-robust-standard-errors" id="toc-section-21.5.8-robust-standard-errors" class="nav-link" data-scroll-target="#section-21.5.8-robust-standard-errors"><span class="header-section-number">17.16</span> Section 21.5.8: Robust Standard Errors</a></li>
+  <li><a href="#example-21.11-heteroscedastic-variance-models" id="toc-example-21.11-heteroscedastic-variance-models" class="nav-link" data-scroll-target="#example-21.11-heteroscedastic-variance-models"><span class="header-section-number">17.17</span> Example 21.11: Heteroscedastic Variance Models</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">17.18</span> References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./sme_r_chapter_13.html">Count, Survival &amp; Clustered Data</a></li><li class="breadcrumb-item"><a href="./sme_r_chapter_16.html"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">SME Chapter 16: Multilevel and Mixed Models</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">SME Chapter 16: Multilevel and Mixed Models</span></h1>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Authors</div>
+  <div class="quarto-title-meta-heading">Affiliations</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Wingston Felix Ng’ambi<sup>1</sup> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Cosmas Zyambo<sup>2</sup> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Adamson Sinjani Muula<sup>3-5</sup> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This chapter reproduces and expands upon the analyses from the original Methods in Epidemiologic Research (MER) Chapter 21 (Dohoo, Martin, &amp; Stryhn, 2012) using R with data sourced from <code>../mer_data_stata/bp.dta</code>. The chapter covers multilevel and mixed-effects models - advanced methods for analyzing hierarchical data structures in epidemiology.</p>
+</div>
+</div>
+<section id="replication-notes" class="level2" data-number="17.1">
+<h2 data-number="17.1" class="anchored" data-anchor-id="replication-notes"><span class="header-section-number">17.1</span> Replication Notes</h2>
+<ul>
+<li><strong>Data dependencies:</strong> <code>../mer_data_stata/bp.dta</code>.</li>
+<li><strong>Required R packages:</strong> <code>dplyr</code>, <code>tidyr</code>, <code>tibble</code>, <code>haven</code>, <code>forcats</code>, <code>ggplot2</code>, <code>patchwork</code>, <code>lme4</code>, <code>lmerTest</code>, <code>broom.mixed</code>, <code>broom</code>, <code>emmeans</code>, <code>nlme</code>, <code>purrr</code>, <code>glue</code>.</li>
+<li><strong>Setup tips:</strong> Install via <code>install.packages(c("dplyr","tidyr","tibble","haven","forcats","ggplot2","patchwork","lme4","lmerTest","broom.mixed","broom","emmeans","nlme","purrr","glue"))</code>.</li>
+<li><strong>Execution:</strong> Run the notebook in order to regenerate all mixed models, diagnostic plots, and Box–Cox profile values.</li>
+</ul>
+</section>
+<section id="theoretical-background" class="level2" data-number="17.2">
+<h2 data-number="17.2" class="anchored" data-anchor-id="theoretical-background"><span class="header-section-number">17.2</span> Theoretical Background</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Understanding Mixed-Effects Models
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Before we build mixed models, let’s understand what they are and why we need them. Mixed-effects models are powerful tools for analyzing hierarchical data structures common in epidemiological research (Dohoo, Martin, &amp; Stryhn, 2012; Kirkwood &amp; Sterne, 2003):</p>
+<section id="what-are-mixed-effects-models" class="level3" data-number="17.2.1">
+<h3 data-number="17.2.1" class="anchored" data-anchor-id="what-are-mixed-effects-models"><span class="header-section-number">17.2.1</span> What are Mixed-Effects Models?</h3>
+<p><strong>Mixed-effects models</strong> (also called multilevel or hierarchical models) are designed for data with multiple levels of grouping. Like: - Level 1: Blood pressure measurements - Level 2: Patients (multiple measurements per patient) - Level 3: Clinics (multiple patients per clinic)</p>
+<p><strong>The “mixed” part</strong>: They have both <strong>fixed effects</strong> (things we’re interested in, like treatment) and <strong>random effects</strong> (things we want to account for but aren’t directly interested in, like which clinic).</p>
+</section>
+<section id="fixed-vs-random-effects" class="level3" data-number="17.2.2">
+<h3 data-number="17.2.2" class="anchored" data-anchor-id="fixed-vs-random-effects"><span class="header-section-number">17.2.2</span> Fixed vs Random Effects</h3>
+<p><strong>Fixed effects</strong>: Things we want to estimate and interpret. Like: - Treatment effect - Age effect - Baseline blood pressure effect</p>
+<p><strong>Random effects</strong>: Things we want to account for but treat as a sample from a population. Like: - Clinic effects (each clinic has its own baseline, but we’re not interested in specific clinics) - Patient effects (each patient has their own baseline)</p>
+<p><strong>Think of it like</strong>: Fixed effects are the “signal” we care about. Random effects are the “noise” we need to account for.</p>
+</section>
+<section id="why-mixed-models" class="level3" data-number="17.2.3">
+<h3 data-number="17.2.3" class="anchored" data-anchor-id="why-mixed-models"><span class="header-section-number">17.2.3</span> Why Mixed Models?</h3>
+</section>
+<section id="accounting-for-clustering" class="level3" data-number="17.2.4">
+<h3 data-number="17.2.4" class="anchored" data-anchor-id="accounting-for-clustering"><span class="header-section-number">17.2.4</span> 1. Accounting for Clustering</h3>
+<p>Mixed models account for the fact that observations within the same group are similar. This gives correct standard errors and p-values.</p>
+</section>
+<section id="modeling-hierarchical-structure" class="level3" data-number="17.2.5">
+<h3 data-number="17.2.5" class="anchored" data-anchor-id="modeling-hierarchical-structure"><span class="header-section-number">17.2.5</span> 2. Modeling Hierarchical Structure</h3>
+<p>They let us model data that has natural hierarchies - like students in classes in schools. Each level can have its own effects.</p>
+</section>
+<section id="random-intercepts-and-slopes" class="level3" data-number="17.2.6">
+<h3 data-number="17.2.6" class="anchored" data-anchor-id="random-intercepts-and-slopes"><span class="header-section-number">17.2.6</span> 3. Random Intercepts and Slopes</h3>
+<p><strong>Random intercepts</strong>: Allow each group to have its own baseline level. Like each clinic having its own average blood pressure.</p>
+<p><strong>Random slopes</strong>: Allow each group to have its own relationship. Like each clinic having a different treatment effect.</p>
+</section>
+<section id="key-concepts" class="level3" data-number="17.2.7">
+<h3 data-number="17.2.7" class="anchored" data-anchor-id="key-concepts"><span class="header-section-number">17.2.7</span> Key Concepts</h3>
+</section>
+<section id="variance-components" class="level3" data-number="17.2.8">
+<h3 data-number="17.2.8" class="anchored" data-anchor-id="variance-components"><span class="header-section-number">17.2.8</span> 1. Variance Components</h3>
+<p>Mixed models partition variance into: - <strong>Between-group variance</strong>: How much groups differ from each other - <strong>Within-group variance</strong>: How much individuals differ within groups</p>
+</section>
+<section id="intraclass-correlation-icc" class="level3" data-number="17.2.9">
+<h3 data-number="17.2.9" class="anchored" data-anchor-id="intraclass-correlation-icc"><span class="header-section-number">17.2.9</span> 2. Intraclass Correlation (ICC)</h3>
+<p><strong>ICC</strong> measures what proportion of variance is between groups: - <strong>High ICC</strong>: Most variation is between groups (groups are very different) - <strong>Low ICC</strong>: Most variation is within groups (groups are similar)</p>
+</section>
+<section id="contextual-effects" class="level3" data-number="17.2.10">
+<h3 data-number="17.2.10" class="anchored" data-anchor-id="contextual-effects"><span class="header-section-number">17.2.10</span> 3. Contextual Effects</h3>
+<p><strong>Contextual effects</strong> are when group-level characteristics matter beyond individual characteristics. Like: “Does being in a clinic with generally high blood pressure affect your outcome, beyond your own blood pressure?”</p>
+</section>
+<section id="model-building" class="level3" data-number="17.2.11">
+<h3 data-number="17.2.11" class="anchored" data-anchor-id="model-building"><span class="header-section-number">17.2.11</span> Model Building</h3>
+<p>We build models by: 1. Starting simple (random intercepts only) 2. Adding fixed effects (predictors we care about) 3. Adding random slopes (if relationships vary by group) 4. Comparing models (using AIC, BIC, likelihood ratio tests)</p>
+</section>
+<section id="assumptions" class="level3" data-number="17.2.12">
+<h3 data-number="17.2.12" class="anchored" data-anchor-id="assumptions"><span class="header-section-number">17.2.12</span> Assumptions</h3>
+<p>Mixed models assume: - <strong>Normality</strong>: Random effects and residuals are normally distributed - <strong>Independence</strong>: Observations are independent given the random effects - <strong>Linearity</strong>: Relationships are linear (on the appropriate scale)</p>
+</section>
+<section id="why-theyre-powerful" class="level3" data-number="17.2.13">
+<h3 data-number="17.2.13" class="anchored" data-anchor-id="why-theyre-powerful"><span class="header-section-number">17.2.13</span> Why They’re Powerful</h3>
+<p>Mixed models let us: - Get correct answers from clustered data - Model complex hierarchical structures - Understand both individual and group effects - Make predictions at different levels</p>
+<p><strong>In simple terms</strong>: Mixed-effects models are for data with multiple levels (like measurements within patients within clinics). They have fixed effects (things we care about) and random effects (things we account for). They let us model complex structures and get correct answers from clustered data. They’re essential when your data has natural groupings.</p>
+</section>
+</div>
+</div>
+</section>
+<section id="setup" class="level2" data-number="17.3">
+<h2 data-number="17.3" class="anchored" data-anchor-id="setup"><span class="header-section-number">17.3</span> Setup</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section prepares for multilevel and mixed-effects modeling - analyzing data with multiple levels of grouping. Think of it like analyzing data that has layers:</p>
+<ol type="1">
+<li><strong>Loading libraries</strong>: Getting tools for mixed-effects models</li>
+<li><strong>Reading data</strong>: Opening blood pressure data with multiple visits per patient, patients within centers</li>
+<li><strong>Data preparation</strong>: Organizing data for multilevel analysis</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re preparing to analyze data that has multiple levels - like blood pressure measurements (level 1) within patients (level 2) within centers (level 3). Mixed-effects models let us account for all these levels simultaneously.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forcats)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmerTest)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom.mixed)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nlme)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glue)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_minimal</span>())</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>data_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">".."</span>, <span class="st">"mer_data_stata"</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>bp <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="fu">file.path</span>(data_dir, <span class="st">"bp.dta"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">where</span>(haven<span class="sc">::</span>is.labelled), haven<span class="sc">::</span>as_factor),</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">tx =</span> <span class="fu">factor</span>(tx),</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">centre =</span> <span class="fu">factor</span>(centre),</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">visit =</span> <span class="fu">as.integer</span>(visit)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>bp_visit3 <span class="ot">&lt;-</span> bp <span class="sc">|&gt;</span> <span class="fu">filter</span>(visit <span class="sc">==</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="example-21.1-variance-components-and-icc" class="level2" data-number="17.4">
+<h2 data-number="17.4" class="anchored" data-anchor-id="example-21.1-variance-components-and-icc"><span class="header-section-number">17.4</span> Example 21.1: Variance Components and ICC</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section calculates how much variation is between groups vs within groups. Think of it like measuring how similar people in the same group are:</p>
+<ol type="1">
+<li><strong>Variance components</strong>: Breaking down total variation into “between centers” and “within centers”</li>
+<li><strong>ICC (Intraclass Correlation Coefficient)</strong>: A number from 0 to 1 showing how much variation is between groups
+<ul>
+<li>ICC close to 1: Groups are very different, people within groups are very similar</li>
+<li>ICC close to 0: Groups are similar, most variation is within groups</li>
+</ul></li>
+<li><strong>Why it matters</strong>: High ICC means clustering is important and we must account for it</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re measuring how much clustering matters. If ICC is high, people in the same center are very similar, and we definitely need to account for clustering. If ICC is low, clustering matters less.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>null_model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(dbp <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> centre), <span class="at">data =</span> bp_visit3, <span class="at">REML =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>var_components <span class="ot">&lt;-</span> <span class="fu">VarCorr</span>(null_model)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>centre_var <span class="ot">&lt;-</span> <span class="fu">attr</span>(var_components<span class="sc">$</span>centre, <span class="st">"stddev"</span>)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>residual_var <span class="ot">&lt;-</span> <span class="fu">attr</span>(var_components, <span class="st">"sc"</span>)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>icc_ml <span class="ot">&lt;-</span> centre_var <span class="sc">/</span> (centre_var <span class="sc">+</span> residual_var)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>anova_model <span class="ot">&lt;-</span> <span class="fu">aov</span>(dbp <span class="sc">~</span> centre, <span class="at">data =</span> bp_visit3)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>ms_between <span class="ot">&lt;-</span> <span class="fu">summary</span>(anova_model)[[<span class="dv">1</span>]]<span class="sc">$</span><span class="st">`</span><span class="at">Mean Sq</span><span class="st">`</span>[<span class="dv">1</span>]</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>ms_within <span class="ot">&lt;-</span> <span class="fu">summary</span>(anova_model)[[<span class="dv">1</span>]]<span class="sc">$</span><span class="st">`</span><span class="at">Mean Sq</span><span class="st">`</span>[<span class="dv">2</span>]</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>cluster_size <span class="ot">&lt;-</span> bp_visit3 <span class="sc">|&gt;</span> <span class="fu">count</span>(centre) <span class="sc">|&gt;</span> <span class="fu">summarise</span>(<span class="at">mean_n =</span> <span class="fu">mean</span>(n)) <span class="sc">|&gt;</span> <span class="fu">pull</span>(mean_n)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>icc_approx <span class="ot">&lt;-</span> (ms_between <span class="sc">-</span> ms_within) <span class="sc">/</span> (ms_between <span class="sc">+</span> (cluster_size <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> ms_within)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">component =</span> <span class="fu">c</span>(<span class="st">"Between-centre variance"</span>, <span class="st">"Residual variance"</span>, <span class="st">"ML ICC"</span>, <span class="st">"Approximate ICC"</span>),</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">c</span>(centre_var, residual_var, icc_ml, icc_approx)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  component                 value
+  &lt;chr&gt;                     &lt;dbl&gt;
+1 Between-centre variance  3.43  
+2 Residual variance       81.4   
+3 ML ICC                   0.0404
+4 Approximate ICC          0.0342</code></pre>
+</div>
+</div>
+</section>
+<section id="example-21.2-two-level-mixed-model-with-predictors" class="level2" data-number="17.5">
+<h2 data-number="17.5" class="anchored" data-anchor-id="example-21.2-two-level-mixed-model-with-predictors"><span class="header-section-number">17.5</span> Example 21.2: Two-Level Mixed Model with Predictors</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section fits a mixed model with predictors. Think of it like building a model that accounts for both individual-level and group-level effects:</p>
+<ol type="1">
+<li><strong>Centering baseline</strong>: Adjusting initial blood pressure so the intercept is more meaningful</li>
+<li><strong>Fitting the model</strong>: Creating a model that predicts follow-up blood pressure from treatment and baseline, while accounting for clustering by centre</li>
+<li><strong>Interpreting results</strong>: Understanding how treatment and baseline affect the outcome</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re building a model to predict blood pressure at follow-up, accounting for the fact that patients are grouped within centres. The model tells us how much treatment affects blood pressure, accounting for initial blood pressure.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>bp_visit3 <span class="ot">&lt;-</span> bp_visit3 <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dbp1c =</span> dbp1 <span class="sc">-</span> <span class="fu">median</span>(dbp1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>model_21_2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(dbp <span class="sc">~</span> tx <span class="sc">+</span> dbp1c <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> centre), <span class="at">data =</span> bp_visit3, <span class="at">REML =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(model_21_2, <span class="at">effects =</span> <span class="st">"fixed"</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 9
+  effect term     estimate std.error statistic    df  p.value conf.low conf.high
+  &lt;chr&gt;  &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 fixed  (Interc…   94.4       0.936    101.    80.4 2.03e-86   92.5      96.3  
+2 fixed  txNifed…   -1.35      1.24      -1.08 267.  2.80e- 1   -3.79      1.10 
+3 fixed  txAteno…   -3.42      1.24      -2.77 267.  6.01e- 3   -5.86     -0.989
+4 fixed  dbp1c       0.558     0.107      5.21 283.  3.68e- 7    0.347     0.769</code></pre>
+</div>
+</div>
+</section>
+<section id="figure-21.1-interaction-illustration" class="level2" data-number="17.6">
+<h2 data-number="17.6" class="anchored" data-anchor-id="figure-21.1-interaction-illustration"><span class="header-section-number">17.6</span> Figure 21.1: Interaction Illustration</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section illustrates the difference between additive and interactive models. Think of it like comparing two ways relationships can work:</p>
+<ol type="1">
+<li><strong>Additive model</strong>: The effect of baseline blood pressure is the same across all centres (parallel lines)</li>
+<li><strong>Interactive model</strong>: The effect of baseline blood pressure differs by centre (lines with different slopes)</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re showing visually how models can differ. In an additive model, baseline blood pressure affects follow-up the same way everywhere. In an interactive model, the effect of baseline differs by centre.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>coefficients_additive <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">centre =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">15</span>, <span class="dv">11</span>, <span class="dv">36</span>)),</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">intercept =</span> <span class="fu">c</span>(<span class="fl">37.43</span>, <span class="fl">38.53</span>, <span class="fl">37.07</span>, <span class="fl">36.67</span>, <span class="fl">35.56</span>),</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">slope =</span> <span class="fl">0.558</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>coefficients_interactive <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">centre =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">15</span>, <span class="dv">11</span>, <span class="dv">36</span>)),</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">intercept =</span> <span class="fu">c</span>(<span class="fl">74.08</span>, <span class="sc">-</span><span class="fl">33.83</span>, <span class="fl">8.59</span>, <span class="fl">49.06</span>, <span class="fl">32.15</span>),</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">slope =</span> <span class="fu">c</span>(<span class="fl">0.200</span>, <span class="fl">1.257</span>, <span class="fl">0.837</span>, <span class="fl">0.450</span>, <span class="fl">0.593</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>x_grid <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">dbp1 =</span> <span class="fu">seq</span>(<span class="dv">90</span>, <span class="dv">120</span>, <span class="at">by =</span> <span class="dv">1</span>))</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>plot_lines <span class="ot">&lt;-</span> <span class="cf">function</span>(coefs_df, title) {</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  x_grid <span class="sc">|&gt;</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">crossing</span>(coefs_df) <span class="sc">|&gt;</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">dbp =</span> intercept <span class="sc">+</span> slope <span class="sc">*</span> dbp1) <span class="sc">|&gt;</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> dbp1, <span class="at">y =</span> dbp, <span class="at">colour =</span> centre)) <span class="sc">+</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Initial blood pressure"</span>, <span class="at">y =</span> <span class="st">"Follow-up blood pressure"</span>, <span class="at">colour =</span> <span class="st">"Centre"</span>, <span class="at">title =</span> title) <span class="sc">+</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>plot_additive <span class="ot">&lt;-</span> <span class="fu">plot_lines</span>(coefficients_additive, <span class="st">"Additive model"</span>)</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>plot_interactive <span class="ot">&lt;-</span> <span class="fu">plot_lines</span>(coefficients_interactive, <span class="st">"Interaction model"</span>)</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>plot_additive <span class="sc">+</span> plot_interactive</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="sme_r_chapter_16_files/figure-html/fig21-1-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Illustrative linear functions with and without interaction</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="example-21.4-random-slopes-for-dbp1c" class="level2" data-number="17.7">
+<h2 data-number="17.7" class="anchored" data-anchor-id="example-21.4-random-slopes-for-dbp1c"><span class="header-section-number">17.7</span> Example 21.4: Random Slopes for <code>dbp1c</code></h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section allows the effect of baseline blood pressure to vary by centre. Think of it like allowing each centre to have its own relationship:</p>
+<ul>
+<li><strong>Random intercepts</strong>: Each centre can have a different baseline level (like different starting points)</li>
+<li><strong>Random slopes</strong>: Each centre can have a different effect of baseline blood pressure (like different steepness of the line)</li>
+</ul>
+<p><strong>In simple terms</strong>: We’re allowing the relationship between initial and follow-up blood pressure to differ by centre. Some centres might show a stronger relationship than others.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>model_rs_dbp1c <span class="ot">&lt;-</span> <span class="fu">lmer</span>(dbp <span class="sc">~</span> tx <span class="sc">+</span> dbp1c <span class="sc">+</span> (dbp1c <span class="sc">|</span> centre), <span class="at">data =</span> bp_visit3, <span class="at">REML =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(model_rs_dbp1c, <span class="at">effects =</span> <span class="st">"fixed"</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 9
+  effect term     estimate std.error statistic    df  p.value conf.low conf.high
+  &lt;chr&gt;  &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 fixed  (Interc…   94.3       0.906    104.    73.7 9.20e-82   92.5      96.1  
+2 fixed  txNifed…   -1.32      1.21      -1.10 260.  2.74e- 1   -3.70      1.05 
+3 fixed  txAteno…   -3.57      1.21      -2.94 264.  3.55e- 3   -5.96     -1.18 
+4 fixed  dbp1c       0.537     0.156      3.44  21.1 2.46e- 3    0.212     0.861</code></pre>
+</div>
+</div>
+</section>
+<section id="figure-21.2-variance-function-for-random-slopes-model" class="level2" data-number="17.8">
+<h2 data-number="17.8" class="anchored" data-anchor-id="figure-21.2-variance-function-for-random-slopes-model"><span class="header-section-number">17.8</span> Figure 21.2: Variance Function for Random Slopes Model</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>variance_params <span class="ot">&lt;-</span> <span class="fu">VarCorr</span>(model_rs_dbp1c)<span class="sc">$</span>centre</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>sigma_intercept <span class="ot">&lt;-</span> variance_params[<span class="dv">1</span>, <span class="dv">1</span>]</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>sigma_slope <span class="ot">&lt;-</span> variance_params[<span class="dv">2</span>, <span class="dv">2</span>]</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>covariance <span class="ot">&lt;-</span> variance_params[<span class="dv">1</span>, <span class="dv">2</span>]</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>residual_variance <span class="ot">&lt;-</span> <span class="fu">attr</span>(<span class="fu">VarCorr</span>(model_rs_dbp1c), <span class="st">"sc"</span>)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>variance_grid <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">dbp1 =</span> <span class="fu">seq</span>(<span class="dv">90</span>, <span class="dv">120</span>, <span class="at">by =</span> <span class="dv">1</span>),</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">dbp1c =</span> dbp1 <span class="sc">-</span> <span class="fu">median</span>(bp_visit3<span class="sc">$</span>dbp1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_y =</span> sigma_intercept <span class="sc">+</span> dbp1c<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> sigma_slope <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> dbp1c <span class="sc">*</span> covariance <span class="sc">+</span> residual_variance</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(variance_grid, <span class="fu">aes</span>(<span class="at">x =</span> dbp1, <span class="at">y =</span> var_y)) <span class="sc">+</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Initial blood pressure"</span>, <span class="at">y =</span> <span class="st">"Var(Y)"</span>) <span class="sc">+</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="sme_r_chapter_16_files/figure-html/fig21-2-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Variance as a function of initial blood pressure</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="example-21.5-random-slopes-for-treatment" class="level2" data-number="17.9">
+<h2 data-number="17.9" class="anchored" data-anchor-id="example-21.5-random-slopes-for-treatment"><span class="header-section-number">17.9</span> Example 21.5: Random Slopes for Treatment</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section allows the treatment effect to vary by centre. Think of it like recognizing that treatment might work better in some centres than others:</p>
+<ul>
+<li><strong>Random treatment effects</strong>: The effect of treatment can differ by centre</li>
+<li><strong>Heterogeneity</strong>: Some centres might show a strong treatment effect, others might show a weak effect</li>
+</ul>
+<p><strong>In simple terms</strong>: We’re allowing treatment to have different effects in different centres. This accounts for the possibility that treatment effectiveness varies by location or centre characteristics.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>model_rs_tx <span class="ot">&lt;-</span> <span class="fu">lmer</span>(dbp <span class="sc">~</span> tx <span class="sc">+</span> dbp1c <span class="sc">+</span> (tx <span class="sc">|</span> centre), <span class="at">data =</span> bp_visit3, <span class="at">REML =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(model_rs_tx, <span class="at">effects =</span> <span class="st">"fixed"</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 9
+  effect term     estimate std.error statistic    df  p.value conf.low conf.high
+  &lt;chr&gt;  &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 fixed  (Interc…   94.3       0.976    96.6    14.8 3.48e-22   92.2      96.3  
+2 fixed  txNifed…   -1.23      1.52     -0.810  18.9 4.28e- 1   -4.40      1.95 
+3 fixed  txAteno…   -3.11      1.35     -2.29   16.1 3.57e- 2   -5.98     -0.234
+4 fixed  dbp1c       0.553     0.107     5.19  278.  4.04e- 7    0.343     0.763</code></pre>
+</div>
+</div>
+</section>
+<section id="example-21.6-contextual-effects" class="level2" data-number="17.10">
+<h2 data-number="17.10" class="anchored" data-anchor-id="example-21.6-contextual-effects"><span class="header-section-number">17.10</span> Example 21.6: Contextual Effects</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section examines contextual effects - when group-level characteristics matter beyond individual characteristics. Think of it like asking “does the average blood pressure in a centre matter, beyond your own blood pressure?”:</p>
+<ol type="1">
+<li><strong>Individual effect</strong>: How your own baseline blood pressure affects your follow-up</li>
+<li><strong>Contextual effect</strong>: How the average baseline blood pressure in your centre affects your follow-up</li>
+<li><strong>Group-mean centering</strong>: Separating individual effects from group effects</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re asking if being in a centre with generally high blood pressure affects your outcome, beyond your own blood pressure. This helps us understand if group characteristics matter.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>bp_visit3 <span class="ot">&lt;-</span> bp_visit3 <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(centre) <span class="sc">|&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">hdbp1c =</span> <span class="fu">mean</span>(dbp1c, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">zdbp1c =</span> dbp1c <span class="sc">-</span> hdbp1c</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>random_intercept_ctx <span class="ot">&lt;-</span> <span class="fu">lmer</span>(dbp <span class="sc">~</span> tx <span class="sc">+</span> dbp1c <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> centre), <span class="at">data =</span> bp_visit3, <span class="at">REML =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>contextual_model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(dbp <span class="sc">~</span> tx <span class="sc">+</span> dbp1c <span class="sc">+</span> hdbp1c <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> centre), <span class="at">data =</span> bp_visit3, <span class="at">REML =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>group_mean_centered <span class="ot">&lt;-</span> <span class="fu">lmer</span>(dbp <span class="sc">~</span> tx <span class="sc">+</span> zdbp1c <span class="sc">+</span> hdbp1c <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> centre), <span class="at">data =</span> bp_visit3, <span class="at">REML =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>contextual_random_slope <span class="ot">&lt;-</span> <span class="fu">lmer</span>(dbp <span class="sc">~</span> tx <span class="sc">+</span> dbp1c <span class="sc">+</span> hdbp1c <span class="sc">+</span> (dbp1c <span class="sc">|</span> centre), <span class="at">data =</span> bp_visit3, <span class="at">REML =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> <span class="fu">c</span>(<span class="st">"Random intercept"</span>, <span class="st">"Contextual"</span>, <span class="st">"Group-mean centered"</span>, <span class="st">"Contextual + random slope"</span>),</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">aic =</span> <span class="fu">c</span>(<span class="fu">AIC</span>(random_intercept_ctx), <span class="fu">AIC</span>(contextual_model), <span class="fu">AIC</span>(group_mean_centered), <span class="fu">AIC</span>(contextual_random_slope)),</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">bic =</span> <span class="fu">c</span>(<span class="fu">BIC</span>(random_intercept_ctx), <span class="fu">BIC</span>(contextual_model), <span class="fu">BIC</span>(group_mean_centered), <span class="fu">BIC</span>(contextual_random_slope))</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  model                       aic   bic
+  &lt;chr&gt;                     &lt;dbl&gt; &lt;dbl&gt;
+1 Random intercept          2062. 2084.
+2 Contextual                2063. 2089.
+3 Group-mean centered       2063. 2089.
+4 Contextual + random slope 2058. 2091.</code></pre>
+</div>
+</div>
+</section>
+<section id="example-21.7-inference-for-fixed-effects" class="level2" data-number="17.11">
+<h2 data-number="17.11" class="anchored" data-anchor-id="example-21.7-inference-for-fixed-effects"><span class="header-section-number">17.11</span> Example 21.7: Inference for Fixed Effects</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section tests whether fixed effects (like treatment) are statistically significant. Think of it like asking “is the treatment effect real, or could it be due to chance?”:</p>
+<ol type="1">
+<li><strong>ANOVA</strong>: Tests if the model with predictors is better than a model without</li>
+<li><strong>Pairwise comparisons</strong>: Compares treatment groups to see which is better</li>
+<li><strong>P-values</strong>: Tells us how confident we can be that the effect is real</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re testing whether treatment actually makes a difference. The p-value tells us how likely it is that we’d see this result by chance alone.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(model_21_2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Type III Analysis of Variance Table with Satterthwaite's method
+       Sum Sq Mean Sq NumDF  DenDF F value    Pr(&gt;F)    
+tx     572.36  286.18     2 267.58  3.8747   0.02194 *  
+dbp1c 2003.61 2003.61     1 282.58 27.1276 3.675e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(model_21_2, pairwise <span class="sc">~</span> tx, <span class="at">adjust =</span> <span class="st">"none"</span>)<span class="sc">$</span>contrasts <span class="sc">|&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 8
+  term  contrast           null.value estimate std.error    df statistic p.value
+  &lt;chr&gt; &lt;chr&gt;                   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+1 tx    Carvedilol - Nife…          0     1.35      1.24  268.      1.08 0.280  
+2 tx    Carvedilol - Aten…          0     3.42      1.24  268.      2.77 0.00603
+3 tx    Nifedipine - Aten…          0     2.08      1.26  270.      1.64 0.101  </code></pre>
+</div>
+</div>
+</section>
+<section id="example-21.8-inference-for-random-effects" class="level2" data-number="17.12">
+<h2 data-number="17.12" class="anchored" data-anchor-id="example-21.8-inference-for-random-effects"><span class="header-section-number">17.12</span> Example 21.8: Inference for Random Effects</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section compares models with and without random effects to see if clustering matters. Think of it like asking “do we need to account for clustering, or can we ignore it?”:</p>
+<ol type="1">
+<li><strong>One-level model</strong>: Ignores clustering (treats all observations as independent)</li>
+<li><strong>Random intercept model</strong>: Accounts for clustering (allows centres to differ)</li>
+<li><strong>Random slope models</strong>: Allows relationships to vary by centre</li>
+<li><strong>Model comparison</strong>: Uses AIC/BIC to see which model fits best</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re comparing different models to see if accounting for clustering improves our model. If AIC/BIC is lower, the model with random effects is better.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>one_level <span class="ot">&lt;-</span> <span class="fu">lm</span>(dbp <span class="sc">~</span> tx <span class="sc">+</span> dbp1c, <span class="at">data =</span> bp_visit3)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>rand_int <span class="ot">&lt;-</span> model_21_2</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>rand_slope_dbp1c <span class="ot">&lt;-</span> model_rs_dbp1c</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>rand_slope_tx <span class="ot">&lt;-</span> model_rs_tx</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Cannot use anova() to compare lm and lmer objects directly</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare using AIC/BIC instead</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>comparison_one_vs_rand <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> <span class="fu">c</span>(<span class="st">"One-level (lm)"</span>, <span class="st">"Random intercept (lmer)"</span>),</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">AIC =</span> <span class="fu">c</span>(<span class="fu">AIC</span>(one_level), <span class="fu">AIC</span>(rand_int)),</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">BIC =</span> <span class="fu">c</span>(<span class="fu">BIC</span>(one_level), <span class="fu">BIC</span>(rand_int))</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Can use anova() for lmer model comparisons</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>comparison_rand_models <span class="ot">&lt;-</span> <span class="fu">anova</span>(rand_int, rand_slope_dbp1c, rand_slope_tx)</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">one_level_vs_random_intercept =</span> comparison_one_vs_rand,</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">random_effects_comparison =</span> comparison_rand_models</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$one_level_vs_random_intercept
+# A tibble: 2 × 3
+  model                     AIC   BIC
+  &lt;chr&gt;                   &lt;dbl&gt; &lt;dbl&gt;
+1 One-level (lm)          2063. 2081.
+2 Random intercept (lmer) 2062. 2084.
+
+$random_effects_comparison
+Data: bp_visit3
+Models:
+rand_int: dbp ~ tx + dbp1c + (1 | centre)
+rand_slope_dbp1c: dbp ~ tx + dbp1c + (dbp1c | centre)
+rand_slope_tx: dbp ~ tx + dbp1c + (tx | centre)
+                 npar    AIC    BIC  logLik -2*log(L)  Chisq Df Pr(&gt;Chisq)  
+rand_int            6 2064.1 2086.1 -1026.1    2052.1                       
+rand_slope_dbp1c    8 2059.4 2088.7 -1021.7    2043.4 8.6802  2    0.01304 *
+rand_slope_tx      11 2072.6 2112.9 -1025.3    2050.6 0.0000  3    1.00000  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+</section>
+<section id="example-21.9-residuals-and-diagnostics" class="level2" data-number="17.13">
+<h2 data-number="17.13" class="anchored" data-anchor-id="example-21.9-residuals-and-diagnostics"><span class="header-section-number">17.13</span> Example 21.9: Residuals and Diagnostics</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section checks if our model assumptions are met. Think of it like checking if our model is working correctly:</p>
+<ol type="1">
+<li><strong>Residuals</strong>: The differences between observed and predicted values (like errors)</li>
+<li><strong>QQ plots</strong>: Check if residuals follow a normal distribution (like checking if errors are random)</li>
+<li><strong>Group-level diagnostics</strong>: Check if centre-level random effects are reasonable</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re checking if our model is valid. If residuals look random and normally distributed, our model is probably good. If not, we might need to fix something.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>bp_visit3 <span class="ot">&lt;-</span> bp_visit3 <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">resid_subject =</span> <span class="fu">residuals</span>(model_21_2),</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">pred_fixed =</span> <span class="fu">predict</span>(model_21_2, <span class="at">re.form =</span> <span class="cn">NA</span>),</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">pred_mixed =</span> <span class="fu">predict</span>(model_21_2)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>ranef_centre <span class="ot">&lt;-</span> <span class="fu">ranef</span>(model_21_2, <span class="at">condVar =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>centre <span class="sc">|&gt;</span> <span class="fu">rename</span>(<span class="at">resid_centre =</span> <span class="st">`</span><span class="at">(Intercept)</span><span class="st">`</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>centre_diag <span class="ot">&lt;-</span> ranef_centre <span class="sc">|&gt;</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>(<span class="st">"centre"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    bp_visit3 <span class="sc">|&gt;</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>(centre) <span class="sc">|&gt;</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">summarise</span>(<span class="at">pred_centre =</span> <span class="fu">mean</span>(pred_fixed), <span class="at">.groups =</span> <span class="st">"drop"</span>),</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"centre"</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>centre_diag <span class="sc">|&gt;</span></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> resid_centre)) <span class="sc">+</span></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Group-level residual QQ plot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="sme_r_chapter_16_files/figure-html/example21-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(centre_diag, <span class="fu">aes</span>(<span class="at">x =</span> pred_centre, <span class="at">y =</span> resid_centre)) <span class="sc">+</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Group-level fixed-effects prediction"</span>, <span class="at">y =</span> <span class="st">"Group-level residual"</span>) <span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="sme_r_chapter_16_files/figure-html/centre-residuals-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Group-level residuals versus fixed-effects predictions</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="example-21.10-boxcox-profile" class="level2" data-number="17.14">
+<h2 data-number="17.14" class="anchored" data-anchor-id="example-21.10-boxcox-profile"><span class="header-section-number">17.14</span> Example 21.10: Box–Cox Profile</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section finds the best transformation for the outcome variable. Think of it like trying different ways to measure something to find the one that works best:</p>
+<ol type="1">
+<li><strong>Box-Cox transformation</strong>: A family of transformations (like square root, log, etc.)</li>
+<li><strong>Profile likelihood</strong>: Tests many transformations to find the best one</li>
+<li><strong>Lambda parameter</strong>: Controls which transformation is used (lambda=1 means no transformation, lambda=0 means log)</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re trying different mathematical transformations of our outcome to see which one makes our model work best. Sometimes transforming the data (like taking the log) makes relationships clearer.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>lambda_values <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="fl">1.5</span>, <span class="fl">1.25</span>, <span class="dv">1</span>, <span class="fl">0.75</span>, <span class="fl">0.5</span>, <span class="fl">0.25</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>profile_results <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(lambda_values, <span class="cf">function</span>(lambda) {</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  transformed <span class="ot">&lt;-</span> <span class="cf">if</span> (lambda <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log</span>(bp_visit3<span class="sc">$</span>dbp)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    (bp_visit3<span class="sc">$</span>dbp<span class="sc">^</span>lambda <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> lambda</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  temp_data <span class="ot">&lt;-</span> bp_visit3 <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">y =</span> transformed)</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(y <span class="sc">~</span> tx <span class="sc">+</span> dbp1c <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> centre), <span class="at">data =</span> temp_data, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">lambda =</span> lambda, <span class="at">logLik =</span> <span class="fu">as.numeric</span>(<span class="fu">logLik</span>(model)))</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>profile_results <span class="sc">|&gt;</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> lambda, <span class="at">y =</span> logLik)) <span class="sc">+</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Lambda"</span>, <span class="at">y =</span> <span class="st">"Log-likelihood"</span>) <span class="sc">+</span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="sme_r_chapter_16_files/figure-html/example21-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="section-21.5.7-hausman-test" class="level2" data-number="17.15">
+<h2 data-number="17.15" class="anchored" data-anchor-id="section-21.5.7-hausman-test"><span class="header-section-number">17.15</span> Section 21.5.7: Hausman Test</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section compares fixed effects and random effects models. Think of it like asking “should we treat centres as fixed (each centre gets its own parameter) or random (centres are a sample from a population)?”:</p>
+<ul>
+<li><strong>Fixed effects</strong>: Each centre gets its own intercept (like having a separate parameter for each centre)</li>
+<li><strong>Random effects</strong>: Centres are treated as a random sample (like assuming centres come from a population)</li>
+<li><strong>Hausman test</strong>: Compares the two approaches to see if they give similar results</li>
+</ul>
+<p><strong>In simple terms</strong>: We’re comparing two ways to handle clustering. Fixed effects are more flexible but use more parameters. Random effects are more efficient but make stronger assumptions.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>fixed_xt <span class="ot">&lt;-</span> lme4<span class="sc">::</span><span class="fu">lmer</span>(dbp <span class="sc">~</span> tx <span class="sc">+</span> dbp1c <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> centre), <span class="at">data =</span> bp_visit3, <span class="at">REML =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>random_xt <span class="ot">&lt;-</span> <span class="fu">lmer</span>(dbp <span class="sc">~</span> tx <span class="sc">+</span> dbp1c <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> centre), <span class="at">data =</span> bp_visit3, <span class="at">REML =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: A direct Hausman test analogue requires panel-data utilities. Here we compare coefficients.</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>coeff_comparison <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">term =</span> <span class="fu">rownames</span>(<span class="fu">coef</span>(<span class="fu">summary</span>(fixed_xt))),</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">fixed_est =</span> <span class="fu">coef</span>(<span class="fu">summary</span>(fixed_xt))[, <span class="st">"Estimate"</span>],</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">random_est =</span> <span class="fu">coef</span>(<span class="fu">summary</span>(random_xt))[, <span class="st">"Estimate"</span>]</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>coeff_comparison</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  term         fixed_est random_est
+  &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt;
+1 (Intercept)     94.4       94.4  
+2 txNifedipine    -1.35      -1.35 
+3 txAtenolol      -3.42      -3.42 
+4 dbp1c            0.558      0.558</code></pre>
+</div>
+</div>
+</section>
+<section id="section-21.5.8-robust-standard-errors" class="level2" data-number="17.16">
+<h2 data-number="17.16" class="anchored" data-anchor-id="section-21.5.8-robust-standard-errors"><span class="header-section-number">17.16</span> Section 21.5.8: Robust Standard Errors</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section calculates standard errors that are robust to violations of assumptions. Think of it like using a more conservative estimate of uncertainty:</p>
+<ul>
+<li><strong>Robust standard errors</strong>: Standard errors that work even if some model assumptions are violated</li>
+<li><strong>More conservative</strong>: Usually larger than regular standard errors, making confidence intervals wider</li>
+<li><strong>Safer inference</strong>: Less likely to claim significance when there isn’t any</li>
+</ul>
+<p><strong>In simple terms</strong>: We’re calculating standard errors in a way that’s more reliable, even if our data doesn’t perfectly meet all assumptions. This makes our conclusions more trustworthy.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>model_gls <span class="ot">&lt;-</span> <span class="fu">lme</span>(</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  dbp <span class="sc">~</span> tx <span class="sc">+</span> dbp1c,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">random =</span> <span class="sc">~</span><span class="dv">1</span> <span class="sc">|</span> centre,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> bp_visit3,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"REML"</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract model summary and coefficients</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>model_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(model_gls)</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>robust_coef <span class="ot">&lt;-</span> model_summary<span class="sc">$</span>tTable</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="co"># For robust standard errors with nlme, we can use intervals() or extract from summary</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="co"># The summary already provides standard errors</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>tidy_result <span class="ot">&lt;-</span> <span class="fu">tidy</span>(model_gls)</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Also show the summary table</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">model_summary =</span> tidy_result,</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">coefficients_table =</span> <span class="fu">as.data.frame</span>(robust_coef)</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$model_summary
+# A tibble: 6 × 8
+  effect   group    term           estimate std.error    df statistic    p.value
+  &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+1 fixed    &lt;NA&gt;     (Intercept)      94.4       0.936   255    101.    1.91e-207
+2 fixed    &lt;NA&gt;     txNifedipine     -1.35      1.24    255     -1.08  2.80e-  1
+3 fixed    &lt;NA&gt;     txAtenolol       -3.42      1.24    255     -2.77  6.03e-  3
+4 fixed    &lt;NA&gt;     dbp1c             0.558     0.107   255      5.21  3.93e-  7
+5 ran_pars centre   sd_(Intercept)    1.49     NA        NA     NA    NA        
+6 ran_pars Residual sd_Observation    8.59     NA        NA     NA    NA        
+
+$coefficients_table
+                  Value Std.Error  DF    t-value       p-value
+(Intercept)  94.3933863 0.9364271 255 100.801637 1.908721e-207
+txNifedipine -1.3455185 1.2424476 255  -1.082958  2.798500e-01
+txAtenolol   -3.4235824 1.2363171 255  -2.769178  6.032581e-03
+dbp1c         0.5583035 0.1071926 255   5.208415  3.928036e-07</code></pre>
+</div>
+</div>
+</section>
+<section id="example-21.11-heteroscedastic-variance-models" class="level2" data-number="17.17">
+<h2 data-number="17.17" class="anchored" data-anchor-id="example-21.11-heteroscedastic-variance-models"><span class="header-section-number">17.17</span> Example 21.11: Heteroscedastic Variance Models</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section allows variance to differ across groups or values. Think of it like recognizing that some groups might be more variable than others:</p>
+<ul>
+<li><strong>Homoscedastic</strong>: Same variance everywhere (like all groups having similar spread)</li>
+<li><strong>Heteroscedastic</strong>: Different variance in different groups (like one group being more variable than another)</li>
+<li><strong>Variance functions</strong>: Models that allow variance to change based on predictors</li>
+</ul>
+<p><strong>In simple terms</strong>: We’re allowing the amount of variability to differ. For example, blood pressure might be more variable in some centres than others, and we want our model to account for that.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set control parameters for better convergence</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Increase max iterations and adjust tolerance</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Try different optimizers: "nlminb" (default) or "optim"</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>ctrl_nlminb <span class="ot">&lt;-</span> <span class="fu">lmeControl</span>(</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">maxIter =</span> <span class="dv">200</span>,</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">msMaxIter =</span> <span class="dv">200</span>,</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">tolerance =</span> <span class="fl">1e-5</span>,</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">niterEM =</span> <span class="dv">50</span>,</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">opt =</span> <span class="st">"nlminb"</span>,</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">msTol =</span> <span class="fl">1e-6</span>,</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">msVerbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>ctrl_optim <span class="ot">&lt;-</span> <span class="fu">lmeControl</span>(</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">maxIter =</span> <span class="dv">200</span>,</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">msMaxIter =</span> <span class="dv">200</span>,</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">tolerance =</span> <span class="fl">1e-5</span>,</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">niterEM =</span> <span class="dv">50</span>,</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">opt =</span> <span class="st">"optim"</span></span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit heteroscedastic models with error handling</span></span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Try nlminb first, then optim if that fails</span></span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>hetero_tx <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lme</span>(</span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>    dbp <span class="sc">~</span> tx <span class="sc">+</span> dbp1c,</span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">random =</span> <span class="sc">~</span><span class="dv">1</span> <span class="sc">|</span> centre,</span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">weights =</span> <span class="fu">varIdent</span>(<span class="at">form =</span> <span class="sc">~</span><span class="dv">1</span> <span class="sc">|</span> tx),</span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> bp_visit3,</span>
+<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"REML"</span>,</span>
+<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> ctrl_nlminb</span>
+<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a>}, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">"hetero_tx model failed with nlminb: "</span>, e<span class="sc">$</span>message, <span class="st">". Trying optim..."</span>)</span>
+<span id="cb27-35"><a href="#cb27-35" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Try with optim optimizer</span></span>
+<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tryCatch</span>({</span>
+<span id="cb27-37"><a href="#cb27-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lme</span>(</span>
+<span id="cb27-38"><a href="#cb27-38" aria-hidden="true" tabindex="-1"></a>      dbp <span class="sc">~</span> tx <span class="sc">+</span> dbp1c,</span>
+<span id="cb27-39"><a href="#cb27-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">random =</span> <span class="sc">~</span><span class="dv">1</span> <span class="sc">|</span> centre,</span>
+<span id="cb27-40"><a href="#cb27-40" aria-hidden="true" tabindex="-1"></a>      <span class="at">weights =</span> <span class="fu">varIdent</span>(<span class="at">form =</span> <span class="sc">~</span><span class="dv">1</span> <span class="sc">|</span> tx),</span>
+<span id="cb27-41"><a href="#cb27-41" aria-hidden="true" tabindex="-1"></a>      <span class="at">data =</span> bp_visit3,</span>
+<span id="cb27-42"><a href="#cb27-42" aria-hidden="true" tabindex="-1"></a>      <span class="at">method =</span> <span class="st">"REML"</span>,</span>
+<span id="cb27-43"><a href="#cb27-43" aria-hidden="true" tabindex="-1"></a>      <span class="at">control =</span> ctrl_optim</span>
+<span id="cb27-44"><a href="#cb27-44" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb27-45"><a href="#cb27-45" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">error =</span> <span class="cf">function</span>(e2) {</span>
+<span id="cb27-46"><a href="#cb27-46" aria-hidden="true" tabindex="-1"></a>    <span class="fu">warning</span>(<span class="st">"hetero_tx model failed even with optim: "</span>, e2<span class="sc">$</span>message)</span>
+<span id="cb27-47"><a href="#cb27-47" aria-hidden="true" tabindex="-1"></a>    <span class="cn">NULL</span></span>
+<span id="cb27-48"><a href="#cb27-48" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb27-49"><a href="#cb27-49" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb27-50"><a href="#cb27-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-51"><a href="#cb27-51" aria-hidden="true" tabindex="-1"></a>hetero_dbp1c <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({</span>
+<span id="cb27-52"><a href="#cb27-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lme</span>(</span>
+<span id="cb27-53"><a href="#cb27-53" aria-hidden="true" tabindex="-1"></a>    dbp <span class="sc">~</span> tx <span class="sc">+</span> dbp1c,</span>
+<span id="cb27-54"><a href="#cb27-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">random =</span> <span class="sc">~</span><span class="dv">1</span> <span class="sc">|</span> centre,</span>
+<span id="cb27-55"><a href="#cb27-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">weights =</span> <span class="fu">varPower</span>(<span class="at">form =</span> <span class="sc">~</span> dbp1c),</span>
+<span id="cb27-56"><a href="#cb27-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> bp_visit3,</span>
+<span id="cb27-57"><a href="#cb27-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"REML"</span>,</span>
+<span id="cb27-58"><a href="#cb27-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> ctrl_nlminb</span>
+<span id="cb27-59"><a href="#cb27-59" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-60"><a href="#cb27-60" aria-hidden="true" tabindex="-1"></a>}, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb27-61"><a href="#cb27-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">"hetero_dbp1c model failed with nlminb: "</span>, e<span class="sc">$</span>message, <span class="st">". Trying optim..."</span>)</span>
+<span id="cb27-62"><a href="#cb27-62" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Try with optim optimizer</span></span>
+<span id="cb27-63"><a href="#cb27-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tryCatch</span>({</span>
+<span id="cb27-64"><a href="#cb27-64" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lme</span>(</span>
+<span id="cb27-65"><a href="#cb27-65" aria-hidden="true" tabindex="-1"></a>      dbp <span class="sc">~</span> tx <span class="sc">+</span> dbp1c,</span>
+<span id="cb27-66"><a href="#cb27-66" aria-hidden="true" tabindex="-1"></a>      <span class="at">random =</span> <span class="sc">~</span><span class="dv">1</span> <span class="sc">|</span> centre,</span>
+<span id="cb27-67"><a href="#cb27-67" aria-hidden="true" tabindex="-1"></a>      <span class="at">weights =</span> <span class="fu">varPower</span>(<span class="at">form =</span> <span class="sc">~</span> dbp1c),</span>
+<span id="cb27-68"><a href="#cb27-68" aria-hidden="true" tabindex="-1"></a>      <span class="at">data =</span> bp_visit3,</span>
+<span id="cb27-69"><a href="#cb27-69" aria-hidden="true" tabindex="-1"></a>      <span class="at">method =</span> <span class="st">"REML"</span>,</span>
+<span id="cb27-70"><a href="#cb27-70" aria-hidden="true" tabindex="-1"></a>      <span class="at">control =</span> ctrl_optim</span>
+<span id="cb27-71"><a href="#cb27-71" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb27-72"><a href="#cb27-72" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">error =</span> <span class="cf">function</span>(e2) {</span>
+<span id="cb27-73"><a href="#cb27-73" aria-hidden="true" tabindex="-1"></a>    <span class="fu">warning</span>(<span class="st">"hetero_dbp1c model failed even with optim: "</span>, e2<span class="sc">$</span>message)</span>
+<span id="cb27-74"><a href="#cb27-74" aria-hidden="true" tabindex="-1"></a>    <span class="cn">NULL</span></span>
+<span id="cb27-75"><a href="#cb27-75" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb27-76"><a href="#cb27-76" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb27-77"><a href="#cb27-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-78"><a href="#cb27-78" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare comparison table</span></span>
+<span id="cb27-79"><a href="#cb27-79" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(hetero_tx) <span class="sc">&amp;&amp;</span> <span class="sc">!</span><span class="fu">is.null</span>(hetero_dbp1c)) {</span>
+<span id="cb27-80"><a href="#cb27-80" aria-hidden="true" tabindex="-1"></a>  comparison_tibble <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb27-81"><a href="#cb27-81" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> <span class="fu">c</span>(<span class="st">"Treatment-specific variance"</span>, <span class="st">"Power variance in dbp1c"</span>),</span>
+<span id="cb27-82"><a href="#cb27-82" aria-hidden="true" tabindex="-1"></a>    <span class="at">logLik =</span> <span class="fu">c</span>(<span class="fu">logLik</span>(hetero_tx), <span class="fu">logLik</span>(hetero_dbp1c)),</span>
+<span id="cb27-83"><a href="#cb27-83" aria-hidden="true" tabindex="-1"></a>    <span class="at">AIC =</span> <span class="fu">c</span>(<span class="fu">AIC</span>(hetero_tx), <span class="fu">AIC</span>(hetero_dbp1c))</span>
+<span id="cb27-84"><a href="#cb27-84" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-85"><a href="#cb27-85" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb27-86"><a href="#cb27-86" aria-hidden="true" tabindex="-1"></a>  comparison_tibble <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb27-87"><a href="#cb27-87" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> <span class="fu">c</span>(<span class="st">"Treatment-specific variance"</span>, <span class="st">"Power variance in dbp1c"</span>),</span>
+<span id="cb27-88"><a href="#cb27-88" aria-hidden="true" tabindex="-1"></a>    <span class="at">logLik =</span> <span class="fu">c</span>(<span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(hetero_tx)) <span class="fu">logLik</span>(hetero_tx) <span class="cf">else</span> <span class="cn">NA</span>,</span>
+<span id="cb27-89"><a href="#cb27-89" aria-hidden="true" tabindex="-1"></a>               <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(hetero_dbp1c)) <span class="fu">logLik</span>(hetero_dbp1c) <span class="cf">else</span> <span class="cn">NA</span>),</span>
+<span id="cb27-90"><a href="#cb27-90" aria-hidden="true" tabindex="-1"></a>    <span class="at">AIC =</span> <span class="fu">c</span>(<span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(hetero_tx)) <span class="fu">AIC</span>(hetero_tx) <span class="cf">else</span> <span class="cn">NA</span>,</span>
+<span id="cb27-91"><a href="#cb27-91" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(hetero_dbp1c)) <span class="fu">AIC</span>(hetero_dbp1c) <span class="cf">else</span> <span class="cn">NA</span>)</span>
+<span id="cb27-92"><a href="#cb27-92" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-93"><a href="#cb27-93" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb27-94"><a href="#cb27-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-95"><a href="#cb27-95" aria-hidden="true" tabindex="-1"></a>comparison_tibble</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 3
+  model                       logLik   AIC
+  &lt;chr&gt;                        &lt;dbl&gt; &lt;dbl&gt;
+1 Treatment-specific variance -1025. 2065.
+2 Power variance in dbp1c        NA    NA </code></pre>
+</div>
+</div>
+</section>
+<section id="references" class="level2" data-number="17.18">
+<h2 data-number="17.18" class="anchored" data-anchor-id="references"><span class="header-section-number">17.18</span> References</h2>
+<ol type="1">
+<li><p>Dohoo, I., Martin, W., &amp; Stryhn, H. Methods in Epidemiologic Research. University of Prince Edward Island, 2012. Available at: https://projects.upei.ca/mer/</p></li>
+<li><p>Kirkwood, B. R., &amp; Sterne, J. A. C. Essential Medical Statistics, 2nd Edition. Wiley-Blackwell, 2003. Available at: https://bcs.wiley.com/he-bcs/Books?action=index&amp;bcsId=11848&amp;itemId=0865428719</p></li>
+<li><p>Batra, N., et al.&nbsp;The Epidemiologist R Handbook. Applied Epi Incorporated, 2021. Available at: https://www.epirhandbook.com/en/</p></li>
+<li><p>Rothman KJ, Huybrechts KF, Murray EJ. Epidemiology. 3rd ed.&nbsp;Oxford University Press; 2024. ISBN: 9780197751541.</p></li>
+<li><p>Jordan RA, Celeste RK, Bernabe E, Schwendicke F. Big Data in Epidemiology: Brave New World? J Dent Res. 2024 Oct;103(11):1047-1050. doi: 10.1177/00220345241272034. Epub 2024 Oct 2. PMID: 39359106; PMCID: PMC11653310.</p></li>
+<li><p>Mazzella, A. R4SME: R for Statistical Methods in Epidemiology. GitHub repository. Available at: https://github.com/andreamazzella/R4SME</p></li>
+<li><p>Mazzella, A. R4ASME: R for Advanced Statistical Methods in Epidemiology. GitHub repository. Available at: https://github.com/andreamazzella/r4asme</p></li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./sme_r_chapter_15.html" class="pagination-link" aria-label="SME Chapter 15: Introduction to Clustered Data">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">SME Chapter 15: Introduction to Clustered Data</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./sme_r_chapter_17.html" class="pagination-link" aria-label="SME Chapter 17: Mixed Models for Discrete Data">
+        <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">SME Chapter 17: Mixed Models for Discrete Data</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

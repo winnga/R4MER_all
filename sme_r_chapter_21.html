@@ -1,0 +1,2139 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Wingston Felix Ng’ambi1">
+<meta name="author" content="Cosmas Zyambo2">
+<meta name="author" content="Adamson Sinjani Muula3-5">
+
+<title>22&nbsp; SME Chapter 21: Meta-analysis – Statistical methods in epidemiology: A step-by-step R tutorial</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./sme_r_chapter_22.html" rel="next">
+<link href="./sme_r_chapter_20.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-364982630eef5352dd1537128a8ed5cb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./sme_r_chapter_19.html">Bayesian, Spatial &amp; Meta-analysis</a></li><li class="breadcrumb-item"><a href="./sme_r_chapter_21.html"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">SME Chapter 21: Meta-analysis</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Statistical methods in epidemiology: A step-by-step R tutorial</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Statistical methods in epidemiology: A step-by-step R tutorial</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">SME Chapter 1: Introduction to R and Epidemiology</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">SME Chapter 2: AI in R Epidemiologic Computing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Sampling &amp; Basic Methods</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">SME Chapter 3: Sampling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">SME Chapter 4: Confidence Intervals and Standardization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">SME Chapter 5: Precision, Agreement, and Diagnostic Accuracy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">SME Chapter 6: Measures of Association</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Sensitivity &amp; Confounding</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">SME Chapter 7: Sensitivity Analyses for Bias</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">SME Chapter 8: Confounding and Propensity Scores</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Regression &amp; Model Building</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">SME Chapter 9: Linear Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">SME Chapter 10: Model Building</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">SME Chapter 11: Logistic Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">SME Chapter 12: Ordinal and Multinomial Logistic Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Count, Survival &amp; Clustered Data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">SME Chapter 13: Modelling Count Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_14.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">SME Chapter 14: Modelling Survival Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_15.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">SME Chapter 15: Introduction to Clustered Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_16.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">SME Chapter 16: Multilevel and Mixed Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_17.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">SME Chapter 17: Mixed Models for Discrete Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_18.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">SME Chapter 18: Repeated Measures Data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Bayesian, Spatial &amp; Meta-analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_19.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">SME Chapter 19: Bayesian Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_20.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">SME Chapter 20: Spatial Data Visualisation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_21.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">SME Chapter 21: Meta-analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_22.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">SME Chapter 22: Confounding Detection and Control</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#replication-notes" id="toc-replication-notes" class="nav-link active" data-scroll-target="#replication-notes"><span class="header-section-number">22.1</span> Replication Notes</a></li>
+  <li><a href="#theoretical-background" id="toc-theoretical-background" class="nav-link" data-scroll-target="#theoretical-background"><span class="header-section-number">22.2</span> Theoretical Background</a></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup"><span class="header-section-number">22.3</span> Setup</a></li>
+  <li><a href="#examples-28.328.4-fixed-and-random-effects-meta-analyses" id="toc-examples-28.328.4-fixed-and-random-effects-meta-analyses" class="nav-link" data-scroll-target="#examples-28.328.4-fixed-and-random-effects-meta-analyses"><span class="header-section-number">22.4</span> Examples 28.3–28.4: Fixed and Random-Effects Meta-analyses</a></li>
+  <li><a href="#example-28.5-stratified-analysis" id="toc-example-28.5-stratified-analysis" class="nav-link" data-scroll-target="#example-28.5-stratified-analysis"><span class="header-section-number">22.5</span> Example 28.5: Stratified Analysis</a></li>
+  <li><a href="#section-28.7-heterogeneity-diagnostics" id="toc-section-28.7-heterogeneity-diagnostics" class="nav-link" data-scroll-target="#section-28.7-heterogeneity-diagnostics"><span class="header-section-number">22.6</span> Section 28.7: Heterogeneity Diagnostics</a></li>
+  <li><a href="#example-28.6-meta-regression" id="toc-example-28.6-meta-regression" class="nav-link" data-scroll-target="#example-28.6-meta-regression"><span class="header-section-number">22.7</span> Example 28.6: Meta-regression</a></li>
+  <li><a href="#figure-28.5-labbé-plot" id="toc-figure-28.5-labbé-plot" class="nav-link" data-scroll-target="#figure-28.5-labbé-plot"><span class="header-section-number">22.8</span> Figure 28.5: L’Abbé Plot</a></li>
+  <li><a href="#section-28.8-publication-bias" id="toc-section-28.8-publication-bias" class="nav-link" data-scroll-target="#section-28.8-publication-bias"><span class="header-section-number">22.9</span> Section 28.8: Publication Bias</a></li>
+  <li><a href="#example-28.9-influential-studies" id="toc-example-28.9-influential-studies" class="nav-link" data-scroll-target="#example-28.9-influential-studies"><span class="header-section-number">22.10</span> Example 28.9: Influential Studies</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">22.11</span> References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./sme_r_chapter_19.html">Bayesian, Spatial &amp; Meta-analysis</a></li><li class="breadcrumb-item"><a href="./sme_r_chapter_21.html"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">SME Chapter 21: Meta-analysis</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">SME Chapter 21: Meta-analysis</span></h1>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Authors</div>
+  <div class="quarto-title-meta-heading">Affiliations</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Wingston Felix Ng’ambi<sup>1</sup> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Cosmas Zyambo<sup>2</sup> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Adamson Sinjani Muula<sup>3-5</sup> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This chapter reproduces and expands upon the analyses from the original Methods in Epidemiologic Research (MER) Chapter 28 (Dohoo, Martin, &amp; Stryhn, 2012) using R with data sourced from <code>../mer_data_stata/salm_ma.dta</code>. The chapter covers meta-analysis - essential methods for combining results from multiple studies to obtain more reliable and precise estimates of treatment effects and associations.</p>
+</div>
+</div>
+<section id="replication-notes" class="level2" data-number="22.1">
+<h2 data-number="22.1" class="anchored" data-anchor-id="replication-notes"><span class="header-section-number">22.1</span> Replication Notes</h2>
+<ul>
+<li><strong>Data dependencies:</strong> <code>../mer_data_stata/salm_ma.dta</code>.</li>
+<li><strong>Required R packages:</strong> <code>dplyr</code>, <code>haven</code>, <code>ggplot2</code>, <code>meta</code>, <code>metafor</code>, <code>broom</code>, <code>purrr</code>, <code>glue</code>.</li>
+<li><strong>Setup tips:</strong> Install with <code>install.packages(c("dplyr","haven","ggplot2","meta","metafor","broom","purrr","glue"))</code>.</li>
+<li><strong>Execution:</strong> Run the notebook sequentially to regenerate fixed/random meta-analyses, stratified summaries, meta-regressions, funnel plots, trim-and-fill adjustments, and influence diagnostics.</li>
+</ul>
+</section>
+<section id="theoretical-background" class="level2" data-number="22.2">
+<h2 data-number="22.2" class="anchored" data-anchor-id="theoretical-background"><span class="header-section-number">22.2</span> Theoretical Background</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Understanding Meta-Analysis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Before we combine studies, let’s understand what meta-analysis is and why it’s powerful. Meta-analysis is a cornerstone of evidence-based medicine and epidemiology, allowing researchers to synthesize evidence from multiple studies (Dohoo, Martin, &amp; Stryhn, 2012; Kirkwood &amp; Sterne, 2003; Rothman, Huybrechts, &amp; Murray, 2024):</p>
+<section id="what-is-meta-analysis" class="level3" data-number="22.2.1">
+<h3 data-number="22.2.1" class="anchored" data-anchor-id="what-is-meta-analysis"><span class="header-section-number">22.2.1</span> What is Meta-Analysis?</h3>
+<p><strong>Meta-analysis</strong> is a statistical method to combine results from multiple studies. It’s like gathering evidence from many sources to get a more reliable answer than any single study can provide.</p>
+<p><strong>Think of it like</strong>: Instead of relying on one study (which might be wrong), you combine many studies to get a more trustworthy answer.</p>
+</section>
+<section id="why-do-meta-analysis" class="level3" data-number="22.2.2">
+<h3 data-number="22.2.2" class="anchored" data-anchor-id="why-do-meta-analysis"><span class="header-section-number">22.2.2</span> Why Do Meta-Analysis?</h3>
+</section>
+<section id="increased-power" class="level3" data-number="22.2.3">
+<h3 data-number="22.2.3" class="anchored" data-anchor-id="increased-power"><span class="header-section-number">22.2.3</span> 1. Increased Power</h3>
+<p>Single studies might be too small to detect real effects. Combining studies gives you more data and more power to find real effects.</p>
+<p><strong>Like</strong>: One study with 100 people might miss an effect, but 10 studies with 100 people each (1000 total) can find it.</p>
+</section>
+<section id="more-precise-estimates" class="level3" data-number="22.2.4">
+<h3 data-number="22.2.4" class="anchored" data-anchor-id="more-precise-estimates"><span class="header-section-number">22.2.4</span> 2. More Precise Estimates</h3>
+<p>Combining studies gives more precise estimates (narrower confidence intervals) than any single study.</p>
+</section>
+<section id="generalizability" class="level3" data-number="22.2.5">
+<h3 data-number="22.2.5" class="anchored" data-anchor-id="generalizability"><span class="header-section-number">22.2.5</span> 3. Generalizability</h3>
+<p>Results from multiple studies (different populations, settings, times) are more generalizable than results from one study.</p>
+</section>
+<section id="resolve-conflicts" class="level3" data-number="22.2.6">
+<h3 data-number="22.2.6" class="anchored" data-anchor-id="resolve-conflicts"><span class="header-section-number">22.2.6</span> 4. Resolve Conflicts</h3>
+<p>When studies disagree, meta-analysis helps understand why and provides an overall answer.</p>
+</section>
+<section id="key-concepts" class="level3" data-number="22.2.7">
+<h3 data-number="22.2.7" class="anchored" data-anchor-id="key-concepts"><span class="header-section-number">22.2.7</span> Key Concepts</h3>
+</section>
+<section id="effect-size" class="level3" data-number="22.2.8">
+<h3 data-number="22.2.8" class="anchored" data-anchor-id="effect-size"><span class="header-section-number">22.2.8</span> 1. Effect Size</h3>
+<p><strong>Effect size</strong> is a standardized measure of the treatment effect. Like: - Risk ratio, odds ratio, or hazard ratio - Mean difference - Correlation</p>
+<p>We need comparable measures across studies to combine them.</p>
+</section>
+<section id="fixed-effects-vs-random-effects" class="level3" data-number="22.2.9">
+<h3 data-number="22.2.9" class="anchored" data-anchor-id="fixed-effects-vs-random-effects"><span class="header-section-number">22.2.9</span> 2. Fixed-Effects vs Random-Effects</h3>
+<p><strong>Fixed-effects meta-analysis</strong> assumes all studies estimate the same true effect. Like: “All studies are measuring the same thing, just with different precision.”</p>
+<p><strong>Random-effects meta-analysis</strong> allows studies to estimate different true effects. Like: “Studies might be measuring slightly different things, and I want to account for that variation.”</p>
+<p><strong>Which to use</strong>: Random-effects is usually more realistic (studies differ), but fixed-effects is simpler and sometimes appropriate.</p>
+</section>
+<section id="heterogeneity" class="level3" data-number="22.2.10">
+<h3 data-number="22.2.10" class="anchored" data-anchor-id="heterogeneity"><span class="header-section-number">22.2.10</span> 3. Heterogeneity</h3>
+<p><strong>Heterogeneity</strong> is how much studies differ from each other. Like: “Do all studies show similar effects, or do they vary a lot?”</p>
+<p><strong>Measuring heterogeneity</strong>: - <strong>I² statistic</strong>: What proportion of variation is due to heterogeneity (0-100%) - <strong>Q statistic</strong>: Tests if heterogeneity is significant - <strong>Tau²</strong>: The variance of true effects across studies</p>
+</section>
+<section id="forest-plots" class="level3" data-number="22.2.11">
+<h3 data-number="22.2.11" class="anchored" data-anchor-id="forest-plots"><span class="header-section-number">22.2.11</span> 4. Forest Plots</h3>
+<p><strong>Forest plots</strong> visualize meta-analysis results. They show: - Each study’s result (with confidence interval) - The overall combined result - How much each study contributes (by size)</p>
+<p><strong>Think of it like</strong>: A graph showing all the evidence and the overall conclusion.</p>
+</section>
+<section id="meta-regression" class="level3" data-number="22.2.12">
+<h3 data-number="22.2.12" class="anchored" data-anchor-id="meta-regression"><span class="header-section-number">22.2.12</span> Meta-Regression</h3>
+<p><strong>Meta-regression</strong> uses study characteristics to explain heterogeneity. Like: “Do newer studies show different effects? Do certain study designs give different results?”</p>
+<p><strong>Think of it like</strong>: Regression, but the “subjects” are studies, not people.</p>
+</section>
+<section id="publication-bias" class="level3" data-number="22.2.13">
+<h3 data-number="22.2.13" class="anchored" data-anchor-id="publication-bias"><span class="header-section-number">22.2.13</span> Publication Bias</h3>
+<p><strong>Publication bias</strong> is when studies with certain results are more likely to be published. Like: “Studies with positive results get published, but studies with negative results don’t.”</p>
+<p><strong>Why it matters</strong>: If negative studies are missing, your meta-analysis is biased toward positive results.</p>
+<p><strong>Detecting publication bias</strong>: - <strong>Funnel plots</strong>: Should be symmetric if no bias - <strong>Begg and Egger tests</strong>: Statistical tests for bias - <strong>Trim-and-fill</strong>: Estimates what missing studies might look like</p>
+</section>
+<section id="influence-analysis" class="level3" data-number="22.2.14">
+<h3 data-number="22.2.14" class="anchored" data-anchor-id="influence-analysis"><span class="header-section-number">22.2.14</span> Influence Analysis</h3>
+<p><strong>Influence analysis</strong> tests how much each study affects the overall result. Like: “If I remove this study, does the conclusion change?”</p>
+<p><strong>Why it matters</strong>: If one study drives the conclusion, you want to understand why and make sure it’s trustworthy.</p>
+</section>
+<section id="the-meta-analysis-process" class="level3" data-number="22.2.15">
+<h3 data-number="22.2.15" class="anchored" data-anchor-id="the-meta-analysis-process"><span class="header-section-number">22.2.15</span> The Meta-Analysis Process</h3>
+<ol type="1">
+<li><strong>Define question</strong>: What are you trying to answer?</li>
+<li><strong>Search studies</strong>: Find all relevant studies</li>
+<li><strong>Extract data</strong>: Get effect sizes and standard errors from each study</li>
+<li><strong>Assess quality</strong>: Check study quality and risk of bias</li>
+<li><strong>Combine results</strong>: Use meta-analysis to get overall estimate</li>
+<li><strong>Assess heterogeneity</strong>: Check if studies are consistent</li>
+<li><strong>Explore sources</strong>: Use meta-regression to understand differences</li>
+<li><strong>Check for bias</strong>: Look for publication bias</li>
+<li><strong>Interpret</strong>: What does the overall result mean?</li>
+</ol>
+</section>
+<section id="common-issues" class="level3" data-number="22.2.16">
+<h3 data-number="22.2.16" class="anchored" data-anchor-id="common-issues"><span class="header-section-number">22.2.16</span> Common Issues</h3>
+<ul>
+<li><strong>Apples and oranges</strong>: Combining studies that are too different</li>
+<li><strong>Publication bias</strong>: Missing negative studies</li>
+<li><strong>Heterogeneity</strong>: Studies showing very different results</li>
+<li><strong>Quality differences</strong>: Some studies are better than others</li>
+</ul>
+<p><strong>In simple terms</strong>: Meta-analysis combines results from multiple studies to get a more reliable answer. It increases power, gives more precise estimates, and helps resolve conflicts. We can use fixed-effects (all studies measure the same thing) or random-effects (studies might differ). We need to check for heterogeneity (do studies agree?) and publication bias (are negative studies missing?). Meta-analysis is powerful but requires careful interpretation, especially when studies differ a lot.</p>
+</section>
+</div>
+</div>
+</section>
+<section id="setup" class="level2" data-number="22.3">
+<h2 data-number="22.3" class="anchored" data-anchor-id="setup"><span class="header-section-number">22.3</span> Setup</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section prepares for meta-analysis - combining results from multiple studies. Think of it like gathering evidence from many studies to get a more reliable answer:</p>
+<ol type="1">
+<li><strong>Loading libraries</strong>: Getting tools for meta-analysis (meta, metafor packages)</li>
+<li><strong>Reading data</strong>: Opening a dataset with results from multiple studies</li>
+<li><strong>Data preparation</strong>: Organizing study results for meta-analysis</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re preparing to combine results from multiple studies to get a more reliable overall estimate. Meta-analysis is like doing a “study of studies” - combining evidence to reach stronger conclusions.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(meta)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(metafor)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glue)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_minimal</span>())</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>data_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">".."</span>, <span class="st">"mer_data_stata"</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>salm <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="fu">file.path</span>(data_dir, <span class="st">"salm_ma.dta"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(haven<span class="sc">::</span>is.labelled), haven<span class="sc">::</span>as_factor))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(salm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 381
+Columns: 32
+$ refid           &lt;dbl&gt; 7885, 7885, 7885, 7885, 7885, 7728, 7728, 7728, 7728, …
+$ id              &lt;dbl&gt; 297, 294, 293, 295, 296, 285, 279, 292, 274, 281, 283,…
+$ author          &lt;chr&gt; "Knivett, 1971", "Knivett, 1971", "Knivett, 1971", "Kn…
+$ pub_date        &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1973, 1973, 1973, 1973, …
+$ pub_type        &lt;fct&gt; Peer reviewed, Peer reviewed, Peer reviewed, Peer revi…
+$ country         &lt;fct&gt; Europe, Europe, Europe, Europe, Europe, North America,…
+$ stdy_set        &lt;fct&gt; Commercial, Commercial, Commercial, Commercial, Commer…
+$ stdy_dsgn       &lt;fct&gt; B/A trial without challenge (CT), B/A trial without ch…
+$ stdy_pop        &lt;fct&gt; Mixed population of birds, Mixed population of birds, …
+$ sple_num_cont_a &lt;dbl&gt; 10, 10, 10, 10, 10, 25, 25, 75, 16, 25, 25, 25, 25, 25…
+$ sple_num_txt_a  &lt;dbl&gt; 10, 10, 10, 10, 10, 25, 25, 75, 16, 25, 25, 25, 25, 25…
+$ sple_pos_cont_a &lt;dbl&gt; 10, 10, 10, 0, 9, 1, 1, 16, 2, 0, 2, 1, 4, 4, 0, 1, 5,…
+$ sple_pos_txt_a  &lt;dbl&gt; 1, 4, 3, 0, 4, 0, 0, 9, 1, 0, 0, 0, 2, 0, 1, 0, 2, 0, …
+$ num             &lt;dbl&gt; 22, 22, 22, 22, 20, 52, 52, 150, 32, 52, 52, 52, 50, 5…
+$ risk_cntrl      &lt;dbl&gt; 0.95454544, 0.95454544, 0.95454544, 0.04545455, 0.8999…
+$ risk_tx         &lt;dbl&gt; 0.136363640, 0.409090906, 0.318181813, 0.045454547, 0.…
+$ rr              &lt;dbl&gt; 0.1428571, 0.4285714, 0.3333333, 1.0000000, 0.4444445,…
+$ rr_ln           &lt;dbl&gt; -1.9459101, -0.8472978, -1.0986123, 0.0000000, -0.8109…
+$ rrse_ln         &lt;dbl&gt; 0.7616342, 0.3682963, 0.4462445, 1.9540168, 0.4013865,…
+$ conc_cont_a     &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ conc_txt_a      &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ conc_sd_cont_a  &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ conc_sd_txt_a   &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ md_ln           &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ mdse_ln         &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ int_asn         &lt;fct&gt; Convenience, Convenience, Convenience, Convenience, Co…
+$ blind           &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No, No, No, No…
+$ intrv           &lt;fct&gt; Chilling, Chilling, Chilling, Chilling, Chilling, NA, …
+$ serotype        &lt;fct&gt; Salmonella spp., Salmonella spp., Salmonella spp., Sal…
+$ disinf_c6       &lt;fct&gt; Oxidizing agent, Oxidizing agent, Oxidizing agent, Oxi…
+$ conc_c7         &lt;fct&gt; 0.01 - 1%, 0.01 - 1%, 0.01 - 1%, 0.01 - 1%, 0.01 - 1%,…
+$ conc_c2         &lt;fct&gt; chem, chem, chem, chem, chem, no_chem, no_chem, no_che…</code></pre>
+</div>
+</div>
+</section>
+<section id="examples-28.328.4-fixed-and-random-effects-meta-analyses" class="level2" data-number="22.4">
+<h2 data-number="22.4" class="anchored" data-anchor-id="examples-28.328.4-fixed-and-random-effects-meta-analyses"><span class="header-section-number">22.4</span> Examples 28.3–28.4: Fixed and Random-Effects Meta-analyses</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section performs meta-analyses to combine results from multiple studies. Think of it like averaging results from many studies:</p>
+<ol type="1">
+<li><strong>Fixed-effects meta-analysis</strong>: Assumes all studies estimate the same true effect (like averaging measurements of the same thing)</li>
+<li><strong>Random-effects meta-analysis</strong>: Allows studies to estimate different true effects (like averaging measurements that might vary)</li>
+<li><strong>Combining evidence</strong>: Getting an overall estimate that’s more reliable than any single study</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re combining results from multiple studies to get an overall estimate. Fixed-effects assumes all studies are measuring the same thing. Random-effects allows for variation between studies, which is usually more realistic.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>meta_conc <span class="ot">&lt;-</span> <span class="fu">metagen</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">TE =</span> salm<span class="sc">$</span>md_ln,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">seTE =</span> salm<span class="sc">$</span>mdse_ln,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">studlab =</span> salm<span class="sc">$</span>id,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">sm =</span> <span class="st">"MD"</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">comb.fixed =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">comb.random =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">hakn =</span> <span class="cn">FALSE</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>meta_conc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Number of studies: k = 25
+
+                          MD             95%-CI      z  p-value
+Common effect model  -2.4211 [-2.5324; -2.3098] -42.63        0
+Random effects model -2.1332 [-2.5484; -1.7179] -10.07 &lt; 0.0001
+
+Quantifying heterogeneity (with 95%-CIs):
+ tau^2 = 0.9850 [0.5422; 1.9313]; tau = 0.9925 [0.7364; 1.3897]
+ I^2 = 95.6% [94.4%; 96.5%]; H = 4.75 [4.23; 5.35]
+
+Test of heterogeneity:
+      Q d.f.  p-value
+ 542.50   24 &lt; 0.0001
+
+Details of meta-analysis methods:
+- Inverse variance method
+- Restricted maximum-likelihood estimator for tau^2
+- Q-Profile method for confidence interval of tau^2 and tau
+- Calculation of I^2 based on Q</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check what values exist in intrv column</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="st">"intrv"</span> <span class="sc">%in%</span> <span class="fu">names</span>(salm)) {</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Handle both numeric and factor types</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.factor</span>(salm<span class="sc">$</span>intrv) <span class="sc">||</span> <span class="fu">is.character</span>(salm<span class="sc">$</span>intrv)) {</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Try to find value 5 as character or factor level</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    intrv_values <span class="ot">&lt;-</span> <span class="fu">unique</span>(salm<span class="sc">$</span>intrv)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    target_value <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="st">"5"</span> <span class="sc">%in%</span> <span class="fu">as.character</span>(intrv_values)) {</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="fu">is.factor</span>(salm<span class="sc">$</span>intrv)) {</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">levels</span>(salm<span class="sc">$</span>intrv)[<span class="fu">levels</span>(salm<span class="sc">$</span>intrv) <span class="sc">==</span> <span class="st">"5"</span>]</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> {</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"5"</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> <span class="cf">if</span> (<span class="dv">5</span> <span class="sc">%in%</span> intrv_values) {</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>      <span class="dv">5</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Use the first available value if 5 doesn't exist</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">warning</span>(<span class="st">"intrv == 5 not found. Using first available value: "</span>, intrv_values[<span class="dv">1</span>])</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>      intrv_values[<span class="dv">1</span>]</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    rr_subset <span class="ot">&lt;-</span> salm <span class="sc">|&gt;</span> <span class="fu">filter</span>(intrv <span class="sc">==</span> target_value)</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Numeric comparison</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    rr_subset <span class="ot">&lt;-</span> salm <span class="sc">|&gt;</span> <span class="fu">filter</span>(intrv <span class="sc">==</span> <span class="dv">5</span>)</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>  <span class="co"># If intrv doesn't exist, check for alternative column names</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>  alt_names <span class="ot">&lt;-</span> <span class="fu">grep</span>(<span class="st">"int|interv|treatment"</span>, <span class="fu">names</span>(salm), <span class="at">ignore.case =</span> <span class="cn">TRUE</span>, <span class="at">value =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(alt_names) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">warning</span>(<span class="st">"Column 'intrv' not found. Using alternative: "</span>, alt_names[<span class="dv">1</span>])</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    rr_subset <span class="ot">&lt;-</span> salm <span class="sc">|&gt;</span> <span class="fu">filter</span>(.data[[alt_names[<span class="dv">1</span>]]] <span class="sc">==</span> <span class="dv">5</span>)</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">warning</span>(<span class="st">"No intervention column found. Using all data."</span>)</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>    rr_subset <span class="ot">&lt;-</span> salm</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if we have data and required columns</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">nrow</span>(rr_subset) <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">"No studies found after filtering. Cannot perform meta-analysis."</span>)</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>  meta_rr <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> <span class="cf">if</span> (<span class="sc">!</span><span class="fu">all</span>(<span class="fu">c</span>(<span class="st">"rr_ln"</span>, <span class="st">"rrse_ln"</span>, <span class="st">"id"</span>) <span class="sc">%in%</span> <span class="fu">names</span>(rr_subset))) {</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>  missing_cols <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(<span class="fu">c</span>(<span class="st">"rr_ln"</span>, <span class="st">"rrse_ln"</span>, <span class="st">"id"</span>), <span class="fu">names</span>(rr_subset))</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">"Required columns missing: "</span>, <span class="fu">paste</span>(missing_cols, <span class="at">collapse =</span> <span class="st">", "</span>), <span class="st">". Cannot perform meta-analysis."</span>)</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>  meta_rr <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Check for missing values in required columns</span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>  complete_cases <span class="ot">&lt;-</span> <span class="fu">complete.cases</span>(rr_subset<span class="sc">$</span>rr_ln, rr_subset<span class="sc">$</span>rrse_ln, rr_subset<span class="sc">$</span>id)</span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">sum</span>(complete_cases) <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">warning</span>(<span class="st">"No complete cases found. Cannot perform meta-analysis."</span>)</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>    meta_rr <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>    rr_subset_complete <span class="ot">&lt;-</span> rr_subset[complete_cases, ]</span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>    meta_rr <span class="ot">&lt;-</span> <span class="fu">metagen</span>(</span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>      <span class="at">TE =</span> rr_subset_complete<span class="sc">$</span>rr_ln,</span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>      <span class="at">seTE =</span> rr_subset_complete<span class="sc">$</span>rrse_ln,</span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>      <span class="at">studlab =</span> rr_subset_complete<span class="sc">$</span>id,</span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>      <span class="at">sm =</span> <span class="st">"RR"</span>,</span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>      <span class="at">comb.fixed =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>      <span class="at">comb.random =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a>      <span class="at">hakn =</span> <span class="cn">FALSE</span></span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(meta_rr)) {</span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a>  meta_rr</span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Meta-analysis not available: insufficient data or missing columns"</span></span>
+<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Number of studies: k = 57
+
+                         RR           95%-CI     z  p-value
+Common effect model  0.7499 [0.6994; 0.8040] -8.10 &lt; 0.0001
+Random effects model 0.5140 [0.4127; 0.6401] -5.95 &lt; 0.0001
+
+Quantifying heterogeneity (with 95%-CIs):
+ tau^2 = 0.4204 [0.4118; 1.7708]; tau = 0.6484 [0.6417; 1.3307]
+ I^2 = 73.9% [66.3%; 79.9%]; H = 1.96 [1.72; 2.23]
+
+Test of heterogeneity:
+      Q d.f.  p-value
+ 214.94   56 &lt; 0.0001
+
+Details of meta-analysis methods:
+- Inverse variance method
+- Restricted maximum-likelihood estimator for tau^2
+- Q-Profile method for confidence interval of tau^2 and tau
+- Calculation of I^2 based on Q</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">forest</span>(meta_conc, <span class="at">comb.fixed =</span> <span class="cn">FALSE</span>, <span class="at">leftcols =</span> <span class="fu">c</span>(<span class="st">"studlab"</span>), <span class="at">smlab =</span> <span class="st">"Log mean difference"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="sme_r_chapter_21_files/figure-html/forest-conc-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Random-effects forest plot for Salmonella concentration</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="example-28.5-stratified-analysis" class="level2" data-number="22.5">
+<h2 data-number="22.5" class="anchored" data-anchor-id="example-28.5-stratified-analysis"><span class="header-section-number">22.5</span> Example 28.5: Stratified Analysis</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section performs meta-analysis separately for different subgroups. Think of it like analyzing different groups separately:</p>
+<ol type="1">
+<li><strong>Stratification</strong>: Breaking studies into groups (like by serotype)</li>
+<li><strong>Separate meta-analyses</strong>: Analyzing each group independently</li>
+<li><strong>Comparing subgroups</strong>: Seeing if effects differ between groups</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re doing separate meta-analyses for different subgroups (like different serotypes). This helps us see if the treatment effect is the same across all groups or differs by subgroup.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>meta_strat <span class="ot">&lt;-</span> <span class="fu">metagen</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">TE =</span> salm<span class="sc">$</span>md_ln,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">seTE =</span> salm<span class="sc">$</span>mdse_ln,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">studlab =</span> salm<span class="sc">$</span>id,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">byvar =</span> salm<span class="sc">$</span>serotype,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">comb.random =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">comb.fixed =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">hakn =</span> <span class="cn">FALSE</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(meta_strat, <span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Number of studies: k = 25
+
+                                   95%-CI      z  p-value
+Random effects model -2.13 [-2.55; -1.72] -10.07 &lt; 0.0001
+
+Quantifying heterogeneity (with 95%-CIs):
+ tau^2 = 0.9850 [0.5422; 1.9313]; tau = 0.9925 [0.7364; 1.3897]
+ I^2 = 95.6% [94.4%; 96.5%]; H = 4.75 [4.23; 5.35]
+
+Test of heterogeneity:
+      Q d.f.  p-value
+ 542.50   24 &lt; 0.0001
+
+Results for subgroups (random effects model):
+                             k               95%-CI  tau^2    tau      Q   I^2
+serotype = Typhimurium      21 -2.25 [-2.70; -1.79] 1.0463 1.0229 525.30 96.2%
+serotype = Salmonella spp.   0    NA                    --     --     --    --
+serotype = Mixed spp.        4 -1.41 [-1.96; -0.87] 0.0129 0.1138   2.63  0.0%
+serotype = Other             0    NA                    --     --     --    --
+
+Test for subgroup differences (random effects model):
+                  Q d.f. p-value
+Between groups 5.25    1  0.0219
+
+Details of meta-analysis methods:
+- Inverse variance method
+- Restricted maximum-likelihood estimator for tau^2
+- Q-Profile method for confidence interval of tau^2 and tau
+- Calculation of I^2 based on Q</code></pre>
+</div>
+</div>
+</section>
+<section id="section-28.7-heterogeneity-diagnostics" class="level2" data-number="22.6">
+<h2 data-number="22.6" class="anchored" data-anchor-id="section-28.7-heterogeneity-diagnostics"><span class="header-section-number">22.6</span> Section 28.7: Heterogeneity Diagnostics</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section examines heterogeneity - how much studies differ from each other. Think of it like checking if studies are consistent:</p>
+<ol type="1">
+<li><strong>Heterogeneity</strong>: Variation between studies (like “do all studies show similar effects?”)</li>
+<li><strong>Galbraith plot</strong>: A visual way to see which studies are outliers</li>
+<li><strong>Scatter plots</strong>: Showing relationships between study characteristics and effects</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re checking if studies are consistent with each other. If studies show very different results, there’s high heterogeneity. We want to understand why studies differ - is it due to study characteristics like concentration levels?</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">radial</span>(meta_conc, <span class="at">comb.fixed =</span> <span class="cn">FALSE</span>, <span class="at">studlab =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="sme_r_chapter_21_files/figure-html/galbraith-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Galbraith (radial) plot</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>heterogeneity_df <span class="ot">&lt;-</span> salm <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">weight =</span> <span class="dv">1</span> <span class="sc">/</span> (mdse_ln<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">conc_label =</span> <span class="fu">factor</span>(</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>      conc_c7,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"None"</span>, <span class="st">"&lt;=0.009"</span>, <span class="st">"0.01-1"</span>, <span class="st">"1-3"</span>, <span class="st">"4-9"</span>, <span class="st">"&gt;9"</span>, <span class="st">"Other"</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filter to complete cases for plotting</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">complete.cases</span>(conc_label, md_ln, weight))</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if we have data to plot</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">nrow</span>(heterogeneity_df) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(heterogeneity_df, <span class="fu">aes</span>(<span class="at">x =</span> conc_label, <span class="at">y =</span> md_ln, <span class="at">size =</span> weight)) <span class="sc">+</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">shape =</span> <span class="dv">21</span>, <span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">colour =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Chemical concentration (%)"</span>, <span class="at">y =</span> <span class="st">"Log mean difference"</span>, <span class="at">size =</span> <span class="st">"Weight"</span>) <span class="sc">+</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add highlighted point if refid == 218 exists</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">any</span>(heterogeneity_df<span class="sc">$</span>refid <span class="sc">==</span> <span class="dv">218</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_point</span>(</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">data =</span> <span class="fu">subset</span>(heterogeneity_df, refid <span class="sc">==</span> <span class="dv">218</span>),</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"red"</span>,</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>      <span class="at">size =</span> <span class="fu">subset</span>(heterogeneity_df, refid <span class="sc">==</span> <span class="dv">218</span>)<span class="sc">$</span>weight</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>  p</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">"No data available for heterogeneity scatter plot"</span>)</span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="fl">0.5</span>, <span class="at">y =</span> <span class="fl">0.5</span>, <span class="at">label =</span> <span class="st">"No data available"</span>) <span class="sc">+</span></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_void</span>()</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="sme_r_chapter_21_files/figure-html/scatter-heterogeneity-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Weighted scatter plot of mean difference vs chemical concentration category</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="example-28.6-meta-regression" class="level2" data-number="22.7">
+<h2 data-number="22.7" class="anchored" data-anchor-id="example-28.6-meta-regression"><span class="header-section-number">22.7</span> Example 28.6: Meta-regression</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section uses regression to explain why study results differ. Think of it like finding factors that predict study outcomes:</p>
+<ol type="1">
+<li><strong>Meta-regression</strong>: Using study characteristics to predict study results</li>
+<li><strong>Covariates</strong>: Study features like publication date, design, population, intervention type</li>
+<li><strong>Explaining heterogeneity</strong>: Understanding why some studies show larger effects than others</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re using regression to understand why studies show different results. Do newer studies show different effects? Do certain study designs give different results? This helps explain heterogeneity.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>meta_rr_random <span class="ot">&lt;-</span> <span class="fu">metagen</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">TE =</span> rr_subset<span class="sc">$</span>rr_ln,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">seTE =</span> rr_subset<span class="sc">$</span>rrse_ln,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">studlab =</span> rr_subset<span class="sc">$</span>id,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">comb.random =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">comb.fixed =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">hakn =</span> <span class="cn">TRUE</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>metareg_null <span class="ot">&lt;-</span> <span class="fu">metareg</span>(meta_rr_random, <span class="sc">~</span> <span class="dv">1</span>)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>metareg_null</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Random-Effects Model (k = 57; tau^2 estimator: REML)
+
+tau^2 (estimated amount of total heterogeneity): 0.4204 (SE = 0.1218)
+tau (square root of estimated tau^2 value):      0.6484
+I^2 (total heterogeneity / total variability):   84.07%
+H^2 (total variability / sampling variability):  6.28
+
+Test for Heterogeneity:
+Q(df = 56) = 214.9353, p-val &lt; .0001
+
+Model Results:
+
+estimate      se     tval  df    pval    ci.lb    ci.ub      
+ -0.6655  0.1320  -5.0418  56  &lt;.0001  -0.9300  -0.4011  *** 
+
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if required columns exist</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>required_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"pub_date"</span>, <span class="st">"stdy_dsgn"</span>, <span class="st">"stdy_pop"</span>, <span class="st">"intrv"</span>, <span class="st">"disinf_c6"</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>missing_cols <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(required_cols, <span class="fu">names</span>(rr_subset))</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(missing_cols) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">"Missing columns for meta-regression: "</span>, <span class="fu">paste</span>(missing_cols, <span class="at">collapse =</span> <span class="st">", "</span>))</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  metareg_full <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  rr_covariates <span class="ot">&lt;-</span> rr_subset <span class="sc">|&gt;</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="fu">complete.cases</span>(pub_date, stdy_dsgn, stdy_pop, intrv, disinf_c6, rr_ln, rrse_ln)) <span class="sc">|&gt;</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">pub_date_c4 =</span> <span class="fu">cut</span>(pub_date, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">1970</span>, <span class="dv">1980</span>, <span class="dv">1990</span>, <span class="dv">2000</span>, <span class="cn">Inf</span>), <span class="at">right =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">study_design =</span> <span class="fu">factor</span>(stdy_dsgn),</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">study_population =</span> <span class="fu">factor</span>(stdy_pop),</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">intervention =</span> <span class="fu">factor</span>(intrv),</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">disinfectant =</span> <span class="fu">factor</span>(disinf_c6)</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">nrow</span>(rr_covariates) <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">warning</span>(<span class="st">"No complete cases for meta-regression"</span>)</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>    metareg_full <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create meta object with covariates data</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>    meta_rr_cov <span class="ot">&lt;-</span> <span class="fu">metagen</span>(</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">TE =</span> rr_covariates<span class="sc">$</span>rr_ln,</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">seTE =</span> rr_covariates<span class="sc">$</span>rrse_ln,</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">studlab =</span> rr_covariates<span class="sc">$</span>id,</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">comb.random =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">comb.fixed =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">hakn =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">data =</span> rr_covariates</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Now metareg can access the covariates from the data</span></span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>    metareg_full <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>      <span class="fu">metareg</span>(</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>        meta_rr_cov,</span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>        <span class="sc">~</span> pub_date_c4 <span class="sc">+</span> study_design <span class="sc">+</span> study_population <span class="sc">+</span> intervention <span class="sc">+</span> disinfectant</span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>    }, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>      <span class="fu">warning</span>(<span class="st">"Meta-regression failed: "</span>, <span class="fu">conditionMessage</span>(e))</span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>      <span class="cn">NULL</span></span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(metareg_full)) {</span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(metareg_full)</span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Meta-regression not available: insufficient data or missing columns"</span></span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Meta-regression not available: insufficient data or missing columns"</code></pre>
+</div>
+</div>
+</section>
+<section id="figure-28.5-labbé-plot" class="level2" data-number="22.8">
+<h2 data-number="22.8" class="anchored" data-anchor-id="figure-28.5-labbé-plot"><span class="header-section-number">22.8</span> Figure 28.5: L’Abbé Plot</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section creates L’Abbé plots - a way to visualize treatment effects. Think of it like plotting control group risks vs treatment group risks:</p>
+<ol type="1">
+<li><strong>L’Abbé plot</strong>: A scatter plot of control group risk vs treatment group risk</li>
+<li><strong>Visualizing effects</strong>: Seeing how treatment affects outcomes across different baseline risks</li>
+<li><strong>Line of equality</strong>: A reference line showing where treatment equals control</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re creating a plot that shows control group risk on the x-axis and treatment group risk on the y-axis. Points below the diagonal line mean treatment is better. This helps visualize treatment effects across different baseline risk levels.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># L'Abbé plot requires risk data (risk in control and treated groups)</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if meta_rr exists and if we have the risk data</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(meta_rr) <span class="sc">&amp;&amp;</span> <span class="fu">exists</span>(<span class="st">"rr_subset_complete"</span>)) {</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Check if risk columns exist in the data</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  risk_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"risk_cntrl"</span>, <span class="st">"risk_trt"</span>, <span class="st">"risk_control"</span>, <span class="st">"risk_treated"</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  available_risk_cols <span class="ot">&lt;-</span> <span class="fu">intersect</span>(risk_cols, <span class="fu">names</span>(rr_subset_complete))</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(available_risk_cols) <span class="sc">&gt;=</span> <span class="dv">2</span>) {</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># We have risk data, can create L'Abbé plot</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Try to use the meta object if it has the data attached</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    labbe_result <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labbe</span>(meta_rr, <span class="at">comb.fixed =</span> <span class="cn">FALSE</span>, <span class="at">xlab =</span> <span class="st">"Risk in control group"</span>, <span class="at">ylab =</span> <span class="st">"Risk in treated group"</span>)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    }, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>      <span class="co"># If that fails, try creating plot directly from data</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="st">"risk_cntrl"</span> <span class="sc">%in%</span> <span class="fu">names</span>(rr_subset_complete) <span class="sc">&amp;&amp;</span> <span class="st">"risk_trt"</span> <span class="sc">%in%</span> <span class="fu">names</span>(rr_subset_complete)) {</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>(rr_subset_complete, <span class="fu">aes</span>(<span class="at">x =</span> risk_cntrl, <span class="at">y =</span> risk_trt)) <span class="sc">+</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>          <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>          <span class="fu">geom_abline</span>(<span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">slope =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>          <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Risk in control group"</span>, <span class="at">y =</span> <span class="st">"Risk in treated group"</span>, </span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>               <span class="at">title =</span> <span class="st">"L'Abbé plot for risk ratios"</span>) <span class="sc">+</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>          <span class="fu">theme_minimal</span>()</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> {</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>        <span class="fu">warning</span>(<span class="st">"L'Abbé plot failed: "</span>, <span class="fu">conditionMessage</span>(e))</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>        <span class="cn">NULL</span></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(labbe_result)) {</span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>      labbe_result</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>        <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="fl">0.5</span>, <span class="at">y =</span> <span class="fl">0.5</span>, <span class="at">label =</span> <span class="st">"L'Abbé plot not available: risk data missing"</span>) <span class="sc">+</span></span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_void</span>()</span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">warning</span>(<span class="st">"Risk data columns not found. L'Abbé plot requires risk in control and treated groups."</span>)</span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>      <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="fl">0.5</span>, <span class="at">y =</span> <span class="fl">0.5</span>, <span class="at">label =</span> <span class="st">"L'Abbé plot not available: risk data missing"</span>) <span class="sc">+</span></span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_void</span>()</span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">"meta_rr or rr_subset_complete not available for L'Abbé plot"</span>)</span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="fl">0.5</span>, <span class="at">y =</span> <span class="fl">0.5</span>, <span class="at">label =</span> <span class="st">"L'Abbé plot not available: meta-analysis data missing"</span>) <span class="sc">+</span></span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_void</span>()</span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="sme_r_chapter_21_files/figure-html/labbe-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>L’Abbé plot for risk ratios (intervention = 5)</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if meta_rr_cov exists and has the required data</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"meta_rr_cov"</span>) <span class="sc">&amp;&amp;</span> <span class="sc">!</span><span class="fu">is.null</span>(meta_rr_cov)) {</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Check if risk_cntrl exists in the data</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"rr_covariates"</span>) <span class="sc">&amp;&amp;</span> <span class="st">"risk_cntrl"</span> <span class="sc">%in%</span> <span class="fu">names</span>(rr_covariates)) {</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    metareg_labbe <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">metareg</span>(</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>        meta_rr_cov,</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>        <span class="sc">~</span> pub_date_c4 <span class="sc">+</span> study_design <span class="sc">+</span> study_population <span class="sc">+</span> intervention <span class="sc">+</span> disinfectant <span class="sc">+</span> risk_cntrl</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    }, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">warning</span>(<span class="st">"Meta-regression with risk_cntrl failed: "</span>, <span class="fu">conditionMessage</span>(e))</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>      <span class="cn">NULL</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(metareg_labbe)) {</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">summary</span>(metareg_labbe)</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Meta-regression not available"</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">warning</span>(<span class="st">"risk_cntrl column not found. Skipping meta-regression."</span>)</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Meta-regression not available: risk_cntrl column missing"</span></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">"meta_rr_cov not available. Run metareg-full chunk first."</span>)</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Meta-regression not available: meta_rr_cov object missing"</span></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Meta-regression not available"</code></pre>
+</div>
+</div>
+</section>
+<section id="section-28.8-publication-bias" class="level2" data-number="22.9">
+<h2 data-number="22.9" class="anchored" data-anchor-id="section-28.8-publication-bias"><span class="header-section-number">22.9</span> Section 28.8: Publication Bias</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section examines publication bias - whether studies with certain results are more likely to be published. Think of it like checking if we’re missing studies:</p>
+<ol type="1">
+<li><strong>Funnel plot</strong>: A plot that should be symmetric if there’s no publication bias</li>
+<li><strong>Begg and Egger tests</strong>: Statistical tests for publication bias</li>
+<li><strong>Trim-and-fill</strong>: A method to estimate what missing studies might look like</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re checking if studies with negative or null results are missing. If small studies with negative results aren’t published, our meta-analysis might be biased. Funnel plots and tests help detect this.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">funnel</span>(meta_conc, <span class="at">ylab =</span> <span class="st">"SE of treatment effect"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="sme_r_chapter_21_files/figure-html/funnel-bias-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Funnel plot</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># metabias() only accepts one method at a time, so call separately</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(meta_conc)) {</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  begg_test <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">metabias</span>(meta_conc, <span class="at">method.bias =</span> <span class="st">"Begg"</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">warning</span>(<span class="st">"Begg test failed: "</span>, <span class="fu">conditionMessage</span>(e))</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="cn">NULL</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  egger_test <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">metabias</span>(meta_conc, <span class="at">method.bias =</span> <span class="st">"Egger"</span>)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">warning</span>(<span class="st">"Egger test failed: "</span>, <span class="fu">conditionMessage</span>(e))</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    <span class="cn">NULL</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Combine results</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(begg_test) <span class="sc">&amp;&amp;</span> <span class="sc">!</span><span class="fu">is.null</span>(egger_test)) {</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">Begg =</span> begg_test, <span class="at">Egger =</span> egger_test)</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(begg_test)) {</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">Begg =</span> begg_test)</span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(egger_test)) {</span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">Egger =</span> egger_test)</span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Bias tests not available: both tests failed"</span></span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Bias tests not available: meta_conc is NULL"</span></span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$Begg
+Rank correlation test of funnel plot asymmetry
+
+Test result: z = 0.37, p-value = 0.7086
+Bias estimate: 16.0000 (SE = 42.8174)
+
+Reference: Begg &amp; Mazumdar (1993), Biometrics
+
+$Egger
+Linear regression test of funnel plot asymmetry
+
+Test result: t = 1.88, df = 23, p-value = 0.0725
+Bias estimate: 4.7340 (SE = 2.5151)
+
+Details:
+- multiplicative residual heterogeneity variance (tau^2 = 20.4389)
+- predictor: standard error
+- weight:    inverse variance
+- reference: Egger et al. (1997), BMJ</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>meta_trim <span class="ot">&lt;-</span> <span class="fu">trimfill</span>(meta_conc)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">funnel</span>(meta_trim, <span class="at">ylab =</span> <span class="st">"SE of treatment effect"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="sme_r_chapter_21_files/figure-html/trimfill-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Trim-and-fill funnel plot</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="example-28.9-influential-studies" class="level2" data-number="22.10">
+<h2 data-number="22.10" class="anchored" data-anchor-id="example-28.9-influential-studies"><span class="header-section-number">22.10</span> Example 28.9: Influential Studies</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section identifies studies that have a large impact on results. Think of it like finding which studies drive the overall conclusion:</p>
+<ol type="1">
+<li><strong>Influence analysis</strong>: Testing what happens if we remove each study one at a time</li>
+<li><strong>Sensitivity</strong>: Seeing how much results change when influential studies are removed</li>
+<li><strong>Identifying outliers</strong>: Finding studies that have unusual results</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re checking which studies have the biggest impact on our results. If removing one study changes the conclusion dramatically, that study is influential. We want to understand why and make sure our conclusions are robust.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(meta_conc)) {</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  influence_all <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">metainf</span>(meta_conc, <span class="at">pooled =</span> <span class="st">"random"</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">warning</span>(<span class="st">"Influence analysis failed: "</span>, <span class="fu">conditionMessage</span>(e))</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="cn">NULL</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(influence_all)) {</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(influence_all, <span class="at">digits =</span> <span class="dv">2</span>)</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Try to plot - check if plot method exists</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    plot_result <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">plot</span>(influence_all)</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>    }, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>      <span class="co"># If plot() fails, try to extract data and create manual plot</span></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="fu">is.list</span>(influence_all) <span class="sc">&amp;&amp;</span> <span class="st">"TE"</span> <span class="sc">%in%</span> <span class="fu">names</span>(influence_all)) {</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Create a basic influence plot</span></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>        influence_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>          <span class="at">study =</span> <span class="fu">seq_along</span>(influence_all<span class="sc">$</span>TE),</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>          <span class="at">TE =</span> influence_all<span class="sc">$</span>TE,</span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>          <span class="at">lower =</span> influence_all<span class="sc">$</span>lower,</span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>          <span class="at">upper =</span> influence_all<span class="sc">$</span>upper</span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>(influence_df, <span class="fu">aes</span>(<span class="at">x =</span> study, <span class="at">y =</span> TE)) <span class="sc">+</span></span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>          <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>          <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lower, <span class="at">ymax =</span> upper), <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>          <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>          <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Study (omitted)"</span>, <span class="at">y =</span> <span class="st">"Treatment effect"</span>, </span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>               <span class="at">title =</span> <span class="st">"Influence analysis: leave-one-out"</span>) <span class="sc">+</span></span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>          <span class="fu">theme_minimal</span>()</span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> {</span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a>        <span class="fu">warning</span>(<span class="st">"Could not create influence plot: "</span>, <span class="fu">conditionMessage</span>(e))</span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a>          <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="fl">0.5</span>, <span class="at">y =</span> <span class="fl">0.5</span>, <span class="at">label =</span> <span class="st">"Influence plot not available"</span>) <span class="sc">+</span></span>
+<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a>          <span class="fu">theme_void</span>()</span>
+<span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb24-40"><a href="#cb24-40" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb24-41"><a href="#cb24-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(plot_result)) {</span>
+<span id="cb24-42"><a href="#cb24-42" aria-hidden="true" tabindex="-1"></a>      plot_result</span>
+<span id="cb24-43"><a href="#cb24-43" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb24-44"><a href="#cb24-44" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb24-45"><a href="#cb24-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Influence analysis not available: meta_conc is NULL or analysis failed"</span></span>
+<span id="cb24-46"><a href="#cb24-46" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb24-47"><a href="#cb24-47" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb24-48"><a href="#cb24-48" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Influence analysis not available: meta_conc is NULL"</span></span>
+<span id="cb24-49"><a href="#cb24-49" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Leave-one-out meta-analysis
+
+                        MD         95%-CI  p-value  tau^2    tau   I^2
+Omitting 297         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 294         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 293         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 295         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 296         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 285         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 279         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 292         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 274         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 281         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 283         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 287         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 290         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 289         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 273         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 286         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 276         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 275         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 291         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 278         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 284         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 282         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 277         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 280         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 288         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 259         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 271         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 268         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 269         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 266         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 267         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 255         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 256         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 260         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 265         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 264         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 270         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 261         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 257         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 263         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 272         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 258         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 262         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 244         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 248         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 247         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 249         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 246         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 251         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 250         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 245         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 225         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 224         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 227         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 226         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 232         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 231         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 228         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 234         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 233         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 235         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 229         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 230         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 223         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 222         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 221         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1015        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1016        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 205         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 196         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 192         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 207         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 194         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 213         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 215         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 220         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 190         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 206         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 217         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 189         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 216         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 203         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 210         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 208         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 199         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 198         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 204         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 193         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 209         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 214         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 187         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 218         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 212         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 188         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 200         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 197         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 219         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 202         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 195         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 201         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 191         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 211         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1002        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 993         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 988         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 991         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 995         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 992         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 986         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1000        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1001        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 999         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 998         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 997         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 990         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 987         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1003        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 994         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 989         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 996         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1011        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1005        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1012        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1004        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1013        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1006        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1007        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1014        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1009        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1008        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1010        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 183         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 185         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 182         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 181         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 184         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 186         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 252         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 254         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 253         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 172         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 174         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 171         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 170         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 173         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 167         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 168         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 169         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 166         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 165         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 973         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 972         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 975         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 974         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 985         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 983         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 981         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 982         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 978         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 979         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 977         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 976         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 984         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 980         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 942         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 923         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 948         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 957         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 933         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 926         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 951         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 939         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 931         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 914         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 912         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 946         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 929         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 932         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 935         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 928         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 956         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 925         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 921         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 958         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 949         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 913         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 916         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 944         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 936         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 922         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 938         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 924         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 950         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 941         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 954         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 945         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 915         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 953         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 947         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 911         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 934         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 955         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 918         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 940         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 917         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 937         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 919         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 930         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 927         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 943         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 920         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 952         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 179         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 180         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 178         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 120         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 123         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 122         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 119         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 121         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 127         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 126         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 128         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 124         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 125         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 474         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 476         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 481         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 475         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 483         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 482         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 478         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 480         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 479         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 477         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 825         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 823         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 826         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 821         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 827         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 824         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 828         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 822         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 164         -2.14 [-2.57; -1.71] &lt; 0.0001 1.0238 1.0119 95.7%
+Omitting 161         -2.11 [-2.55; -1.68] &lt; 0.0001 1.0262 1.0130 95.8%
+Omitting 157         -2.18 [-2.60; -1.75] &lt; 0.0001 0.9864 0.9932 95.6%
+Omitting 154         -2.09 [-2.52; -1.67] &lt; 0.0001 0.9993 0.9996 95.7%
+Omitting 163         -2.16 [-2.59; -1.73] &lt; 0.0001 1.0051 1.0026 95.7%
+Omitting 156         -2.12 [-2.56; -1.69] &lt; 0.0001 1.0308 1.0153 95.8%
+Omitting 159         -2.14 [-2.58; -1.71] &lt; 0.0001 1.0256 1.0127 95.7%
+Omitting 158         -2.13 [-2.57; -1.70] &lt; 0.0001 1.0278 1.0138 95.8%
+Omitting 155         -2.11 [-2.55; -1.68] &lt; 0.0001 1.0266 1.0132 95.8%
+Omitting 160         -2.13 [-2.57; -1.70] &lt; 0.0001 1.0327 1.0162 95.7%
+Omitting 153         -2.12 [-2.56; -1.69] &lt; 0.0001 1.0302 1.0150 95.8%
+Omitting 162         -2.11 [-2.55; -1.68] &lt; 0.0001 1.0267 1.0132 95.8%
+Omitting 441         -2.08 [-2.50; -1.66] &lt; 0.0001 0.9680 0.9838 95.7%
+Omitting 435         -2.19 [-2.61; -1.77] &lt; 0.0001 0.9560 0.9778 95.4%
+Omitting 434         -2.19 [-2.61; -1.77] &lt; 0.0001 0.9624 0.9810 95.2%
+Omitting 440         -2.10 [-2.53; -1.67] &lt; 0.0001 1.0138 1.0069 95.7%
+Omitting 438         -2.09 [-2.52; -1.67] &lt; 0.0001 0.9903 0.9952 95.7%
+Omitting 436         -2.17 [-2.60; -1.74] &lt; 0.0001 0.9968 0.9984 95.6%
+Omitting 437         -2.21 [-2.62; -1.80] &lt; 0.0001 0.9037 0.9507 95.2%
+Omitting 439         -2.07 [-2.48; -1.66] &lt; 0.0001 0.9305 0.9646 95.7%
+Omitting 356         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 355         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 364         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 353         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 358         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 360         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 363         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 362         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 354         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 361         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 359         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 357         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 350         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 349         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 347         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 351         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 352         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 348         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 112         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 819         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 820         -2.17 [-2.60; -1.75] &lt; 0.0001 0.9883 0.9941 95.7%
+Omitting 818         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 88          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 82          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 94          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 91          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 89          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 93          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 85          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 87          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 79          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 78          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 86          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 77          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 92          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 90          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 81          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 83          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 80          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 84          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 815         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 817         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 816         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 37          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 36          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 35          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 805         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 29          -2.01 [-2.36; -1.66] &lt; 0.0001 0.6398 0.7999 88.1%
+Omitting 787         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 789         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 788         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 786         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 784         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 791         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 783         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 785         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 790         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 782         -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 39          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 40          -2.16 [-2.58; -1.73] &lt; 0.0001 1.0050 1.0025 95.7%
+Omitting 38          -2.13 [-2.57; -1.70] &lt; 0.0001 1.0253 1.0126 95.8%
+Omitting 41          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 781         -2.17 [-2.59; -1.75] &lt; 0.0001 0.9819 0.9909 95.7%
+Omitting 45          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 48          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 47          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 44          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 52          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 50          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 49          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 46          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 42          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 43          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 55          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 53          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 54          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 51          -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1139        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1140        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1129        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1128        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1123        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1124        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1131        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1137        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1125        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1138        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1126        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1136        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1135        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1134        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1132        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1133        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1130        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1127        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1141        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1142        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1162        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1155        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1159        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1154        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1145        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1143        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1158        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1161        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1151        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1157        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1160        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1144        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1146        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1156        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1149        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1153        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1147        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1152        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1148        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1150        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+Omitting 1163        -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+                                                                      
+Random effects model -2.13 [-2.55; -1.72] &lt; 0.0001 0.9850 0.9925 95.6%
+
+Details of meta-analysis methods:
+- Inverse variance method
+- Restricted maximum-likelihood estimator for tau^2
+- Calculation of I^2 based on Q</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="sme_r_chapter_21_files/figure-html/influence-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>These plots and summaries reproduce the main analyses of Chapter 28 using R’s <code>meta</code> package. Some numerical values may differ slightly due to differences in defaults (e.g.&nbsp;Hartung-Knapp adjustments).</p>
+</section>
+<section id="references" class="level2" data-number="22.11">
+<h2 data-number="22.11" class="anchored" data-anchor-id="references"><span class="header-section-number">22.11</span> References</h2>
+<ol type="1">
+<li><p>Dohoo, I., Martin, W., &amp; Stryhn, H. Methods in Epidemiologic Research. University of Prince Edward Island. Available at: https://projects.upei.ca/mer/</p></li>
+<li><p>Kirkwood, B. R., &amp; Sterne, J. A. C. Essential Medical Statistics, 2nd Edition. Wiley-Blackwell. Available at: https://bcs.wiley.com/he-bcs/Books?action=index&amp;bcsId=11848&amp;itemId=0865428719</p></li>
+<li><p>Batra, N., et al.&nbsp;The Epidemiologist R Handbook. Applied Epi Incorporated, 2021. Available at: https://www.epirhandbook.com/en/</p></li>
+<li><p>Rothman KJ, Huybrechts KF, Murray EJ. Epidemiology. 3rd ed.&nbsp;Oxford University Press; 2024. ISBN: 9780197751541.</p></li>
+<li><p>Jordan RA, Celeste RK, Bernabe E, Schwendicke F. Big Data in Epidemiology: Brave New World? J Dent Res. 2024 Oct;103(11):1047-1050. doi: 10.1177/00220345241272034. Epub 2024 Oct 2. PMID: 39359106; PMCID: PMC11653310.</p></li>
+<li><p>Mazzella, A. R4SME: R for Statistical Methods in Epidemiology. Available at: https://github.com/andreamazzella/R4SME</p></li>
+<li><p>Mazzella, A. R4ASME: R for Advanced Statistical Methods in Epidemiology. Available at: https://github.com/andreamazzella/r4asme</p></li>
+<li><p>BMJ Mental Health. Meta-analysis methods. Available at: https://mentalhealth.bmj.com/content/22/4/153</p></li>
+<li><p>Springer. Meta-analysis: A Guide to Calibrating and Combining Statistical Evidence. Available at: https://link.springer.com/book/10.1007/978-3-319-21416-0</p></li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./sme_r_chapter_20.html" class="pagination-link" aria-label="SME Chapter 20: Spatial Data Visualisation">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">SME Chapter 20: Spatial Data Visualisation</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./sme_r_chapter_22.html" class="pagination-link" aria-label="SME Chapter 22: Confounding Detection and Control">
+        <span class="nav-page-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">SME Chapter 22: Confounding Detection and Control</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

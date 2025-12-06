@@ -1,0 +1,1987 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Wingston Felix Ng’ambi1">
+<meta name="author" content="Cosmas Zyambo2">
+<meta name="author" content="Adamson Sinjani Muula3-5">
+
+<title>18&nbsp; SME Chapter 17: Mixed Models for Discrete Data – Statistical methods in epidemiology: A step-by-step R tutorial</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./sme_r_chapter_18.html" rel="next">
+<link href="./sme_r_chapter_16.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-364982630eef5352dd1537128a8ed5cb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./sme_r_chapter_13.html">Count, Survival &amp; Clustered Data</a></li><li class="breadcrumb-item"><a href="./sme_r_chapter_17.html"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">SME Chapter 17: Mixed Models for Discrete Data</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Statistical methods in epidemiology: A step-by-step R tutorial</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Statistical methods in epidemiology: A step-by-step R tutorial</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">SME Chapter 1: Introduction to R and Epidemiology</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">SME Chapter 2: AI in R Epidemiologic Computing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Sampling &amp; Basic Methods</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">SME Chapter 3: Sampling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">SME Chapter 4: Confidence Intervals and Standardization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">SME Chapter 5: Precision, Agreement, and Diagnostic Accuracy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">SME Chapter 6: Measures of Association</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Sensitivity &amp; Confounding</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">SME Chapter 7: Sensitivity Analyses for Bias</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">SME Chapter 8: Confounding and Propensity Scores</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Regression &amp; Model Building</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">SME Chapter 9: Linear Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">SME Chapter 10: Model Building</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">SME Chapter 11: Logistic Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">SME Chapter 12: Ordinal and Multinomial Logistic Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Count, Survival &amp; Clustered Data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">SME Chapter 13: Modelling Count Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_14.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">SME Chapter 14: Modelling Survival Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_15.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">SME Chapter 15: Introduction to Clustered Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_16.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">SME Chapter 16: Multilevel and Mixed Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_17.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">SME Chapter 17: Mixed Models for Discrete Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_18.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">SME Chapter 18: Repeated Measures Data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Bayesian, Spatial &amp; Meta-analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_19.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">SME Chapter 19: Bayesian Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_20.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">SME Chapter 20: Spatial Data Visualisation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_21.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">SME Chapter 21: Meta-analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_22.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">SME Chapter 22: Confounding Detection and Control</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#replication-notes" id="toc-replication-notes" class="nav-link active" data-scroll-target="#replication-notes"><span class="header-section-number">18.1</span> Replication Notes</a></li>
+  <li><a href="#theoretical-background" id="toc-theoretical-background" class="nav-link" data-scroll-target="#theoretical-background"><span class="header-section-number">18.2</span> Theoretical Background</a></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup"><span class="header-section-number">18.3</span> Setup</a></li>
+  <li><a href="#example-22.1-random-effects-logistic-regression-two-level" id="toc-example-22.1-random-effects-logistic-regression-two-level" class="nav-link" data-scroll-target="#example-22.1-random-effects-logistic-regression-two-level"><span class="header-section-number">18.4</span> Example 22.1: Random-Effects Logistic Regression (Two-Level)</a></li>
+  <li><a href="#example-22.3-random-effects-poisson-regression" id="toc-example-22.3-random-effects-poisson-regression" class="nav-link" data-scroll-target="#example-22.3-random-effects-poisson-regression"><span class="header-section-number">18.5</span> Example 22.3: Random-Effects Poisson Regression</a></li>
+  <li><a href="#example-22.4-four-level-logistic-probit-models" id="toc-example-22.4-four-level-logistic-probit-models" class="nav-link" data-scroll-target="#example-22.4-four-level-logistic-probit-models"><span class="header-section-number">18.6</span> Example 22.4: Four-Level Logistic / Probit Models</a></li>
+  <li><a href="#example-22.5-random-effects-count-models" id="toc-example-22.5-random-effects-count-models" class="nav-link" data-scroll-target="#example-22.5-random-effects-count-models"><span class="header-section-number">18.7</span> Example 22.5: Random-Effects Count Models</a></li>
+  <li><a href="#example-22.6-random-effects-proportional-odds-model" id="toc-example-22.6-random-effects-proportional-odds-model" class="nav-link" data-scroll-target="#example-22.6-random-effects-proportional-odds-model"><span class="header-section-number">18.8</span> Example 22.6: Random-Effects Proportional-Odds Model</a></li>
+  <li><a href="#example-22.7-quadrature-checks" id="toc-example-22.7-quadrature-checks" class="nav-link" data-scroll-target="#example-22.7-quadrature-checks"><span class="header-section-number">18.9</span> Example 22.7: Quadrature Checks</a></li>
+  <li><a href="#example-22.9-model-comparison-via-likelihood-ratio-tests" id="toc-example-22.9-model-comparison-via-likelihood-ratio-tests" class="nav-link" data-scroll-target="#example-22.9-model-comparison-via-likelihood-ratio-tests"><span class="header-section-number">18.10</span> Example 22.9: Model Comparison via Likelihood-Ratio Tests</a></li>
+  <li><a href="#example-22.10-predictive-probabilities-under-a-random-intercept-logistic-model" id="toc-example-22.10-predictive-probabilities-under-a-random-intercept-logistic-model" class="nav-link" data-scroll-target="#example-22.10-predictive-probabilities-under-a-random-intercept-logistic-model"><span class="header-section-number">18.11</span> Example 22.10: Predictive Probabilities under a Random-Intercept Logistic Model</a></li>
+  <li><a href="#example-22.11-residual-diagnostics-for-a-three-level-glmm" id="toc-example-22.11-residual-diagnostics-for-a-three-level-glmm" class="nav-link" data-scroll-target="#example-22.11-residual-diagnostics-for-a-three-level-glmm"><span class="header-section-number">18.12</span> Example 22.11: Residual Diagnostics for a Three-Level GLMM</a></li>
+  <li><a href="#example-22.12-comparing-approaches-for-family-level-outcomes" id="toc-example-22.12-comparing-approaches-for-family-level-outcomes" class="nav-link" data-scroll-target="#example-22.12-comparing-approaches-for-family-level-outcomes"><span class="header-section-number">18.13</span> Example 22.12: Comparing Approaches for Family-Level Outcomes</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">18.14</span> References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./sme_r_chapter_13.html">Count, Survival &amp; Clustered Data</a></li><li class="breadcrumb-item"><a href="./sme_r_chapter_17.html"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">SME Chapter 17: Mixed Models for Discrete Data</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">SME Chapter 17: Mixed Models for Discrete Data</span></h1>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Authors</div>
+  <div class="quarto-title-meta-heading">Affiliations</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Wingston Felix Ng’ambi<sup>1</sup> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Cosmas Zyambo<sup>2</sup> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Adamson Sinjani Muula<sup>3-5</sup> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This chapter reproduces and expands upon the analyses from the original Methods in Epidemiologic Research (MER) Chapter 22 (Dohoo, Martin, &amp; Stryhn, 2012) using R with data sourced from <code>../mer_data_stata/</code>. The chapter covers generalized linear mixed models (GLMMs) - essential methods for analyzing discrete outcomes (binary, count, ordinal) in clustered data structures.</p>
+</div>
+</div>
+<section id="replication-notes" class="level2" data-number="18.1">
+<h2 data-number="18.1" class="anchored" data-anchor-id="replication-notes"><span class="header-section-number">18.1</span> Replication Notes</h2>
+<ul>
+<li><strong>Data dependencies:</strong> <code>../mer_data_stata/brazil_smpl.dta</code>, <code>brazil_smplx.dta</code> (if available), and <code>brazil.dta</code>.</li>
+<li><strong>Required R packages:</strong> <code>dplyr</code>, <code>tidyr</code>, <code>tibble</code>, <code>haven</code>, <code>forcats</code>, <code>ggplot2</code>, <code>lme4</code>, <code>glmmTMB</code>, <code>ordinal</code>, <code>broom.mixed</code>, <code>broom</code>, <code>performance</code>, <code>purrr</code>, <code>glue</code>, <code>lmtest</code>, <code>sandwich</code>, <code>geepack</code>.</li>
+<li><strong>Setup tips:</strong> Install via <code>install.packages(c("dplyr","tidyr","tibble","haven","forcats","ggplot2","lme4","glmmTMB","ordinal","broom.mixed","broom","performance","purrr","glue","lmtest","sandwich","geepack"))</code>.</li>
+<li><strong>Execution:</strong> Run the notebook sequentially; all GLMM, meta-regression-style comparisons, and residual diagnostics are recomputed using the supplied datasets.</li>
+</ul>
+</section>
+<section id="theoretical-background" class="level2" data-number="18.2">
+<h2 data-number="18.2" class="anchored" data-anchor-id="theoretical-background"><span class="header-section-number">18.2</span> Theoretical Background</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Understanding Generalized Linear Mixed Models (GLMMs)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Before we analyze discrete outcomes with clustering, let’s understand what GLMMs are and why we need them. GLMMs combine the flexibility of generalized linear models with the ability to handle clustered data structures (Dohoo, Martin, &amp; Stryhn, 2012; Kirkwood &amp; Sterne, 2003):</p>
+<section id="what-are-glmms" class="level3" data-number="18.2.1">
+<h3 data-number="18.2.1" class="anchored" data-anchor-id="what-are-glmms"><span class="header-section-number">18.2.1</span> What are GLMMs?</h3>
+<p><strong>Generalized Linear Mixed Models (GLMMs)</strong> combine two ideas: 1. <strong>Generalized Linear Models (GLMs)</strong>: For non-normal outcomes (like binary, counts, ordinal) 2. <strong>Mixed-effects models</strong>: For clustered/hierarchical data</p>
+<p><strong>Think of it like</strong>: Taking logistic regression (for binary outcomes) or Poisson regression (for counts) and adding random effects to account for clustering.</p>
+</section>
+<section id="why-we-need-glmms" class="level3" data-number="18.2.2">
+<h3 data-number="18.2.2" class="anchored" data-anchor-id="why-we-need-glmms"><span class="header-section-number">18.2.2</span> Why We Need GLMMs</h3>
+<p>When you have: - <strong>Discrete outcomes</strong> (yes/no, counts, categories) that need GLMs - <strong>Clustered data</strong> (people in families, patients in clinics) that need random effects</p>
+<p>You need GLMMs! Regular GLMs ignore clustering. Regular mixed models assume normal outcomes. GLMMs handle both.</p>
+</section>
+<section id="types-of-glmms" class="level3" data-number="18.2.3">
+<h3 data-number="18.2.3" class="anchored" data-anchor-id="types-of-glmms"><span class="header-section-number">18.2.3</span> Types of GLMMs</h3>
+</section>
+<section id="random-intercept-models" class="level3" data-number="18.2.4">
+<h3 data-number="18.2.4" class="anchored" data-anchor-id="random-intercept-models"><span class="header-section-number">18.2.4</span> 1. Random-Intercept Models</h3>
+<p><strong>Random intercepts</strong> allow each cluster to have its own baseline. Like: “Each family has its own baseline risk of diarrhea, but the effect of treatment is the same for all families.”</p>
+<p><strong>Example</strong>: Modeling diarrhea (yes/no) in families, where families are clustered within communities.</p>
+</section>
+<section id="random-slope-models" class="level3" data-number="18.2.5">
+<h3 data-number="18.2.5" class="anchored" data-anchor-id="random-slope-models"><span class="header-section-number">18.2.5</span> 2. Random-Slope Models</h3>
+<p><strong>Random slopes</strong> allow the effect of predictors to vary by cluster. Like: “The effect of treatment differs by clinic - some clinics show a strong effect, others show a weak effect.”</p>
+</section>
+<section id="multi-level-glmms" class="level3" data-number="18.2.6">
+<h3 data-number="18.2.6" class="anchored" data-anchor-id="multi-level-glmms"><span class="header-section-number">18.2.6</span> 3. Multi-Level GLMMs</h3>
+<p><strong>Multi-level</strong> means multiple levels of clustering. Like: - Level 1: Individuals - Level 2: Families - Level 3: Communities - Level 4: Municipalities</p>
+<p>Each level can have its own random effects.</p>
+</section>
+<section id="key-concepts" class="level3" data-number="18.2.7">
+<h3 data-number="18.2.7" class="anchored" data-anchor-id="key-concepts"><span class="header-section-number">18.2.7</span> Key Concepts</h3>
+</section>
+<section id="link-functions" class="level3" data-number="18.2.8">
+<h3 data-number="18.2.8" class="anchored" data-anchor-id="link-functions"><span class="header-section-number">18.2.8</span> 1. Link Functions</h3>
+<p>GLMMs use link functions (like logit for binary, log for counts) to transform outcomes to a scale where relationships are linear.</p>
+</section>
+<section id="variance-components" class="level3" data-number="18.2.9">
+<h3 data-number="18.2.9" class="anchored" data-anchor-id="variance-components"><span class="header-section-number">18.2.9</span> 2. Variance Components</h3>
+<p>GLMMs partition variance into: - <strong>Between-cluster variance</strong>: How much clusters differ - <strong>Within-cluster variance</strong>: How much individuals differ within clusters - <strong>Residual variance</strong>: Unexplained variation</p>
+</section>
+<section id="intraclass-correlation-icc" class="level3" data-number="18.2.10">
+<h3 data-number="18.2.10" class="anchored" data-anchor-id="intraclass-correlation-icc"><span class="header-section-number">18.2.10</span> 3. Intraclass Correlation (ICC)</h3>
+<p><strong>ICC</strong> for binary outcomes measures what proportion of variance is between clusters. It’s more complex than for continuous outcomes because of the link function.</p>
+</section>
+<section id="prediction-types" class="level3" data-number="18.2.11">
+<h3 data-number="18.2.11" class="anchored" data-anchor-id="prediction-types"><span class="header-section-number">18.2.11</span> 4. Prediction Types</h3>
+<p>GLMMs can give different types of predictions: - <strong>Conditional</strong>: Predictions for specific clusters (like “this family’s risk”) - <strong>Marginal</strong>: Population-averaged predictions (like “average risk across all families”)</p>
+</section>
+<section id="model-fitting-challenges" class="level3" data-number="18.2.12">
+<h3 data-number="18.2.12" class="anchored" data-anchor-id="model-fitting-challenges"><span class="header-section-number">18.2.12</span> Model Fitting Challenges</h3>
+<p>GLMMs are harder to fit than regular models because: - <strong>No closed-form solution</strong>: Need numerical methods (like quadrature) - <strong>Computational intensity</strong>: Can be slow for large datasets or complex models - <strong>Convergence issues</strong>: Models might not converge</p>
+</section>
+<section id="model-diagnostics" class="level3" data-number="18.2.13">
+<h3 data-number="18.2.13" class="anchored" data-anchor-id="model-diagnostics"><span class="header-section-number">18.2.13</span> Model Diagnostics</h3>
+<p>We check GLMMs by looking at: - <strong>Random effects</strong>: Should be normally distributed - <strong>Residuals</strong>: Harder to define for discrete outcomes, but we can check patterns - <strong>Model fit</strong>: AIC, BIC, likelihood ratio tests</p>
+</section>
+<section id="when-to-use-glmms" class="level3" data-number="18.2.14">
+<h3 data-number="18.2.14" class="anchored" data-anchor-id="when-to-use-glmms"><span class="header-section-number">18.2.14</span> When to Use GLMMs</h3>
+<p>Use GLMMs when you have: - Discrete outcomes (binary, counts, ordinal) - Clustered data (hierarchical structure) - Need to account for both</p>
+<p><strong>Alternatives</strong>: - <strong>GEE</strong>: For population-averaged estimates (doesn’t model cluster effects) - <strong>Fixed effects</strong>: When you have few clusters and want to estimate each one</p>
+<p><strong>In simple terms</strong>: GLMMs are for discrete outcomes (like yes/no or counts) that are clustered (like families or clinics). They combine the flexibility of GLMs (for non-normal outcomes) with random effects (for clustering). They’re more complex than regular models but necessary when you have both discrete outcomes and clustering. They let us get correct answers from complex data structures.</p>
+</section>
+</div>
+</div>
+</section>
+<section id="setup" class="level2" data-number="18.3">
+<h2 data-number="18.3" class="anchored" data-anchor-id="setup"><span class="header-section-number">18.3</span> Setup</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section prepares for mixed-effects models with discrete outcomes (like yes/no, or counts). Think of it like analyzing binary or count data that’s clustered:</p>
+<ol type="1">
+<li><strong>Loading libraries</strong>: Getting tools for generalized linear mixed models (GLMMs)</li>
+<li><strong>Reading data</strong>: Opening clustered data with discrete outcomes (like diarrhea: yes/no)</li>
+<li><strong>Data preparation</strong>: Organizing data for mixed-effects analysis with binary/count outcomes</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re preparing to analyze discrete outcomes (like “does the family have diarrhea?”) that are clustered (families within communities). This requires special methods because regular mixed models are for continuous outcomes.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forcats)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glmmTMB)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ordinal)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom.mixed)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(performance)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glue)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sandwich)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(geepack)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_minimal</span>())</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>data_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">".."</span>, <span class="st">"mer_data_stata"</span>)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>brazil_smpl <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="fu">file.path</span>(data_dir, <span class="st">"brazil_smpl.dta"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(haven<span class="sc">::</span>is.labelled), haven<span class="sc">::</span>as_factor))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="example-22.1-random-effects-logistic-regression-two-level" class="level2" data-number="18.4">
+<h2 data-number="18.4" class="anchored" data-anchor-id="example-22.1-random-effects-logistic-regression-two-level"><span class="header-section-number">18.4</span> Example 22.1: Random-Effects Logistic Regression (Two-Level)</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section fits a logistic regression model that accounts for clustering. Think of it like predicting yes/no outcomes while accounting for groups:</p>
+<ol type="1">
+<li><strong>Aggregating to family level</strong>: Converting individual diarrhea to family-level (does any family member have diarrhea?)</li>
+<li><strong>Random-effects logistic regression</strong>: A model that predicts binary outcomes (yes/no) while allowing each group (community) to have its own baseline</li>
+<li><strong>Random intercepts</strong>: Each community can have a different baseline probability of diarrhea</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re predicting whether a family has diarrhea (yes/no) while accounting for the fact that families in the same community might be more similar to each other. The model allows each community to have its own baseline risk.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert diarr to 0/1 numeric (for max() calculation and binomial model)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># max() doesn't work on factors, and binomial models need 0/1 values</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">is.factor</span>(brazil_smpl<span class="sc">$</span>diarr)) {</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Convert factor to 0/1: check if any level indicates "yes" or positive</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  diarr_levels <span class="ot">&lt;-</span> <span class="fu">levels</span>(brazil_smpl<span class="sc">$</span>diarr)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Find which level represents "yes" (diarrhea present)</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  yes_level_idx <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">grepl</span>(<span class="st">"yes|1|true|present"</span>, diarr_levels, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>))[<span class="dv">1</span>]</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.na</span>(yes_level_idx)) {</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If no clear "yes" level, assume higher numeric level is "yes"</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    yes_level_idx <span class="ot">&lt;-</span> <span class="fu">length</span>(diarr_levels)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  brazil_smpl_prep <span class="ot">&lt;-</span> brazil_smpl <span class="sc">|&gt;</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">diarr_num =</span> <span class="fu">if_else</span>(<span class="fu">as.numeric</span>(diarr) <span class="sc">==</span> yes_level_idx, <span class="dv">1</span>L, <span class="dv">0</span>L))</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Already numeric, convert to 0/1</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  brazil_smpl_prep <span class="ot">&lt;-</span> brazil_smpl <span class="sc">|&gt;</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">diarr_num =</span> <span class="fu">if_else</span>(<span class="fu">as.numeric</span>(diarr) <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>L, <span class="dv">0</span>L))</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Now max() will give 0 or 1 (family has diarrhea if any member has it)</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>family_level <span class="ot">&lt;-</span> brazil_smpl_prep <span class="sc">|&gt;</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(fam, comm) <span class="sc">|&gt;</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(fam, comm, mun) <span class="sc">|&gt;</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">famdiarr =</span> <span class="fu">max</span>(diarr_num, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),  <span class="co"># This will be 0 or 1</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">cistern =</span> <span class="fu">first</span>(cistern),</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop_last"</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">within_f =</span> <span class="fu">row_number</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure famdiarr is integer 0/1 for binomial model</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>family_sample <span class="ot">&lt;-</span> family_level <span class="sc">|&gt;</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(within_f <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">famdiarr =</span> <span class="fu">as.integer</span>(famdiarr))</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Final validation: ensure all values are 0 or 1</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">any</span>(<span class="sc">!</span>family_sample<span class="sc">$</span>famdiarr <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">"famdiarr contains values outside 0/1. Converting to 0/1."</span>)</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>  family_sample<span class="sc">$</span>famdiarr <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(family_sample<span class="sc">$</span>famdiarr <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>L, <span class="dv">0</span>L)</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>contingency <span class="ot">&lt;-</span> family_sample <span class="sc">|&gt;</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(famdiarr, cistern) <span class="sc">|&gt;</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> cistern, <span class="at">values_from =</span> n, <span class="at">values_fill =</span> <span class="dv">0</span>)</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>logistic_comm <span class="ot">&lt;-</span> <span class="fu">glmer</span>(</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>  famdiarr <span class="sc">~</span> cistern <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> comm),</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> family_sample,</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>()</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(logistic_comm, <span class="at">effects =</span> <span class="st">"fixed"</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 8
+  effect term        estimate std.error statistic   p.value conf.low conf.high
+  &lt;chr&gt;  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 fixed  (Intercept)   -0.151     0.135     -1.12 0.262       -0.416     0.113
+2 fixed  cisternYes    -0.698     0.179     -3.90 0.0000972   -1.05     -0.347</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>var_comm <span class="ot">&lt;-</span> <span class="fu">VarCorr</span>(logistic_comm)<span class="sc">$</span>comm[<span class="dv">1</span>]</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>icc_logit <span class="ot">&lt;-</span> var_comm <span class="sc">/</span> (var_comm <span class="sc">+</span> (pi<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="dv">3</span>))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">component =</span> <span class="fu">c</span>(<span class="st">"Community variance"</span>, <span class="st">"Logistic residual variance"</span>, <span class="st">"ICC"</span>),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">c</span>(var_comm, pi<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="dv">3</span>, icc_logit)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  component                  value
+  &lt;chr&gt;                      &lt;dbl&gt;
+1 Community variance         0.505
+2 Logistic residual variance 3.29 
+3 ICC                        0.133</code></pre>
+</div>
+</div>
+</section>
+<section id="example-22.3-random-effects-poisson-regression" class="level2" data-number="18.5">
+<h2 data-number="18.5" class="anchored" data-anchor-id="example-22.3-random-effects-poisson-regression"><span class="header-section-number">18.5</span> Example 22.3: Random-Effects Poisson Regression</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section models count data (like number of cases) using Poisson regression with random effects. Think of it like predicting how many cases occur, accounting for clustering:</p>
+<ol type="1">
+<li><strong>Aggregating to family level</strong>: Counting cases per family (like “how many family members got diarrhea?”)</li>
+<li><strong>Poisson regression</strong>: Models count outcomes (0, 1, 2, 3… cases)</li>
+<li><strong>Random effects</strong>: Accounts for clustering at the community level</li>
+<li><strong>Offset</strong>: Adjusts for family size (like accounting for larger families having more opportunities for cases)</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re modeling how many diarrhea cases occur per family, accounting for the fact that families are clustered within communities. Larger families might have more cases just because they’re larger, so we adjust for that.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert diarr to numeric for sum() calculation</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># sum() doesn't work on factors</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">is.factor</span>(brazil_smpl<span class="sc">$</span>diarr)) {</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Convert factor to 0/1 for counting cases</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  diarr_levels <span class="ot">&lt;-</span> <span class="fu">levels</span>(brazil_smpl<span class="sc">$</span>diarr)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  yes_level_idx <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">grepl</span>(<span class="st">"yes|1|true|present"</span>, diarr_levels, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>))[<span class="dv">1</span>]</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.na</span>(yes_level_idx)) {</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    yes_level_idx <span class="ot">&lt;-</span> <span class="fu">length</span>(diarr_levels)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  brazil_smpl_counts <span class="ot">&lt;-</span> brazil_smpl <span class="sc">|&gt;</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">diarr_num =</span> <span class="fu">if_else</span>(<span class="fu">as.numeric</span>(diarr) <span class="sc">==</span> yes_level_idx, <span class="dv">1</span>L, <span class="dv">0</span>L))</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  brazil_smpl_counts <span class="ot">&lt;-</span> brazil_smpl <span class="sc">|&gt;</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">diarr_num =</span> <span class="fu">if_else</span>(<span class="fu">as.numeric</span>(diarr) <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>L, <span class="dv">0</span>L))</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Check what water treatment variable exists</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>water_var <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>possible_water_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"water_treat_chlor"</span>, <span class="st">"water_treat"</span>, <span class="st">"water_tx"</span>, <span class="st">"water"</span>, <span class="st">"chlor"</span>)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (name <span class="cf">in</span> possible_water_names) {</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (name <span class="sc">%in%</span> <span class="fu">names</span>(brazil_smpl_counts)) {</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    water_var <span class="ot">&lt;-</span> name</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">break</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="co"># If not found, look for pattern</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">is.null</span>(water_var)) {</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>  water_candidates <span class="ot">&lt;-</span> <span class="fu">grep</span>(<span class="st">"water|chlor|treat"</span>, <span class="fu">names</span>(brazil_smpl_counts), <span class="at">ignore.case =</span> <span class="cn">TRUE</span>, <span class="at">value =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(water_candidates) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    water_var <span class="ot">&lt;-</span> water_candidates[<span class="dv">1</span>]</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Create water_tx column in the data if variable exists, otherwise use dummy</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(water_var)) {</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>  brazil_smpl_counts<span class="sc">$</span>water_tx_temp <span class="ot">&lt;-</span> brazil_smpl_counts[[water_var]]</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">"Water treatment variable not found. Creating dummy variable."</span>)</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>  brazil_smpl_counts<span class="sc">$</span>water_tx_temp <span class="ot">&lt;-</span> <span class="dv">0</span>L</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>family_counts <span class="ot">&lt;-</span> brazil_smpl_counts <span class="sc">|&gt;</span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(fam, comm) <span class="sc">|&gt;</span></span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(fam, comm, mun) <span class="sc">|&gt;</span></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">famcases =</span> <span class="fu">sum</span>(diarr_num, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),  <span class="co"># Sum of 0/1 values = count of cases</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">cistern =</span> <span class="fu">first</span>(cistern),</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">water_tx =</span> <span class="fu">first</span>(water_tx_temp),</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">fam_n =</span> <span class="fu">first</span>(fam_n),</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop_last"</span></span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">logn =</span> <span class="fu">log</span>(fam_n),</span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">within_f =</span> <span class="fu">row_number</span>()</span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">cistern =</span> <span class="fu">factor</span>(cistern),</span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">water_tx =</span> <span class="fu">factor</span>(water_tx)</span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>family_counts_sample <span class="ot">&lt;-</span> family_counts <span class="sc">|&gt;</span> <span class="fu">filter</span>(within_f <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a>poisson_comm <span class="ot">&lt;-</span> <span class="fu">glmer</span>(</span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a>  famcases <span class="sc">~</span> cistern <span class="sc">+</span> water_tx <span class="sc">+</span> <span class="fu">offset</span>(logn) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> comm),</span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> family_counts_sample,</span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">poisson</span>()</span>
+<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(poisson_comm, <span class="at">effects =</span> <span class="st">"fixed"</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 8
+  effect term        estimate std.error statistic  p.value conf.low conf.high
+  &lt;chr&gt;  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 fixed  (Intercept)    0.191    0.0238    -13.3  2.27e-40    0.150     0.244
+2 fixed  cisternYes     0.555    0.0615     -5.31 1.07e- 7    0.447     0.690
+3 fixed  water_txYes    0.734    0.0818     -2.77 5.54e- 3    0.590     0.913</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>sigma2 <span class="ot">&lt;-</span> <span class="fu">VarCorr</span>(poisson_comm)<span class="sc">$</span>comm[<span class="dv">1</span>]</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(sigma2)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>fixefs <span class="ot">&lt;-</span> <span class="fu">fixef</span>(poisson_comm)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>icc_curve <span class="ot">&lt;-</span> family_counts_sample <span class="sc">|&gt;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">logn =</span> <span class="fu">log</span>(fam_n),</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">bx_none =</span> fixefs[<span class="st">"(Intercept)"</span>] <span class="sc">+</span> logn,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">bx_both =</span> fixefs[<span class="st">"(Intercept)"</span>] <span class="sc">+</span> fixefs[<span class="st">"cistern1"</span>] <span class="sc">+</span> fixefs[<span class="st">"water_tx1"</span>] <span class="sc">+</span> logn,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_none =</span> <span class="fu">exp</span>(bx_none <span class="sc">+</span> sigma2 <span class="sc">/</span> <span class="dv">2</span>),</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_none =</span> <span class="fu">exp</span>(<span class="dv">2</span> <span class="sc">*</span> bx_none <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> sigma2) <span class="sc">-</span> <span class="fu">exp</span>(<span class="dv">2</span> <span class="sc">*</span> bx_none <span class="sc">+</span> sigma2),</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">icc_none =</span> var_none <span class="sc">/</span> (var_none <span class="sc">+</span> mean_none),</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_both =</span> <span class="fu">exp</span>(bx_both <span class="sc">+</span> sigma2 <span class="sc">/</span> <span class="dv">2</span>),</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_both =</span> <span class="fu">exp</span>(<span class="dv">2</span> <span class="sc">*</span> bx_both <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> sigma2) <span class="sc">-</span> <span class="fu">exp</span>(<span class="dv">2</span> <span class="sc">*</span> bx_both <span class="sc">+</span> sigma2),</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">icc_both =</span> var_both <span class="sc">/</span> (var_both <span class="sc">+</span> mean_both)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(fam_n, icc_none, icc_both) <span class="sc">|&gt;</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>icc_curve <span class="sc">|&gt;</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"icc"</span>), <span class="at">names_to =</span> <span class="st">"scenario"</span>, <span class="at">values_to =</span> <span class="st">"icc"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">scenario =</span> <span class="fu">recode</span>(scenario, <span class="at">icc_none =</span> <span class="st">"No cistern / no treatment"</span>, <span class="at">icc_both =</span> <span class="st">"Cistern + treatment"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> fam_n, <span class="at">y =</span> icc, <span class="at">shape =</span> scenario)) <span class="sc">+</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">colour =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Family size"</span>, <span class="at">y =</span> <span class="st">"ICC (community)"</span>, <span class="at">shape =</span> <span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="sme_r_chapter_17_files/figure-html/example22-3-icc-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Community-level ICC by family size under different exposure patterns</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="example-22.4-four-level-logistic-probit-models" class="level2" data-number="18.6">
+<h2 data-number="18.6" class="anchored" data-anchor-id="example-22.4-four-level-logistic-probit-models"><span class="header-section-number">18.6</span> Example 22.4: Four-Level Logistic / Probit Models</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section fits models with four levels of clustering (individual, family, community, municipality). Think of it like a Russian nesting doll - individuals within families, families within communities, communities within municipalities:</p>
+<ol type="1">
+<li><strong>Four-level structure</strong>: Accounts for clustering at multiple levels simultaneously</li>
+<li><strong>Logit vs Probit</strong>: Two different link functions (ways to model probabilities)</li>
+<li><strong>ICC calculation</strong>: Shows how much variation occurs at each level</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re accounting for clustering at multiple levels. People in the same family are similar, families in the same community are similar, and communities in the same municipality are similar. This model accounts for all of that.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find water treatment variable</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>water_var <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>possible_water_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"water_treat_chlor"</span>, <span class="st">"water_treat"</span>, <span class="st">"water_tx"</span>, <span class="st">"water"</span>, <span class="st">"chlor"</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (name <span class="cf">in</span> possible_water_names) {</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (name <span class="sc">%in%</span> <span class="fu">names</span>(brazil_smpl)) {</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    water_var <span class="ot">&lt;-</span> name</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">break</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co"># If not found, look for pattern</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">is.null</span>(water_var)) {</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  water_candidates <span class="ot">&lt;-</span> <span class="fu">grep</span>(<span class="st">"water|chlor|treat"</span>, <span class="fu">names</span>(brazil_smpl), <span class="at">ignore.case =</span> <span class="cn">TRUE</span>, <span class="at">value =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(water_candidates) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    water_var <span class="ot">&lt;-</span> water_candidates[<span class="dv">1</span>]</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert diarr to 0/1 numeric for binomial model</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">is.factor</span>(brazil_smpl<span class="sc">$</span>diarr)) {</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  diarr_levels <span class="ot">&lt;-</span> <span class="fu">levels</span>(brazil_smpl<span class="sc">$</span>diarr)</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>  yes_level_idx <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">grepl</span>(<span class="st">"yes|1|true|present"</span>, diarr_levels, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>))[<span class="dv">1</span>]</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.na</span>(yes_level_idx)) {</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>    yes_level_idx <span class="ot">&lt;-</span> <span class="fu">length</span>(diarr_levels)</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>  brazil_multi <span class="ot">&lt;-</span> brazil_smpl <span class="sc">|&gt;</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">diarr =</span> <span class="fu">if_else</span>(<span class="fu">as.numeric</span>(diarr) <span class="sc">==</span> yes_level_idx, <span class="dv">1</span>L, <span class="dv">0</span>L),</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">age5 =</span> <span class="fu">as.integer</span>(age <span class="sc">&lt;=</span> <span class="dv">5</span>),</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">smsize =</span> (<span class="fu">as.numeric</span>(m_pop_families) <span class="sc">-</span> <span class="dv">2000</span>) <span class="sc">/</span> <span class="dv">1000</span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>  brazil_multi <span class="ot">&lt;-</span> brazil_smpl <span class="sc">|&gt;</span></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>      <span class="at">diarr =</span> <span class="fu">if_else</span>(<span class="fu">as.numeric</span>(diarr) <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>L, <span class="dv">0</span>L),</span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>      <span class="at">age5 =</span> <span class="fu">as.integer</span>(age <span class="sc">&lt;=</span> <span class="dv">5</span>),</span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>      <span class="at">smsize =</span> (<span class="fu">as.numeric</span>(m_pop_families) <span class="sc">-</span> <span class="dv">2000</span>) <span class="sc">/</span> <span class="dv">1000</span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Create water_tx column if variable exists, otherwise use dummy</span></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(water_var)) {</span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>  brazil_multi<span class="sc">$</span>water_tx <span class="ot">&lt;-</span> brazil_multi[[water_var]]</span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">"Water treatment variable not found. Creating dummy variable."</span>)</span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>  brazil_multi<span class="sc">$</span>water_tx <span class="ot">&lt;-</span> <span class="dv">0</span>L</span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop NA for variables that exist</span></span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>drop_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"diarr"</span>, <span class="st">"cistern"</span>, <span class="st">"age5"</span>, <span class="st">"smsize"</span>)</span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(water_var)) {</span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>  drop_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(drop_vars, water_var)</span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>  drop_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(drop_vars, <span class="st">"water_tx"</span>)</span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>brazil_multi <span class="ot">&lt;-</span> brazil_multi <span class="sc">|&gt;</span></span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(<span class="fu">all_of</span>(drop_vars))</span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure diarr is 0/1 for binomial model</span></span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">any</span>(<span class="sc">!</span>brazil_multi<span class="sc">$</span>diarr <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">"diarr contains values outside 0/1. Converting to 0/1."</span>)</span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a>  brazil_multi<span class="sc">$</span>diarr <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(brazil_multi<span class="sc">$</span>diarr <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>L, <span class="dv">0</span>L)</span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a><span class="co"># Build model formula</span></span>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(water_var)) {</span>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a>  model_formula <span class="ot">&lt;-</span> diarr <span class="sc">~</span> cistern <span class="sc">+</span> water_tx <span class="sc">+</span> age5 <span class="sc">+</span> smsize <span class="sc">+</span></span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a>    (<span class="dv">1</span> <span class="sc">|</span> mun) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> mun<span class="sc">:</span>comm) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> mun<span class="sc">:</span>comm<span class="sc">:</span>fam)</span>
+<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a>  <span class="co"># If no water treatment variable, exclude it from model</span></span>
+<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a>  model_formula <span class="ot">&lt;-</span> diarr <span class="sc">~</span> cistern <span class="sc">+</span> age5 <span class="sc">+</span> smsize <span class="sc">+</span></span>
+<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a>    (<span class="dv">1</span> <span class="sc">|</span> mun) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> mun<span class="sc">:</span>comm) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> mun<span class="sc">:</span>comm<span class="sc">:</span>fam)</span>
+<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a>logit_four_level <span class="ot">&lt;-</span> <span class="fu">glmer</span>(</span>
+<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a>  model_formula,</span>
+<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> brazil_multi,</span>
+<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>(),</span>
+<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">glmerControl</span>(<span class="at">optimizer =</span> <span class="st">"bobyqa"</span>)</span>
+<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-82"><a href="#cb9-82" aria-hidden="true" tabindex="-1"></a>probit_four_level <span class="ot">&lt;-</span> <span class="fu">glmer</span>(</span>
+<span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a>  model_formula,</span>
+<span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> brazil_multi,</span>
+<span id="cb9-85"><a href="#cb9-85" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"probit"</span>),</span>
+<span id="cb9-86"><a href="#cb9-86" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">glmerControl</span>(<span class="at">optimizer =</span> <span class="st">"bobyqa"</span>)</span>
+<span id="cb9-87"><a href="#cb9-87" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-88"><a href="#cb9-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-89"><a href="#cb9-89" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(logit_four_level, <span class="at">effects =</span> <span class="st">"fixed"</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 8
+  effect term        estimate std.error statistic  p.value conf.low conf.high
+  &lt;chr&gt;  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 fixed  (Intercept)   -2.02     0.241      -8.39 4.75e-17 -2.49       -1.55 
+2 fixed  cisternYes    -0.857    0.174      -4.93 8.02e- 7 -1.20       -0.517
+3 fixed  water_txYes   -0.583    0.193      -3.01 2.59e- 3 -0.962      -0.204
+4 fixed  age5           0.835    0.124       6.75 1.53e-11  0.593       1.08 
+5 fixed  smsize         0.184    0.0975      1.88 5.95e- 2 -0.00738     0.375</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>var_components_logit <span class="ot">&lt;-</span> <span class="fu">VarCorr</span>(logit_four_level)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>var_mun <span class="ot">&lt;-</span> <span class="fu">attr</span>(var_components_logit<span class="sc">$</span>mun, <span class="st">"stddev"</span>)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>var_comm <span class="ot">&lt;-</span> <span class="fu">attr</span>(var_components_logit<span class="sc">$</span><span class="st">`</span><span class="at">mun:comm</span><span class="st">`</span>, <span class="st">"stddev"</span>)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>var_fam <span class="ot">&lt;-</span> <span class="fu">attr</span>(var_components_logit<span class="sc">$</span><span class="st">`</span><span class="at">mun:comm:fam</span><span class="st">`</span>, <span class="st">"stddev"</span>)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>total_var_logit <span class="ot">&lt;-</span> var_mun <span class="sc">+</span> var_comm <span class="sc">+</span> var_fam <span class="sc">+</span> (pi<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="dv">3</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>icc_logit_levels <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">level =</span> <span class="fu">c</span>(<span class="st">"Municipality"</span>, <span class="st">"Community"</span>, <span class="st">"Family"</span>),</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">variance =</span> <span class="fu">c</span>(var_mun, var_comm, var_fam),</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">icc =</span> variance <span class="sc">/</span> total_var_logit</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>icc_logit_levels</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  level        variance     icc
+  &lt;chr&gt;           &lt;dbl&gt;   &lt;dbl&gt;
+1 Municipality   0.384  0.0679 
+2 Community      0.0545 0.00965
+3 Family         1.92   0.340  </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>var_components_probit <span class="ot">&lt;-</span> <span class="fu">VarCorr</span>(probit_four_level)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>var_mun_p <span class="ot">&lt;-</span> <span class="fu">attr</span>(var_components_probit<span class="sc">$</span>mun, <span class="st">"stddev"</span>)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>var_comm_p <span class="ot">&lt;-</span> <span class="fu">attr</span>(var_components_probit<span class="sc">$</span><span class="st">`</span><span class="at">mun:comm</span><span class="st">`</span>, <span class="st">"stddev"</span>)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>var_fam_p <span class="ot">&lt;-</span> <span class="fu">attr</span>(var_components_probit<span class="sc">$</span><span class="st">`</span><span class="at">mun:comm:fam</span><span class="st">`</span>, <span class="st">"stddev"</span>)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>total_var_probit <span class="ot">&lt;-</span> var_mun_p <span class="sc">+</span> var_comm_p <span class="sc">+</span> var_fam_p <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">level =</span> <span class="fu">c</span>(<span class="st">"Municipality"</span>, <span class="st">"Community"</span>, <span class="st">"Family"</span>),</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">variance =</span> <span class="fu">c</span>(var_mun_p, var_comm_p, var_fam_p),</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">icc =</span> variance <span class="sc">/</span> total_var_probit</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  level        variance     icc
+  &lt;chr&gt;           &lt;dbl&gt;   &lt;dbl&gt;
+1 Municipality   0.136  0.0808 
+2 Community      0.0158 0.00940
+3 Family         0.533  0.316  </code></pre>
+</div>
+</div>
+</section>
+<section id="example-22.5-random-effects-count-models" class="level2" data-number="18.7">
+<h2 data-number="18.7" class="anchored" data-anchor-id="example-22.5-random-effects-count-models"><span class="header-section-number">18.7</span> Example 22.5: Random-Effects Count Models</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section compares different models for count data. Think of it like trying different tools to model counts:</p>
+<ol type="1">
+<li><strong>Poisson models</strong>: Assumes variance equals the mean (like assuming variability matches the average)</li>
+<li><strong>Negative binomial</strong>: Allows extra variability (overdispersion) - like recognizing counts are more variable than Poisson assumes</li>
+<li><strong>Zero-inflated models</strong>: Accounts for excess zeros (like many families having zero cases)</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re comparing different ways to model count data. Poisson is simple but might not fit well. Negative binomial handles extra variability. Zero-inflated models handle situations where many families have zero cases.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>poisson_comm <span class="ot">&lt;-</span> <span class="fu">glmer</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  famcases <span class="sc">~</span> cistern <span class="sc">+</span> water_tx <span class="sc">+</span> <span class="fu">offset</span>(logn) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> comm),</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> family_counts_sample,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">poisson</span>()</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>poisson_mun <span class="ot">&lt;-</span> <span class="fu">glmer</span>(</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  famcases <span class="sc">~</span> cistern <span class="sc">+</span> water_tx <span class="sc">+</span> <span class="fu">offset</span>(logn) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> mun),</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> family_counts_sample,</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">poisson</span>()</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>poisson_three_level <span class="ot">&lt;-</span> <span class="fu">glmer</span>(</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  famcases <span class="sc">~</span> cistern <span class="sc">+</span> water_tx <span class="sc">+</span> <span class="fu">offset</span>(logn) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> mun) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> mun<span class="sc">:</span>comm),</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> family_counts_sample,</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">poisson</span>()</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>nb_comm <span class="ot">&lt;-</span> <span class="fu">glmmTMB</span>(</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  famcases <span class="sc">~</span> cistern <span class="sc">+</span> water_tx <span class="sc">+</span> <span class="fu">offset</span>(logn) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> comm),</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> family_counts_sample,</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">nbinom2</span>()</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>nb_mun <span class="ot">&lt;-</span> <span class="fu">glmmTMB</span>(</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>  famcases <span class="sc">~</span> cistern <span class="sc">+</span> water_tx <span class="sc">+</span> <span class="fu">offset</span>(logn) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> mun),</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> family_counts_sample,</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">nbinom2</span>()</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>zinb_model <span class="ot">&lt;-</span> <span class="fu">glmmTMB</span>(</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>  famcases <span class="sc">~</span> cistern <span class="sc">+</span> water_tx <span class="sc">+</span> <span class="fu">offset</span>(logn) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> comm),</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">ziformula =</span> <span class="sc">~</span> cistern <span class="sc">+</span> water_tx,</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> family_counts_sample,</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">nbinom2</span>()</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">poisson_comm =</span> <span class="fu">tidy</span>(poisson_comm, <span class="at">effects =</span> <span class="st">"fixed"</span>, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">poisson_mun =</span> <span class="fu">tidy</span>(poisson_mun, <span class="at">effects =</span> <span class="st">"fixed"</span>, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">poisson_three_level =</span> <span class="fu">tidy</span>(poisson_three_level, <span class="at">effects =</span> <span class="st">"fixed"</span>, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">nb_comm =</span> <span class="fu">tidy</span>(nb_comm, <span class="at">effects =</span> <span class="st">"fixed"</span>, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>  <span class="at">nb_mun =</span> <span class="fu">tidy</span>(nb_mun, <span class="at">effects =</span> <span class="st">"fixed"</span>, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>  <span class="at">zinb =</span> <span class="fu">tidy</span>(zinb_model, <span class="at">effects =</span> <span class="st">"fixed"</span>, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$poisson_comm
+# A tibble: 3 × 6
+  effect term        estimate std.error statistic  p.value
+  &lt;chr&gt;  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 fixed  (Intercept)    0.191    0.0238    -13.3  2.27e-40
+2 fixed  cisternYes     0.555    0.0615     -5.31 1.07e- 7
+3 fixed  water_txYes    0.734    0.0818     -2.77 5.54e- 3
+
+$poisson_mun
+# A tibble: 3 × 6
+  effect term        estimate std.error statistic  p.value
+  &lt;chr&gt;  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 fixed  (Intercept)    0.207    0.0342     -9.53 1.57e-21
+2 fixed  cisternYes     0.568    0.0522     -6.16 7.36e-10
+3 fixed  water_txYes    0.731    0.0741     -3.09 2.01e- 3
+
+$poisson_three_level
+# A tibble: 3 × 6
+  effect term        estimate std.error statistic  p.value
+  &lt;chr&gt;  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 fixed  (Intercept)    0.189    0.0316     -9.97 2.08e-23
+2 fixed  cisternYes     0.557    0.0570     -5.72 1.07e- 8
+3 fixed  water_txYes    0.760    0.0821     -2.54 1.12e- 2
+
+$nb_comm
+# A tibble: 3 × 7
+  effect component term        estimate std.error statistic  p.value
+  &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 fixed  cond      (Intercept)    0.217    0.0293    -11.3  8.49e-30
+2 fixed  cond      cisternYes     0.559    0.0717     -4.53 5.82e- 6
+3 fixed  cond      water_txYes    0.682    0.0900     -2.90 3.70e- 3
+
+$nb_mun
+# A tibble: 3 × 7
+  effect component term        estimate std.error statistic  p.value
+  &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 fixed  cond      (Intercept)    0.210    0.0365     -9.00 2.36e-19
+2 fixed  cond      cisternYes     0.581    0.0670     -4.71 2.49e- 6
+3 fixed  cond      water_txYes    0.711    0.0917     -2.64 8.27e- 3
+
+$zinb
+# A tibble: 6 × 7
+  effect component term        estimate std.error statistic  p.value
+  &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 fixed  cond      (Intercept)    0.248    0.0341    -10.1  3.33e-24
+2 fixed  cond      cisternYes     0.776    0.137      -1.43 1.52e- 1
+3 fixed  cond      water_txYes    0.813    0.133      -1.27 2.05e- 1
+4 fixed  zi        (Intercept)    0.193    0.0818     -3.88 1.03e- 4
+5 fixed  zi        cisternYes     2.54     1.13        2.10 3.57e- 2
+6 fixed  zi        water_txYes    1.78     0.769       1.34 1.79e- 1</code></pre>
+</div>
+</div>
+</section>
+<section id="example-22.6-random-effects-proportional-odds-model" class="level2" data-number="18.8">
+<h2 data-number="18.8" class="anchored" data-anchor-id="example-22.6-random-effects-proportional-odds-model"><span class="header-section-number">18.8</span> Example 22.6: Random-Effects Proportional-Odds Model</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section models ordinal outcomes (like severity: none, mild, severe) with random effects. Think of it like predicting severity categories while accounting for clustering:</p>
+<ol type="1">
+<li><strong>Ordinal outcome</strong>: Three or more ordered categories (like severity levels)</li>
+<li><strong>Proportional odds</strong>: Assumes the effect of predictors is the same across all thresholds</li>
+<li><strong>Random effects</strong>: Accounts for clustering at municipality and community levels</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re modeling disease severity (none, mild, severe) while accounting for clustering. The model assumes that factors like cistern use affect the odds of moving from “none” to “mild” the same way as moving from “mild” to “severe”.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>brazil_smplx_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(data_dir, <span class="st">"brazil_smplx.dta"</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">file.exists</span>(brazil_smplx_path)) {</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  brazil_smplx <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(brazil_smplx_path) <span class="sc">|&gt;</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">across</span>(<span class="fu">where</span>(haven<span class="sc">::</span>is.labelled), haven<span class="sc">::</span>as_factor),</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">cistern =</span> <span class="fu">factor</span>(cistern),</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">water_tx =</span> <span class="fu">factor</span>(water_treat_chlor)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  fam_ord <span class="ot">&lt;-</span> brazil_smplx <span class="sc">|&gt;</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(fam, comm, mun) <span class="sc">|&gt;</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">mean_di_cnt =</span> <span class="fu">mean</span>(di_cnt, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">cistern =</span> <span class="fu">first</span>(cistern),</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">water_tx =</span> <span class="fu">first</span>(water_tx),</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">famsev =</span> <span class="fu">cut</span>(mean_di_cnt, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="fl">0.01</span>, <span class="fl">0.51</span>, <span class="cn">Inf</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"None"</span>, <span class="st">"Mild"</span>, <span class="st">"Severe"</span>)),</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">.groups =</span> <span class="st">"drop_last"</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">within_f =</span> <span class="fu">row_number</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(within_f <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>  ordinal_model <span class="ot">&lt;-</span> <span class="fu">clmm</span>(</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>    famsev <span class="sc">~</span> cistern <span class="sc">+</span> water_tx <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> mun<span class="sc">/</span>comm),</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> fam_ord,</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">link =</span> <span class="st">"logit"</span></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>(ordinal_model, <span class="at">effects =</span> <span class="st">"fixed"</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">"`brazil_smplx.dta` not found; skipping Example 22.6."</span>)</span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="example-22.7-quadrature-checks" class="level2" data-number="18.9">
+<h2 data-number="18.9" class="anchored" data-anchor-id="example-22.7-quadrature-checks"><span class="header-section-number">18.9</span> Example 22.7: Quadrature Checks</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section checks if the numerical method used to fit the model is accurate. Think of it like checking if your calculator is giving the right answer:</p>
+<ol type="1">
+<li><strong>Quadrature</strong>: A numerical method used to fit mixed models (like a way to do complex calculations)</li>
+<li><strong>Adaptive quadrature</strong>: A more accurate version that adapts to the data</li>
+<li><strong>Checking accuracy</strong>: Testing if using more quadrature points changes the results</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re checking if our model fitting method is accurate enough. If results change a lot when we use more accurate methods, we need to use the more accurate method.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the same model formula as in example22-4</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if water_tx exists in brazil_multi (created in example22-4)</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="st">"water_tx"</span> <span class="sc">%in%</span> <span class="fu">names</span>(brazil_multi) <span class="sc">&amp;&amp;</span> <span class="fu">any</span>(brazil_multi<span class="sc">$</span>water_tx <span class="sc">!=</span> <span class="dv">0</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  agq_formula <span class="ot">&lt;-</span> diarr <span class="sc">~</span> cistern <span class="sc">+</span> water_tx <span class="sc">+</span> age5 <span class="sc">+</span> smsize <span class="sc">+</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    (<span class="dv">1</span> <span class="sc">|</span> mun) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> mun<span class="sc">:</span>comm) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> mun<span class="sc">:</span>comm<span class="sc">:</span>fam)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># If water_tx doesn't exist or is all zeros, exclude it</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  agq_formula <span class="ot">&lt;-</span> diarr <span class="sc">~</span> cistern <span class="sc">+</span> age5 <span class="sc">+</span> smsize <span class="sc">+</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    (<span class="dv">1</span> <span class="sc">|</span> mun) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> mun<span class="sc">:</span>comm) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> mun<span class="sc">:</span>comm<span class="sc">:</span>fam)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: nAGQ &gt; 1 is only available for models with a single scalar random-effects term</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="co"># This model has multiple random effects, so we can only use nAGQ = 1 (Laplace approximation)</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co"># We'll try different nAGQ values and handle errors gracefully</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>fits_by_agq <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">12</span>, <span class="dv">20</span>), <span class="cf">function</span>(nagq) {</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    fit <span class="ot">&lt;-</span> <span class="fu">glmer</span>(</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>      agq_formula,</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">data =</span> brazil_multi,</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">family =</span> <span class="fu">binomial</span>(),</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">nAGQ =</span> nagq,</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">control =</span> <span class="fu">glmerControl</span>(<span class="at">optimizer =</span> <span class="st">"bobyqa"</span>)</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tibble</span>(</span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">nAGQ =</span> nagq,</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">logLik =</span> <span class="fu">as.numeric</span>(<span class="fu">logLik</span>(fit)),</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">deviance =</span> <span class="fu">deviance</span>(fit),</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">status =</span> <span class="st">"success"</span></span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If nAGQ &gt; 1 fails (expected for multi-level models), return NA</span></span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tibble</span>(</span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">nAGQ =</span> nagq,</span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>      <span class="at">logLik =</span> <span class="cn">NA_real_</span>,</span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>      <span class="at">deviance =</span> <span class="cn">NA_real_</span>,</span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>      <span class="at">status =</span> <span class="fu">paste0</span>(<span class="st">"error: "</span>, <span class="fu">conditionMessage</span>(e))</span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a>  result</span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a>fits_by_agq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 4
+   nAGQ logLik deviance status                                                  
+  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;                                                   
+1     1 -1227.    1745. success                                                 
+2     3    NA       NA  error: nAGQ &gt; 1 is only available for models with a sin…
+3     7    NA       NA  error: nAGQ &gt; 1 is only available for models with a sin…
+4    12    NA       NA  error: nAGQ &gt; 1 is only available for models with a sin…
+5    20    NA       NA  error: nAGQ &gt; 1 is only available for models with a sin…</code></pre>
+</div>
+</div>
+</section>
+<section id="example-22.9-model-comparison-via-likelihood-ratio-tests" class="level2" data-number="18.10">
+<h2 data-number="18.10" class="anchored" data-anchor-id="example-22.9-model-comparison-via-likelihood-ratio-tests"><span class="header-section-number">18.10</span> Example 22.9: Model Comparison via Likelihood-Ratio Tests</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section compares different models to see which components are important. Think of it like testing which parts of a machine are necessary:</p>
+<ol type="1">
+<li><strong>Nested models</strong>: Models where one is a simpler version of another</li>
+<li><strong>Likelihood-ratio tests</strong>: Tests if adding a component significantly improves the model</li>
+<li><strong>Removing components</strong>: Testing if removing municipality, community, family, or predictors makes the model worse</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re testing which parts of our model matter. If removing a component (like municipality level) makes the model significantly worse, that component is important. If not, we might not need it.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>full_model <span class="ot">&lt;-</span> logit_four_level</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>no_mun <span class="ot">&lt;-</span> <span class="fu">update</span>(logit_four_level, . <span class="sc">~</span> . <span class="sc">-</span> (<span class="dv">1</span> <span class="sc">|</span> mun))</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>no_comm <span class="ot">&lt;-</span> <span class="fu">update</span>(logit_four_level, . <span class="sc">~</span> . <span class="sc">-</span> (<span class="dv">1</span> <span class="sc">|</span> mun<span class="sc">:</span>comm))</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>no_fam <span class="ot">&lt;-</span> <span class="fu">update</span>(logit_four_level, . <span class="sc">~</span> . <span class="sc">-</span> (<span class="dv">1</span> <span class="sc">|</span> mun<span class="sc">:</span>comm<span class="sc">:</span>fam))</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>no_smsize <span class="ot">&lt;-</span> <span class="fu">update</span>(logit_four_level, . <span class="sc">~</span> . <span class="sc">-</span> smsize)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">comparison =</span> <span class="fu">c</span>(<span class="st">"Remove municipality"</span>, <span class="st">"Remove community"</span>, <span class="st">"Remove family"</span>, <span class="st">"Remove smsize"</span>),</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">p_value =</span> <span class="fu">c</span>(</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">anova</span>(no_mun, full_model)<span class="sc">$</span><span class="st">`</span><span class="at">Pr(&gt;Chisq)</span><span class="st">`</span>[<span class="dv">2</span>],</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">anova</span>(no_comm, full_model)<span class="sc">$</span><span class="st">`</span><span class="at">Pr(&gt;Chisq)</span><span class="st">`</span>[<span class="dv">2</span>],</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">anova</span>(no_fam, full_model)<span class="sc">$</span><span class="st">`</span><span class="at">Pr(&gt;Chisq)</span><span class="st">`</span>[<span class="dv">2</span>],</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">anova</span>(no_smsize, full_model)<span class="sc">$</span><span class="st">`</span><span class="at">Pr(&gt;Chisq)</span><span class="st">`</span>[<span class="dv">2</span>]</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  comparison           p_value
+  &lt;chr&gt;                  &lt;dbl&gt;
+1 Remove municipality 6.87e- 4
+2 Remove community    7.18e- 1
+3 Remove family       2.58e-27
+4 Remove smsize       8.07e- 2</code></pre>
+</div>
+</div>
+</section>
+<section id="example-22.10-predictive-probabilities-under-a-random-intercept-logistic-model" class="level2" data-number="18.11">
+<h2 data-number="18.11" class="anchored" data-anchor-id="example-22.10-predictive-probabilities-under-a-random-intercept-logistic-model"><span class="header-section-number">18.11</span> Example 22.10: Predictive Probabilities under a Random-Intercept Logistic Model</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section calculates different types of predicted probabilities. Think of it like predicting outcomes in different ways:</p>
+<ol type="1">
+<li><strong>Fixed-effects predictions</strong>: Predictions ignoring random effects (like “average” predictions)</li>
+<li><strong>Random-effects predictions</strong>: Predictions including the specific community’s random effect (like “community-specific” predictions)</li>
+<li><strong>Marginal predictions</strong>: Population-averaged predictions (like “overall” predictions)</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re calculating predicted probabilities in three ways. Fixed-effects gives average predictions. Random-effects gives community-specific predictions. Marginal gives population-level predictions. Each is useful for different purposes.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>prediction_model <span class="ot">&lt;-</span> <span class="fu">glmer</span>(</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  famdiarr <span class="sc">~</span> cistern <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> comm),</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> family_sample,</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>(),</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">glmerControl</span>(<span class="at">optimizer =</span> <span class="st">"bobyqa"</span>)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>family_sample <span class="ot">&lt;-</span> family_sample <span class="sc">|&gt;</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">p_fixed =</span> <span class="fu">predict</span>(prediction_model, <span class="at">type =</span> <span class="st">"response"</span>, <span class="at">re.form =</span> <span class="cn">NA</span>),</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">xb =</span> <span class="fu">predict</span>(prediction_model, <span class="at">type =</span> <span class="st">"link"</span>, <span class="at">re.form =</span> <span class="cn">NA</span>),</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">random_effect =</span> <span class="fu">ranef</span>(prediction_model)<span class="sc">$</span>comm[comm, <span class="dv">1</span>],</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">p_random =</span> <span class="fu">plogis</span>(xb <span class="sc">+</span> random_effect),</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">p_marginal =</span> <span class="fu">plogis</span>(xb <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">+</span> (pi<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="dv">3</span>) <span class="sc">*</span> <span class="fu">VarCorr</span>(prediction_model)<span class="sc">$</span>comm[<span class="dv">1</span>]))</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>family_sample <span class="sc">|&gt;</span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(comm, famdiarr, cistern, p_fixed, p_random, p_marginal) <span class="sc">|&gt;</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 6
+    comm famdiarr cistern p_fixed p_random p_marginal
+   &lt;dbl&gt;    &lt;int&gt; &lt;fct&gt;     &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;
+ 1    51        1 Yes       0.299    0.518      0.373
+ 2    51        1 Yes       0.299    0.518      0.373
+ 3    51        1 No        0.462    0.684      0.477
+ 4    53        1 Yes       0.299    0.443      0.373
+ 5    53        0 Yes       0.299    0.443      0.373
+ 6    53        1 Yes       0.299    0.443      0.373
+ 7    53        1 Yes       0.299    0.443      0.373
+ 8    52        0 Yes       0.299    0.345      0.373
+ 9    52        1 Yes       0.299    0.345      0.373
+10    52        0 Yes       0.299    0.345      0.373</code></pre>
+</div>
+</div>
+</section>
+<section id="example-22.11-residual-diagnostics-for-a-three-level-glmm" class="level2" data-number="18.12">
+<h2 data-number="18.12" class="anchored" data-anchor-id="example-22.11-residual-diagnostics-for-a-three-level-glmm"><span class="header-section-number">18.12</span> Example 22.11: Residual Diagnostics for a Three-Level GLMM</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section checks if the random effects at the family level are reasonable. Think of it like checking if the model’s assumptions about families are met:</p>
+<ol type="1">
+<li><strong>Random effects</strong>: The family-level deviations from the average</li>
+<li><strong>QQ plots</strong>: Check if random effects follow a normal distribution</li>
+<li><strong>Residual plots</strong>: Check if random effects are related to predictions</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re checking if our model’s assumptions about families are reasonable. If random effects look normal and random, the model is probably good. If they show patterns, we might need to adjust the model.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>family_sample_full <span class="ot">&lt;-</span> brazil_multi <span class="sc">|&gt;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">fam =</span> <span class="fu">factor</span>(fam),</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">comm =</span> <span class="fu">factor</span>(comm),</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mun =</span> <span class="fu">factor</span>(mun)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>diagnostic_model <span class="ot">&lt;-</span> logit_four_level</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>ranef_vals <span class="ot">&lt;-</span> <span class="fu">ranef</span>(diagnostic_model, <span class="at">condVar =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>family_random <span class="ot">&lt;-</span> ranef_vals<span class="sc">$</span><span class="st">`</span><span class="at">mun:comm:fam</span><span class="st">`</span> <span class="sc">|&gt;</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">resid_family =</span> <span class="st">`</span><span class="at">(Intercept)</span><span class="st">`</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>(<span class="st">"group"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(group, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"mun"</span>, <span class="st">"comm"</span>, <span class="st">"fam"</span>), <span class="at">sep =</span> <span class="st">":"</span>, <span class="at">remove =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(family_random, <span class="fu">aes</span>(<span class="at">sample =</span> resid_family)) <span class="sc">+</span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Family-level random effects QQ plot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="sme_r_chapter_17_files/figure-html/example22-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>fixed_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(diagnostic_model, <span class="at">type =</span> <span class="st">"link"</span>, <span class="at">re.form =</span> <span class="cn">NA</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>family_predictions <span class="ot">&lt;-</span> family_sample_full <span class="sc">|&gt;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pred_fixed =</span> fixed_predictions) <span class="sc">|&gt;</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(mun, comm, fam) <span class="sc">|&gt;</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">pred_mean =</span> <span class="fu">mean</span>(pred_fixed), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(family_random, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"mun"</span>, <span class="st">"comm"</span>, <span class="st">"fam"</span>))</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(family_predictions, <span class="fu">aes</span>(<span class="at">x =</span> pred_mean, <span class="at">y =</span> resid_family)) <span class="sc">+</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Fixed-effect linear predictor"</span>, <span class="at">y =</span> <span class="st">"Family-level random effect"</span>) <span class="sc">+</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="sme_r_chapter_17_files/figure-html/example22-11-residual-vs-pred-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="example-22.12-comparing-approaches-for-family-level-outcomes" class="level2" data-number="18.13">
+<h2 data-number="18.13" class="anchored" data-anchor-id="example-22.12-comparing-approaches-for-family-level-outcomes"><span class="header-section-number">18.13</span> Example 22.12: Comparing Approaches for Family-Level Outcomes</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is this section doing?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section compares different methods for analyzing family-level outcomes. Think of it like comparing different tools for the same job:</p>
+<ol type="1">
+<li><strong>Mixed-effects models</strong>: Accounts for clustering at municipality level</li>
+<li><strong>GEE</strong>: Generalized Estimating Equations - another way to account for clustering</li>
+<li><strong>Mantel-Haenszel</strong>: A simpler method for stratified data</li>
+<li><strong>Comparing results</strong>: Seeing how different methods compare</li>
+</ol>
+<p><strong>In simple terms</strong>: We’re comparing different statistical methods for analyzing family-level data. Each method accounts for clustering differently, and we see how results compare. This helps us choose the best method.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>mf_model <span class="ot">&lt;-</span> <span class="fu">glmer</span>(</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  famdiarr <span class="sc">~</span> cistern <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> mun),</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> family_sample,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>()</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>glm_plain <span class="ot">&lt;-</span> <span class="fu">glm</span>(famdiarr <span class="sc">~</span> cistern, <span class="at">data =</span> family_sample, <span class="at">family =</span> <span class="fu">binomial</span>())</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>glm_robust <span class="ot">&lt;-</span> <span class="fu">coeftest</span>(glm_plain, <span class="at">vcov. =</span> <span class="fu">vcovCL</span>(glm_plain, <span class="at">cluster =</span> family_sample<span class="sc">$</span>mun))</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>glm_fixed <span class="ot">&lt;-</span> <span class="fu">glm</span>(famdiarr <span class="sc">~</span> cistern <span class="sc">+</span> <span class="fu">factor</span>(mun), <span class="at">data =</span> family_sample, <span class="at">family =</span> <span class="fu">binomial</span>())</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>gee_model <span class="ot">&lt;-</span> <span class="fu">geeglm</span>(famdiarr <span class="sc">~</span> cistern, <span class="at">data =</span> family_sample, <span class="at">id =</span> mun, <span class="at">family =</span> <span class="fu">binomial</span>(), <span class="at">corstr =</span> <span class="st">"exchangeable"</span>)</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Mantel-Haenszel test using formula interface</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a><span class="co"># This tests the association between famdiarr and cistern, stratified by mun</span></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure variables are factors for proper test</span></span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>mh_data <span class="ot">&lt;-</span> family_sample <span class="sc">|&gt;</span></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">famdiarr =</span> <span class="fu">factor</span>(famdiarr),</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">cistern =</span> <span class="fu">factor</span>(cistern),</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">mun =</span> <span class="fu">factor</span>(mun)</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if we have sufficient data</span></span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">nlevels</span>(mh_data<span class="sc">$</span>famdiarr) <span class="sc">&gt;=</span> <span class="dv">2</span> <span class="sc">&amp;&amp;</span> <span class="fu">nlevels</span>(mh_data<span class="sc">$</span>cistern) <span class="sc">&gt;=</span> <span class="dv">2</span> <span class="sc">&amp;&amp;</span> <span class="fu">nlevels</span>(mh_data<span class="sc">$</span>mun) <span class="sc">&gt;=</span> <span class="dv">2</span>) {</span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>  mh_summary <span class="ot">&lt;-</span> <span class="fu">mantelhaen.test</span>(</span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">table</span>(mh_data<span class="sc">$</span>famdiarr, mh_data<span class="sc">$</span>cistern, mh_data<span class="sc">$</span>mun)</span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">"Insufficient levels for Mantel-Haenszel test"</span>)</span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>  mh_summary <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert coeftest output to data frame with numeric indexing</span></span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a><span class="co"># coeftest returns a matrix with columns: Estimate, Std. Error, z value, Pr(&gt;|z|)</span></span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Use numeric indexing to avoid issues with column name variations</span></span>
+<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a>glm_robust_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(glm_robust)</span>
+<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure we have the expected number of columns</span></span>
+<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">ncol</span>(glm_robust_df) <span class="sc">&gt;=</span> <span class="dv">4</span>) {</span>
+<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a>  glm_robust_tidy <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">term =</span> <span class="fu">rownames</span>(glm_robust_df),</span>
+<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">estimate =</span> <span class="fu">as.numeric</span>(glm_robust_df[, <span class="dv">1</span>]),  <span class="co"># Estimate</span></span>
+<span id="cb26-44"><a href="#cb26-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">std.error =</span> <span class="fu">as.numeric</span>(glm_robust_df[, <span class="dv">2</span>]),  <span class="co"># Std. Error</span></span>
+<span id="cb26-45"><a href="#cb26-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">statistic =</span> <span class="fu">as.numeric</span>(glm_robust_df[, <span class="dv">3</span>]),  <span class="co"># z value</span></span>
+<span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">p.value =</span> <span class="fu">as.numeric</span>(glm_robust_df[, <span class="dv">4</span>])     <span class="co"># Pr(&gt;|z|)</span></span>
+<span id="cb26-47"><a href="#cb26-47" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb26-49"><a href="#cb26-49" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Fallback: try to extract by column names if numeric indexing fails</span></span>
+<span id="cb26-50"><a href="#cb26-50" aria-hidden="true" tabindex="-1"></a>  col_names <span class="ot">&lt;-</span> <span class="fu">colnames</span>(glm_robust_df)</span>
+<span id="cb26-51"><a href="#cb26-51" aria-hidden="true" tabindex="-1"></a>  estimate_col <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">grepl</span>(<span class="st">"estimate|coef"</span>, col_names, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>))[<span class="dv">1</span>]</span>
+<span id="cb26-52"><a href="#cb26-52" aria-hidden="true" tabindex="-1"></a>  se_col <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">grepl</span>(<span class="st">"std|se|error"</span>, col_names, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>))[<span class="dv">1</span>]</span>
+<span id="cb26-53"><a href="#cb26-53" aria-hidden="true" tabindex="-1"></a>  stat_col <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">grepl</span>(<span class="st">"z|t|stat"</span>, col_names, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>))[<span class="dv">1</span>]</span>
+<span id="cb26-54"><a href="#cb26-54" aria-hidden="true" tabindex="-1"></a>  pval_col <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">grepl</span>(<span class="st">"p</span><span class="sc">\\</span><span class="st">.?value|pr"</span>, col_names, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>))[<span class="dv">1</span>]</span>
+<span id="cb26-55"><a href="#cb26-55" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-56"><a href="#cb26-56" aria-hidden="true" tabindex="-1"></a>  glm_robust_tidy <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb26-57"><a href="#cb26-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">term =</span> <span class="fu">rownames</span>(glm_robust_df),</span>
+<span id="cb26-58"><a href="#cb26-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">estimate =</span> <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.na</span>(estimate_col)) <span class="fu">as.numeric</span>(glm_robust_df[, estimate_col]) <span class="cf">else</span> <span class="cn">NA</span>,</span>
+<span id="cb26-59"><a href="#cb26-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">std.error =</span> <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.na</span>(se_col)) <span class="fu">as.numeric</span>(glm_robust_df[, se_col]) <span class="cf">else</span> <span class="cn">NA</span>,</span>
+<span id="cb26-60"><a href="#cb26-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">statistic =</span> <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.na</span>(stat_col)) <span class="fu">as.numeric</span>(glm_robust_df[, stat_col]) <span class="cf">else</span> <span class="cn">NA</span>,</span>
+<span id="cb26-61"><a href="#cb26-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">p.value =</span> <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.na</span>(pval_col)) <span class="fu">as.numeric</span>(glm_robust_df[, pval_col]) <span class="cf">else</span> <span class="cn">NA</span></span>
+<span id="cb26-62"><a href="#cb26-62" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-63"><a href="#cb26-63" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb26-64"><a href="#cb26-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-65"><a href="#cb26-65" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb26-66"><a href="#cb26-66" aria-hidden="true" tabindex="-1"></a>  <span class="at">glmm =</span> <span class="fu">tidy</span>(mf_model, <span class="at">effects =</span> <span class="st">"fixed"</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb26-67"><a href="#cb26-67" aria-hidden="true" tabindex="-1"></a>  <span class="at">glm =</span> <span class="fu">tidy</span>(glm_plain, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb26-68"><a href="#cb26-68" aria-hidden="true" tabindex="-1"></a>  <span class="at">glm_robust =</span> glm_robust_tidy,</span>
+<span id="cb26-69"><a href="#cb26-69" aria-hidden="true" tabindex="-1"></a>  <span class="at">glm_fixed =</span> <span class="fu">tidy</span>(glm_fixed, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb26-70"><a href="#cb26-70" aria-hidden="true" tabindex="-1"></a>  <span class="at">gee =</span> <span class="fu">tidy</span>(gee_model, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb26-71"><a href="#cb26-71" aria-hidden="true" tabindex="-1"></a>  <span class="at">mantel_haenszel =</span> mh_summary</span>
+<span id="cb26-72"><a href="#cb26-72" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$glmm
+# A tibble: 2 × 8
+  effect term        estimate std.error statistic   p.value conf.low conf.high
+  &lt;chr&gt;  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 fixed  (Intercept)   -0.138     0.190    -0.723 0.469       -0.511     0.235
+2 fixed  cisternYes    -0.668     0.163    -4.11  0.0000398   -0.987    -0.350
+
+$glm
+# A tibble: 2 × 7
+  term        estimate std.error statistic   p.value conf.low conf.high
+  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)    0.869     0.106     -1.32 0.186        0.705     1.07 
+2 cisternYes     0.540     0.155     -3.97 0.0000708    0.398     0.731
+
+$glm_robust
+  term estimate std.error statistic p.value
+1    1       NA        NA        NA      NA
+2    2       NA        NA        NA      NA
+3    3       NA        NA        NA      NA
+4    4       NA        NA        NA      NA
+5    5       NA        NA        NA      NA
+6    6       NA        NA        NA      NA
+7    7       NA        NA        NA      NA
+8    8       NA        NA        NA      NA
+
+$glm_fixed
+# A tibble: 22 × 7
+   term         estimate std.error statistic   p.value conf.low conf.high
+   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+ 1 (Intercept)    1.65       0.382    1.32   0.189      0.782       3.55 
+ 2 cisternYes     0.505      0.166   -4.13   0.0000367  0.364       0.697
+ 3 factor(mun)2   0.894      0.506   -0.221  0.825      0.330       2.42 
+ 4 factor(mun)3   1.02       0.464    0.0373 0.970      0.407       2.53 
+ 5 factor(mun)4   0.955      0.486   -0.0946 0.925      0.366       2.48 
+ 6 factor(mun)5   0.621      0.481   -0.988  0.323      0.239       1.59 
+ 7 factor(mun)6   1.54       1.29     0.336  0.737      0.130      36.1  
+ 8 factor(mun)7   1.75       0.578    0.969  0.333      0.570       5.60 
+ 9 factor(mun)8   0.217      0.549   -2.78   0.00540    0.0710      0.620
+10 factor(mun)9   0.0467     0.819   -3.74   0.000185   0.00674     0.194
+# ℹ 12 more rows
+
+$gee
+# A tibble: 2 × 7
+  term        estimate std.error statistic p.value conf.low conf.high
+  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)    0.834     0.199     0.841 0.359      0.565     1.23 
+2 cisternYes     0.536     0.223     7.80  0.00522    0.346     0.830
+
+$mantel_haenszel
+
+    Mantel-Haenszel chi-squared test with continuity correction
+
+data:  table(mh_data$famdiarr, mh_data$cistern, mh_data$mun)
+Mantel-Haenszel X-squared = 16.12, df = 1, p-value = 5.944e-05
+alternative hypothesis: true common odds ratio is not equal to 1
+95 percent confidence interval:
+ 0.3814078 0.7170512
+sample estimates:
+common odds ratio 
+        0.5229617 </code></pre>
+</div>
+</div>
+</section>
+<section id="references" class="level2" data-number="18.14">
+<h2 data-number="18.14" class="anchored" data-anchor-id="references"><span class="header-section-number">18.14</span> References</h2>
+<ol type="1">
+<li><p>Dohoo, I., Martin, W., &amp; Stryhn, H. Methods in Epidemiologic Research. University of Prince Edward Island, 2012. Available at: https://projects.upei.ca/mer/</p></li>
+<li><p>Kirkwood, B. R., &amp; Sterne, J. A. C. Essential Medical Statistics, 2nd Edition. Wiley-Blackwell, 2003. Available at: https://bcs.wiley.com/he-bcs/Books?action=index&amp;bcsId=11848&amp;itemId=0865428719</p></li>
+<li><p>Batra, N., et al.&nbsp;The Epidemiologist R Handbook. Applied Epi Incorporated, 2021. Available at: https://www.epirhandbook.com/en/</p></li>
+<li><p>Rothman KJ, Huybrechts KF, Murray EJ. Epidemiology. 3rd ed.&nbsp;Oxford University Press; 2024. ISBN: 9780197751541.</p></li>
+<li><p>Jordan RA, Celeste RK, Bernabe E, Schwendicke F. Big Data in Epidemiology: Brave New World? J Dent Res. 2024 Oct;103(11):1047-1050. doi: 10.1177/00220345241272034. Epub 2024 Oct 2. PMID: 39359106; PMCID: PMC11653310.</p></li>
+<li><p>Mazzella, A. R4SME: R for Statistical Methods in Epidemiology. GitHub repository. Available at: https://github.com/andreamazzella/R4SME</p></li>
+<li><p>Mazzella, A. R4ASME: R for Advanced Statistical Methods in Epidemiology. GitHub repository. Available at: https://github.com/andreamazzella/r4asme</p></li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./sme_r_chapter_16.html" class="pagination-link" aria-label="SME Chapter 16: Multilevel and Mixed Models">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">SME Chapter 16: Multilevel and Mixed Models</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./sme_r_chapter_18.html" class="pagination-link" aria-label="SME Chapter 18: Repeated Measures Data">
+        <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">SME Chapter 18: Repeated Measures Data</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

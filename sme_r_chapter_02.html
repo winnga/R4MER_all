@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Wingston Felix Ng’ambi1">
+<meta name="author" content="Cosmas Zyambo2">
+<meta name="author" content="Adamson Sinjani Muula3-5">
+
+<title>3&nbsp; SME Chapter 2: AI in R Epidemiologic Computing – Statistical methods in epidemiology: A step-by-step R tutorial</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./sme_r_chapter_03.html" rel="next">
+<link href="./sme_r_chapter_01.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-364982630eef5352dd1537128a8ed5cb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./sme_r_chapter_02.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">SME Chapter 2: AI in R Epidemiologic Computing</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Statistical methods in epidemiology: A step-by-step R tutorial</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Statistical methods in epidemiology: A step-by-step R tutorial</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">SME Chapter 1: Introduction to R and Epidemiology</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_02.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">SME Chapter 2: AI in R Epidemiologic Computing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Sampling &amp; Basic Methods</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">SME Chapter 3: Sampling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">SME Chapter 4: Confidence Intervals and Standardization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">SME Chapter 5: Precision, Agreement, and Diagnostic Accuracy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">SME Chapter 6: Measures of Association</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Sensitivity &amp; Confounding</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">SME Chapter 7: Sensitivity Analyses for Bias</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">SME Chapter 8: Confounding and Propensity Scores</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Regression &amp; Model Building</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">SME Chapter 9: Linear Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">SME Chapter 10: Model Building</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">SME Chapter 11: Logistic Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">SME Chapter 12: Ordinal and Multinomial Logistic Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Count, Survival &amp; Clustered Data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">SME Chapter 13: Modelling Count Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_14.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">SME Chapter 14: Modelling Survival Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_15.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">SME Chapter 15: Introduction to Clustered Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_16.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">SME Chapter 16: Multilevel and Mixed Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_17.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">SME Chapter 17: Mixed Models for Discrete Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_18.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">SME Chapter 18: Repeated Measures Data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Bayesian, Spatial &amp; Meta-analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_19.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">SME Chapter 19: Bayesian Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_20.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">SME Chapter 20: Spatial Data Visualisation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_21.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">SME Chapter 21: Meta-analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sme_r_chapter_22.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">SME Chapter 22: Confounding Detection and Control</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">3.1</span> Overview</a></li>
+  <li><a href="#the-ai-revolution-in-epidemiological-computing" id="toc-the-ai-revolution-in-epidemiological-computing" class="nav-link" data-scroll-target="#the-ai-revolution-in-epidemiological-computing"><span class="header-section-number">3.2</span> The AI Revolution in Epidemiological Computing</a>
+  <ul class="collapse">
+  <li><a href="#timeline-of-ai-in-coding-2010-2024" id="toc-timeline-of-ai-in-coding-2010-2024" class="nav-link" data-scroll-target="#timeline-of-ai-in-coding-2010-2024"><span class="header-section-number">3.2.1</span> Timeline of AI in Coding (2010-2024)</a></li>
+  </ul></li>
+  <li><a href="#ai-powered-code-editors-an-overview" id="toc-ai-powered-code-editors-an-overview" class="nav-link" data-scroll-target="#ai-powered-code-editors-an-overview"><span class="header-section-number">3.3</span> AI-Powered Code Editors: An Overview</a>
+  <ul class="collapse">
+  <li><a href="#what-are-ai-code-editors" id="toc-what-are-ai-code-editors" class="nav-link" data-scroll-target="#what-are-ai-code-editors"><span class="header-section-number">3.3.1</span> What Are AI Code Editors?</a></li>
+  <li><a href="#why-ai-code-editors-for-epidemiology" id="toc-why-ai-code-editors-for-epidemiology" class="nav-link" data-scroll-target="#why-ai-code-editors-for-epidemiology"><span class="header-section-number">3.3.2</span> Why AI Code Editors for Epidemiology?</a></li>
+  </ul></li>
+  <li><a href="#cursor-ai-first-code-editor" id="toc-cursor-ai-first-code-editor" class="nav-link" data-scroll-target="#cursor-ai-first-code-editor"><span class="header-section-number">3.4</span> Cursor: AI-First Code Editor</a>
+  <ul class="collapse">
+  <li><a href="#what-makes-cursor-special" id="toc-what-makes-cursor-special" class="nav-link" data-scroll-target="#what-makes-cursor-special"><span class="header-section-number">3.4.1</span> What Makes Cursor Special?</a></li>
+  <li><a href="#setting-up-cursor-for-r-and-epidemiology" id="toc-setting-up-cursor-for-r-and-epidemiology" class="nav-link" data-scroll-target="#setting-up-cursor-for-r-and-epidemiology"><span class="header-section-number">3.4.2</span> Setting Up Cursor for R and Epidemiology</a></li>
+  <li><a href="#using-cursors-ai-features-for-epidemiology" id="toc-using-cursors-ai-features-for-epidemiology" class="nav-link" data-scroll-target="#using-cursors-ai-features-for-epidemiology"><span class="header-section-number">3.4.3</span> Using Cursor’s AI Features for Epidemiology</a></li>
+  </ul></li>
+  <li><a href="#github-copilot-ai-pair-programmer" id="toc-github-copilot-ai-pair-programmer" class="nav-link" data-scroll-target="#github-copilot-ai-pair-programmer"><span class="header-section-number">3.5</span> GitHub Copilot: AI Pair Programmer</a>
+  <ul class="collapse">
+  <li><a href="#setting-up-github-copilot" id="toc-setting-up-github-copilot" class="nav-link" data-scroll-target="#setting-up-github-copilot"><span class="header-section-number">3.5.1</span> Setting Up GitHub Copilot</a></li>
+  <li><a href="#example-using-copilot-for-epidemiological-analysis" id="toc-example-using-copilot-for-epidemiological-analysis" class="nav-link" data-scroll-target="#example-using-copilot-for-epidemiological-analysis"><span class="header-section-number">3.5.2</span> Example: Using Copilot for Epidemiological Analysis</a></li>
+  </ul></li>
+  <li><a href="#other-ai-tools-for-r-epidemiology" id="toc-other-ai-tools-for-r-epidemiology" class="nav-link" data-scroll-target="#other-ai-tools-for-r-epidemiology"><span class="header-section-number">3.6</span> Other AI Tools for R Epidemiology</a>
+  <ul class="collapse">
+  <li><a href="#codeium" id="toc-codeium" class="nav-link" data-scroll-target="#codeium"><span class="header-section-number">3.6.1</span> 1. Codeium</a></li>
+  <li><a href="#tabnine" id="toc-tabnine" class="nav-link" data-scroll-target="#tabnine"><span class="header-section-number">3.6.2</span> 2. TabNine</a></li>
+  <li><a href="#chatgptclaude-for-code-review" id="toc-chatgptclaude-for-code-review" class="nav-link" data-scroll-target="#chatgptclaude-for-code-review"><span class="header-section-number">3.6.3</span> 3. ChatGPT/Claude for Code Review</a></li>
+  </ul></li>
+  <li><a href="#how-ai-has-revolutionized-epidemiological-analysis" id="toc-how-ai-has-revolutionized-epidemiological-analysis" class="nav-link" data-scroll-target="#how-ai-has-revolutionized-epidemiological-analysis"><span class="header-section-number">3.7</span> How AI Has Revolutionized Epidemiological Analysis</a>
+  <ul class="collapse">
+  <li><a href="#before-ai-pre-2020" id="toc-before-ai-pre-2020" class="nav-link" data-scroll-target="#before-ai-pre-2020"><span class="header-section-number">3.7.1</span> Before AI (Pre-2020)</a></li>
+  <li><a href="#after-ai-2020-present" id="toc-after-ai-2020-present" class="nav-link" data-scroll-target="#after-ai-2020-present"><span class="header-section-number">3.7.2</span> After AI (2020-Present)</a></li>
+  <li><a href="#specific-improvements-in-epidemiology" id="toc-specific-improvements-in-epidemiology" class="nav-link" data-scroll-target="#specific-improvements-in-epidemiology"><span class="header-section-number">3.7.3</span> Specific Improvements in Epidemiology</a></li>
+  </ul></li>
+  <li><a href="#case-studies-ai-in-epidemiological-research" id="toc-case-studies-ai-in-epidemiological-research" class="nav-link" data-scroll-target="#case-studies-ai-in-epidemiological-research"><span class="header-section-number">3.8</span> Case Studies: AI in Epidemiological Research</a>
+  <ul class="collapse">
+  <li><a href="#case-study-1-rapid-covid-19-analysis-pipeline" id="toc-case-study-1-rapid-covid-19-analysis-pipeline" class="nav-link" data-scroll-target="#case-study-1-rapid-covid-19-analysis-pipeline"><span class="header-section-number">3.8.1</span> Case Study 1: Rapid COVID-19 Analysis Pipeline</a></li>
+  <li><a href="#case-study-2-survival-analysis-automation" id="toc-case-study-2-survival-analysis-automation" class="nav-link" data-scroll-target="#case-study-2-survival-analysis-automation"><span class="header-section-number">3.8.2</span> Case Study 2: Survival Analysis Automation</a></li>
+  <li><a href="#case-study-3-meta-analysis-workflow" id="toc-case-study-3-meta-analysis-workflow" class="nav-link" data-scroll-target="#case-study-3-meta-analysis-workflow"><span class="header-section-number">3.8.3</span> Case Study 3: Meta-Analysis Workflow</a></li>
+  <li><a href="#case-study-4-spatial-epidemiology-mapping" id="toc-case-study-4-spatial-epidemiology-mapping" class="nav-link" data-scroll-target="#case-study-4-spatial-epidemiology-mapping"><span class="header-section-number">3.8.4</span> Case Study 4: Spatial Epidemiology Mapping</a></li>
+  </ul></li>
+  <li><a href="#best-practices-for-using-ai-in-epidemiological-computing" id="toc-best-practices-for-using-ai-in-epidemiological-computing" class="nav-link" data-scroll-target="#best-practices-for-using-ai-in-epidemiological-computing"><span class="header-section-number">3.9</span> Best Practices for Using AI in Epidemiological Computing</a>
+  <ul class="collapse">
+  <li><a href="#verify-ai-generated-code" id="toc-verify-ai-generated-code" class="nav-link" data-scroll-target="#verify-ai-generated-code"><span class="header-section-number">3.9.1</span> 1. Verify AI-Generated Code</a></li>
+  <li><a href="#use-ai-as-a-learning-tool" id="toc-use-ai-as-a-learning-tool" class="nav-link" data-scroll-target="#use-ai-as-a-learning-tool"><span class="header-section-number">3.9.2</span> 2. Use AI as a Learning Tool</a></li>
+  <li><a href="#maintain-code-quality" id="toc-maintain-code-quality" class="nav-link" data-scroll-target="#maintain-code-quality"><span class="header-section-number">3.9.3</span> 3. Maintain Code Quality</a></li>
+  <li><a href="#be-aware-of-limitations" id="toc-be-aware-of-limitations" class="nav-link" data-scroll-target="#be-aware-of-limitations"><span class="header-section-number">3.9.4</span> 4. Be Aware of Limitations</a></li>
+  <li><a href="#combine-ai-tools" id="toc-combine-ai-tools" class="nav-link" data-scroll-target="#combine-ai-tools"><span class="header-section-number">3.9.5</span> 5. Combine AI Tools</a></li>
+  </ul></li>
+  <li><a href="#ethical-considerations" id="toc-ethical-considerations" class="nav-link" data-scroll-target="#ethical-considerations"><span class="header-section-number">3.10</span> Ethical Considerations</a>
+  <ul class="collapse">
+  <li><a href="#data-privacy" id="toc-data-privacy" class="nav-link" data-scroll-target="#data-privacy"><span class="header-section-number">3.10.1</span> 1. Data Privacy</a></li>
+  <li><a href="#attribution" id="toc-attribution" class="nav-link" data-scroll-target="#attribution"><span class="header-section-number">3.10.2</span> 2. Attribution</a></li>
+  <li><a href="#reproducibility" id="toc-reproducibility" class="nav-link" data-scroll-target="#reproducibility"><span class="header-section-number">3.10.3</span> 3. Reproducibility</a></li>
+  </ul></li>
+  <li><a href="#future-directions" id="toc-future-directions" class="nav-link" data-scroll-target="#future-directions"><span class="header-section-number">3.11</span> Future Directions</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">3.12</span> Summary</a></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps"><span class="header-section-number">3.13</span> Next Steps</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">3.14</span> References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">SME Chapter 2: AI in R Epidemiologic Computing</span></h1>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Authors</div>
+  <div class="quarto-title-meta-heading">Affiliations</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Wingston Felix Ng’ambi<sup>1</sup> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Cosmas Zyambo<sup>2</sup> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Adamson Sinjani Muula<sup>3-5</sup> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="overview" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="overview"><span class="header-section-number">3.1</span> Overview</h2>
+<p>This chapter explores the revolutionary role of Artificial Intelligence (AI) in epidemiological computing, with a focus on AI-powered code editors like Cursor and GitHub Copilot. We’ll cover setup instructions, practical applications, and real-world case studies demonstrating how AI has transformed epidemiological analysis over the past decade.</p>
+</section>
+<section id="the-ai-revolution-in-epidemiological-computing" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="the-ai-revolution-in-epidemiological-computing"><span class="header-section-number">3.2</span> The AI Revolution in Epidemiological Computing</h2>
+<p>Over the past decade, AI has fundamentally transformed how epidemiologists write code, analyze data, and conduct research. What once required hours of debugging and documentation searching can now be accomplished in minutes with AI assistance.</p>
+<section id="timeline-of-ai-in-coding-2010-2024" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="timeline-of-ai-in-coding-2010-2024"><span class="header-section-number">3.2.1</span> Timeline of AI in Coding (2010-2024)</h3>
+<ul>
+<li><strong>2010-2015</strong>: Early code completion tools and basic autocomplete</li>
+<li><strong>2016-2019</strong>: Machine learning-based code suggestions (TabNine, Kite)</li>
+<li><strong>2020-2021</strong>: Large Language Models (GPT-3) begin to understand code context</li>
+<li><strong>2022</strong>: GitHub Copilot becomes widely available, revolutionizing code generation</li>
+<li><strong>2023</strong>: Specialized AI coding assistants (Cursor, Codeium) emerge</li>
+<li><strong>2024</strong>: AI becomes standard in modern development workflows</li>
+</ul>
+</section>
+</section>
+<section id="ai-powered-code-editors-an-overview" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="ai-powered-code-editors-an-overview"><span class="header-section-number">3.3</span> AI-Powered Code Editors: An Overview</h2>
+<section id="what-are-ai-code-editors" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="what-are-ai-code-editors"><span class="header-section-number">3.3.1</span> What Are AI Code Editors?</h3>
+<p>AI code editors are integrated development environments (IDEs) or code editors enhanced with artificial intelligence capabilities. They use large language models to: - Understand code context - Generate code suggestions - Debug errors automatically - Explain complex code - Refactor and optimize code - Write documentation</p>
+</section>
+<section id="why-ai-code-editors-for-epidemiology" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="why-ai-code-editors-for-epidemiology"><span class="header-section-number">3.3.2</span> Why AI Code Editors for Epidemiology?</h3>
+<p>Epidemiological analysis often involves: - Complex statistical models - Repetitive data cleaning tasks - Specialized R packages with unique syntax - Integration of multiple data sources - Reproducible research workflows</p>
+<p>AI assistants excel at all of these, making them particularly valuable for epidemiologists.</p>
+</section>
+</section>
+<section id="cursor-ai-first-code-editor" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="cursor-ai-first-code-editor"><span class="header-section-number">3.4</span> Cursor: AI-First Code Editor</h2>
+<p>Cursor is a modern code editor built specifically for AI-assisted programming. It’s based on VS Code but optimized for AI interactions.</p>
+<section id="what-makes-cursor-special" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="what-makes-cursor-special"><span class="header-section-number">3.4.1</span> What Makes Cursor Special?</h3>
+<ol type="1">
+<li><strong>AI-First Design</strong>: Built from the ground up with AI in mind</li>
+<li><strong>Context Awareness</strong>: Understands your entire codebase, not just the current file</li>
+<li><strong>Multi-Model Support</strong>: Can use different AI models (GPT-4, Claude, etc.)</li>
+<li><strong>Chat Interface</strong>: Natural language conversation about your code</li>
+<li><strong>Codebase Indexing</strong>: Understands relationships across files and projects</li>
+</ol>
+</section>
+<section id="setting-up-cursor-for-r-and-epidemiology" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="setting-up-cursor-for-r-and-epidemiology"><span class="header-section-number">3.4.2</span> Setting Up Cursor for R and Epidemiology</h3>
+<section id="step-1-download-and-install-cursor" class="level4" data-number="3.4.2.1">
+<h4 data-number="3.4.2.1" class="anchored" data-anchor-id="step-1-download-and-install-cursor"><span class="header-section-number">3.4.2.1</span> Step 1: Download and Install Cursor</h4>
+<ol type="1">
+<li><strong>Visit</strong>: <a href="https://cursor.sh/">https://cursor.sh/</a></li>
+<li><strong>Download</strong>: Choose your operating system (Windows, macOS, or Linux)</li>
+<li><strong>Install</strong>: Run the installer and follow the prompts</li>
+<li><strong>Launch</strong>: Open Cursor (it will look familiar if you’ve used VS Code)</li>
+</ol>
+</section>
+<section id="step-2-install-r-extension" class="level4" data-number="3.4.2.2">
+<h4 data-number="3.4.2.2" class="anchored" data-anchor-id="step-2-install-r-extension"><span class="header-section-number">3.4.2.2</span> Step 2: Install R Extension</h4>
+<ol type="1">
+<li><strong>Open Extensions</strong>: Click the Extensions icon in the sidebar (or press Ctrl+Shift+X / Cmd+Shift+X)</li>
+<li><strong>Search</strong>: Type “R” in the search bar</li>
+<li><strong>Install</strong>: Click “Install” on the “R” extension by REditorSupport</li>
+<li><strong>Reload</strong>: Restart Cursor if prompted</li>
+</ol>
+</section>
+<section id="step-3-configure-r-path" class="level4" data-number="3.4.2.3">
+<h4 data-number="3.4.2.3" class="anchored" data-anchor-id="step-3-configure-r-path"><span class="header-section-number">3.4.2.3</span> Step 3: Configure R Path</h4>
+<ol type="1">
+<li><strong>Open Settings</strong>: File → Preferences → Settings (or Ctrl+, / Cmd+,)</li>
+<li><strong>Search</strong>: Type “r.rterm” in the settings search</li>
+<li><strong>Set Path</strong>: Enter your R executable path:
+<ul>
+<li>Windows: <code>C:\Program Files\R\R-4.5.0\bin\R.exe</code></li>
+<li>macOS: <code>/usr/local/bin/R</code> or <code>/Library/Frameworks/R.framework/Resources/bin/R</code></li>
+<li>Linux: <code>/usr/bin/R</code></li>
+</ul></li>
+<li><strong>Verify</strong>: Open a terminal in Cursor and type <code>R --version</code></li>
+</ol>
+</section>
+<section id="step-4-install-quarto-extension" class="level4" data-number="3.4.2.4">
+<h4 data-number="3.4.2.4" class="anchored" data-anchor-id="step-4-install-quarto-extension"><span class="header-section-number">3.4.2.4</span> Step 4: Install Quarto Extension</h4>
+<ol type="1">
+<li><strong>Extensions</strong>: Open Extensions panel</li>
+<li><strong>Search</strong>: Type “Quarto”</li>
+<li><strong>Install</strong>: Install the official Quarto extension</li>
+<li><strong>Verify</strong>: Create a <code>.qmd</code> file and check for syntax highlighting</li>
+</ol>
+</section>
+<section id="step-5-configure-ai-model" class="level4" data-number="3.4.2.5">
+<h4 data-number="3.4.2.5" class="anchored" data-anchor-id="step-5-configure-ai-model"><span class="header-section-number">3.4.2.5</span> Step 5: Configure AI Model</h4>
+<ol type="1">
+<li><strong>Open Settings</strong>: File → Preferences → Settings</li>
+<li><strong>Search</strong>: “Cursor AI” or “Model”</li>
+<li><strong>Choose Model</strong>:
+<ul>
+<li><strong>GPT-4</strong>: Best for complex code generation (requires subscription)</li>
+<li><strong>GPT-3.5</strong>: Good balance of quality and speed (free tier available)</li>
+<li><strong>Claude</strong>: Excellent for long context and explanations</li>
+</ul></li>
+<li><strong>API Key</strong>: If using custom API, add your key in Settings → Cursor → API Keys</li>
+</ol>
+</section>
+<section id="step-6-test-your-setup" class="level4" data-number="3.4.2.6">
+<h4 data-number="3.4.2.6" class="anchored" data-anchor-id="step-6-test-your-setup"><span class="header-section-number">3.4.2.6</span> Step 6: Test Your Setup</h4>
+<p>Create a test file <code>test_r.qmd</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test R execution</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"R is working in Cursor!</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R is working in Cursor!</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test package loading</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"dplyr loaded successfully!</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>dplyr loaded successfully!</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simple analysis</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">age =</span> <span class="fu">c</span>(<span class="dv">25</span>, <span class="dv">30</span>, <span class="dv">35</span>, <span class="dv">40</span>, <span class="dv">45</span>),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">cases =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">20</span>, <span class="dv">25</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      age         cases   
+ Min.   :25   Min.   : 5  
+ 1st Qu.:30   1st Qu.:10  
+ Median :35   Median :15  
+ Mean   :35   Mean   :15  
+ 3rd Qu.:40   3rd Qu.:20  
+ Max.   :45   Max.   :25  </code></pre>
+</div>
+</div>
+<p><strong>Try Cursor’s AI</strong>: - Select the code - Press <code>Ctrl+K</code> (or <code>Cmd+K</code> on Mac) to open AI chat - Ask: “Explain what this code does” - Or ask: “Add a ggplot visualization of this data”</p>
+</section>
+</section>
+<section id="using-cursors-ai-features-for-epidemiology" class="level3" data-number="3.4.3">
+<h3 data-number="3.4.3" class="anchored" data-anchor-id="using-cursors-ai-features-for-epidemiology"><span class="header-section-number">3.4.3</span> Using Cursor’s AI Features for Epidemiology</h3>
+<section id="code-generation" class="level4" data-number="3.4.3.1">
+<h4 data-number="3.4.3.1" class="anchored" data-anchor-id="code-generation"><span class="header-section-number">3.4.3.1</span> 1. Code Generation</h4>
+<p><strong>Example Prompt</strong>: “Create a function to calculate age-standardized rates”</p>
+<p>Cursor will generate:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>calculate_age_standardized_rate <span class="ot">&lt;-</span> <span class="cf">function</span>(data, age_var, cases_var, pop_var, standard_pop) {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Merge data with standard population</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  merged <span class="ot">&lt;-</span> <span class="fu">merge</span>(data, standard_pop, <span class="at">by =</span> age_var)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Calculate age-specific rates</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  merged<span class="sc">$</span>rate <span class="ot">&lt;-</span> merged[[cases_var]] <span class="sc">/</span> merged[[pop_var]]</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Calculate age-standardized rate</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  asr <span class="ot">&lt;-</span> <span class="fu">sum</span>(merged<span class="sc">$</span>rate <span class="sc">*</span> merged<span class="sc">$</span>standard_pop) <span class="sc">/</span> <span class="fu">sum</span>(merged<span class="sc">$</span>standard_pop)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(asr)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="code-explanation" class="level4" data-number="3.4.3.2">
+<h4 data-number="3.4.3.2" class="anchored" data-anchor-id="code-explanation"><span class="header-section-number">3.4.3.2</span> 2. Code Explanation</h4>
+<p>Select any complex R code and press <code>Ctrl+L</code> (or <code>Cmd+L</code>) to get an explanation in plain language.</p>
+</section>
+<section id="error-debugging" class="level4" data-number="3.4.3.3">
+<h4 data-number="3.4.3.3" class="anchored" data-anchor-id="error-debugging"><span class="header-section-number">3.4.3.3</span> 3. Error Debugging</h4>
+<p>When you encounter an error: 1. Select the error message 2. Press <code>Ctrl+K</code> 3. Ask: “How do I fix this error?” 4. Cursor will analyze the error and suggest fixes</p>
+</section>
+<section id="refactoring" class="level4" data-number="3.4.3.4">
+<h4 data-number="3.4.3.4" class="anchored" data-anchor-id="refactoring"><span class="header-section-number">3.4.3.4</span> 4. Refactoring</h4>
+<p>Ask Cursor to: - “Refactor this code to use dplyr instead of base R” - “Make this function more efficient” - “Add error handling to this code”</p>
+</section>
+</section>
+</section>
+<section id="github-copilot-ai-pair-programmer" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="github-copilot-ai-pair-programmer"><span class="header-section-number">3.5</span> GitHub Copilot: AI Pair Programmer</h2>
+<p>GitHub Copilot is an AI code completion tool that suggests code as you type. It’s available as an extension for VS Code, Cursor, and other editors.</p>
+<section id="setting-up-github-copilot" class="level3" data-number="3.5.1">
+<h3 data-number="3.5.1" class="anchored" data-anchor-id="setting-up-github-copilot"><span class="header-section-number">3.5.1</span> Setting Up GitHub Copilot</h3>
+<section id="step-1-sign-up-for-github-copilot" class="level4" data-number="3.5.1.1">
+<h4 data-number="3.5.1.1" class="anchored" data-anchor-id="step-1-sign-up-for-github-copilot"><span class="header-section-number">3.5.1.1</span> Step 1: Sign Up for GitHub Copilot</h4>
+<ol type="1">
+<li><strong>Visit</strong>: <a href="https://github.com/features/copilot">https://github.com/features/copilot</a></li>
+<li><strong>Pricing</strong>:
+<ul>
+<li>Free for students and open-source maintainers</li>
+<li>Paid subscription for individuals ($10/month) or businesses</li>
+</ul></li>
+<li><strong>Sign Up</strong>: Create account or sign in with GitHub</li>
+</ol>
+</section>
+<section id="step-2-install-copilot-extension" class="level4" data-number="3.5.1.2">
+<h4 data-number="3.5.1.2" class="anchored" data-anchor-id="step-2-install-copilot-extension"><span class="header-section-number">3.5.1.2</span> Step 2: Install Copilot Extension</h4>
+<ol type="1">
+<li><strong>In Cursor/VS Code</strong>: Open Extensions</li>
+<li><strong>Search</strong>: “GitHub Copilot”</li>
+<li><strong>Install</strong>: Click Install on the official GitHub Copilot extension</li>
+<li><strong>Authenticate</strong>: Sign in with your GitHub account when prompted</li>
+</ol>
+</section>
+<section id="step-3-start-using-copilot" class="level4" data-number="3.5.1.3">
+<h4 data-number="3.5.1.3" class="anchored" data-anchor-id="step-3-start-using-copilot"><span class="header-section-number">3.5.1.3</span> Step 3: Start Using Copilot</h4>
+<ol type="1">
+<li><strong>Begin Typing</strong>: Start writing a comment or function name</li>
+<li><strong>Accept Suggestions</strong>: Press <code>Tab</code> to accept, <code>Esc</code> to dismiss</li>
+<li><strong>Cycle Suggestions</strong>: Press <code>Alt+]</code> (Windows/Linux) or <code>Option+]</code> (Mac) to see alternatives</li>
+</ol>
+</section>
+</section>
+<section id="example-using-copilot-for-epidemiological-analysis" class="level3" data-number="3.5.2">
+<h3 data-number="3.5.2" class="anchored" data-anchor-id="example-using-copilot-for-epidemiological-analysis"><span class="header-section-number">3.5.2</span> Example: Using Copilot for Epidemiological Analysis</h3>
+<p>Type this comment and let Copilot complete it:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to calculate incidence rate with confidence intervals</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>calculate_incidence_rate <span class="ot">&lt;-</span> <span class="cf">function</span>(cases, person_time, <span class="at">conf_level =</span> <span class="fl">0.95</span>) {</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Copilot will suggest the implementation</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Copilot might suggest:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>calculate_incidence_rate <span class="ot">&lt;-</span> <span class="cf">function</span>(cases, person_time, <span class="at">conf_level =</span> <span class="fl">0.95</span>) {</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Calculate incidence rate</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  rate <span class="ot">&lt;-</span> cases <span class="sc">/</span> person_time</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Calculate confidence interval using Poisson approximation</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  alpha <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> conf_level</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  z_score <span class="ot">&lt;-</span> <span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha<span class="sc">/</span><span class="dv">2</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  lower <span class="ot">&lt;-</span> (cases <span class="sc">-</span> z_score <span class="sc">*</span> <span class="fu">sqrt</span>(cases)) <span class="sc">/</span> person_time</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  upper <span class="ot">&lt;-</span> (cases <span class="sc">+</span> z_score <span class="sc">*</span> <span class="fu">sqrt</span>(cases)) <span class="sc">/</span> person_time</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">rate =</span> rate,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">lower_ci =</span> lower,</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">upper_ci =</span> upper,</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">conf_level =</span> conf_level</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Example usage</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">calculate_incidence_rate</span>(<span class="at">cases =</span> <span class="dv">50</span>, <span class="at">person_time =</span> <span class="dv">1000</span>)</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$rate
+[1] 0.05
+
+$lower_ci
+[1] 0.03614096
+
+$upper_ci
+[1] 0.06385904
+
+$conf_level
+[1] 0.95</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="other-ai-tools-for-r-epidemiology" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="other-ai-tools-for-r-epidemiology"><span class="header-section-number">3.6</span> Other AI Tools for R Epidemiology</h2>
+<section id="codeium" class="level3" data-number="3.6.1">
+<h3 data-number="3.6.1" class="anchored" data-anchor-id="codeium"><span class="header-section-number">3.6.1</span> 1. Codeium</h3>
+<ul>
+<li><strong>Free alternative</strong> to GitHub Copilot</li>
+<li><strong>Setup</strong>: Install extension, no account required</li>
+<li><strong>Best for</strong>: Quick code completions</li>
+</ul>
+</section>
+<section id="tabnine" class="level3" data-number="3.6.2">
+<h3 data-number="3.6.2" class="anchored" data-anchor-id="tabnine"><span class="header-section-number">3.6.2</span> 2. TabNine</h3>
+<ul>
+<li><strong>Early AI code completion</strong> pioneer</li>
+<li><strong>Works offline</strong> with local models</li>
+<li><strong>Best for</strong>: Privacy-conscious users</li>
+</ul>
+</section>
+<section id="chatgptclaude-for-code-review" class="level3" data-number="3.6.3">
+<h3 data-number="3.6.3" class="anchored" data-anchor-id="chatgptclaude-for-code-review"><span class="header-section-number">3.6.3</span> 3. ChatGPT/Claude for Code Review</h3>
+<ul>
+<li><strong>Use for</strong>: Explaining complex code, debugging, learning</li>
+<li><strong>How</strong>: Copy-paste code and ask questions</li>
+<li><strong>Best for</strong>: Understanding unfamiliar code</li>
+</ul>
+</section>
+</section>
+<section id="how-ai-has-revolutionized-epidemiological-analysis" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="how-ai-has-revolutionized-epidemiological-analysis"><span class="header-section-number">3.7</span> How AI Has Revolutionized Epidemiological Analysis</h2>
+<section id="before-ai-pre-2020" class="level3" data-number="3.7.1">
+<h3 data-number="3.7.1" class="anchored" data-anchor-id="before-ai-pre-2020"><span class="header-section-number">3.7.1</span> Before AI (Pre-2020)</h3>
+<ul>
+<li><strong>Time-consuming</strong>: Hours spent searching documentation</li>
+<li><strong>Error-prone</strong>: Manual debugging of syntax errors</li>
+<li><strong>Learning curve</strong>: Steep for new R users</li>
+<li><strong>Repetitive</strong>: Writing similar code patterns repeatedly</li>
+<li><strong>Documentation</strong>: Manual writing of code comments</li>
+</ul>
+</section>
+<section id="after-ai-2020-present" class="level3" data-number="3.7.2">
+<h3 data-number="3.7.2" class="anchored" data-anchor-id="after-ai-2020-present"><span class="header-section-number">3.7.2</span> After AI (2020-Present)</h3>
+<ul>
+<li><strong>Faster development</strong>: Code generation in seconds</li>
+<li><strong>Fewer errors</strong>: AI catches common mistakes</li>
+<li><strong>Lower barrier</strong>: Easier for beginners to get started</li>
+<li><strong>Consistency</strong>: Standardized code patterns</li>
+<li><strong>Auto-documentation</strong>: AI generates helpful comments</li>
+</ul>
+</section>
+<section id="specific-improvements-in-epidemiology" class="level3" data-number="3.7.3">
+<h3 data-number="3.7.3" class="anchored" data-anchor-id="specific-improvements-in-epidemiology"><span class="header-section-number">3.7.3</span> Specific Improvements in Epidemiology</h3>
+<ol type="1">
+<li><strong>Data Cleaning</strong>: AI suggests efficient <code>dplyr</code> pipelines</li>
+<li><strong>Statistical Models</strong>: Generates correct model syntax</li>
+<li><strong>Visualization</strong>: Creates publication-ready <code>ggplot2</code> code</li>
+<li><strong>Reproducibility</strong>: Helps structure Quarto documents</li>
+<li><strong>Package Discovery</strong>: Suggests relevant packages for tasks</li>
+</ol>
+</section>
+</section>
+<section id="case-studies-ai-in-epidemiological-research" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="case-studies-ai-in-epidemiological-research"><span class="header-section-number">3.8</span> Case Studies: AI in Epidemiological Research</h2>
+<section id="case-study-1-rapid-covid-19-analysis-pipeline" class="level3" data-number="3.8.1">
+<h3 data-number="3.8.1" class="anchored" data-anchor-id="case-study-1-rapid-covid-19-analysis-pipeline"><span class="header-section-number">3.8.1</span> Case Study 1: Rapid COVID-19 Analysis Pipeline</h3>
+<p><strong>Challenge</strong>: A research team needed to quickly analyze COVID-19 surveillance data from multiple sources.</p>
+<p><strong>AI Solution</strong>: Used Cursor to generate: - Data import functions for multiple file formats - Automated data cleaning pipeline - Standardized visualization templates - Report generation with Quarto</p>
+<p><strong>Result</strong>: Analysis time reduced from 2 weeks to 2 days.</p>
+<p><strong>Example Code Generated by AI</strong>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># AI-generated data import pipeline</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>import_covid_data <span class="ot">&lt;-</span> <span class="cf">function</span>(file_path) {</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Detect file type and import accordingly</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  ext <span class="ot">&lt;-</span> tools<span class="sc">::</span><span class="fu">file_ext</span>(file_path)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="cf">switch</span>(ext,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"csv"</span> <span class="ot">=</span> <span class="fu">read.csv</span>(file_path),</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"xlsx"</span> <span class="ot">=</span> readxl<span class="sc">::</span><span class="fu">read_excel</span>(file_path),</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"dta"</span> <span class="ot">=</span> haven<span class="sc">::</span><span class="fu">read_dta</span>(file_path),</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">"Unsupported file format"</span>)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Standardize column names</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename_with</span>(<span class="sc">~</span><span class="fu">tolower</span>(<span class="fu">gsub</span>(<span class="st">" "</span>, <span class="st">"_"</span>, .x)))</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(data)</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="case-study-2-survival-analysis-automation" class="level3" data-number="3.8.2">
+<h3 data-number="3.8.2" class="anchored" data-anchor-id="case-study-2-survival-analysis-automation"><span class="header-section-number">3.8.2</span> Case Study 2: Survival Analysis Automation</h3>
+<p><strong>Challenge</strong>: A graduate student needed to perform survival analysis on multiple datasets with different structures.</p>
+<p><strong>AI Solution</strong>: Used GitHub Copilot to: - Generate reusable survival analysis functions - Create standardized output tables - Automate plot generation</p>
+<p><strong>Result</strong>: Standardized workflow applicable to all datasets.</p>
+<p><strong>Example</strong>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># AI-assisted survival analysis function</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>analyze_survival <span class="ot">&lt;-</span> <span class="cf">function</span>(data, time_var, event_var, <span class="at">group_var =</span> <span class="cn">NULL</span>) {</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">require</span>(survival)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">require</span>(survminer)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create survival object</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  surv_obj <span class="ot">&lt;-</span> <span class="fu">Surv</span>(data[[time_var]], data[[event_var]])</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Fit model</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.null</span>(group_var)) {</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    fit <span class="ot">&lt;-</span> <span class="fu">survfit</span>(surv_obj <span class="sc">~</span> <span class="dv">1</span>)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    fit <span class="ot">&lt;-</span> <span class="fu">survfit</span>(surv_obj <span class="sc">~</span> data[[group_var]])</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Return results</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">fit =</span> fit,</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">summary =</span> <span class="fu">summary</span>(fit),</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">median_survival =</span> <span class="fu">median</span>(fit)</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="case-study-3-meta-analysis-workflow" class="level3" data-number="3.8.3">
+<h3 data-number="3.8.3" class="anchored" data-anchor-id="case-study-3-meta-analysis-workflow"><span class="header-section-number">3.8.3</span> Case Study 3: Meta-Analysis Workflow</h3>
+<p><strong>Challenge</strong>: A researcher needed to conduct a meta-analysis but was unfamiliar with the <code>metafor</code> package syntax.</p>
+<p><strong>AI Solution</strong>: Used Cursor’s chat to: - Explain meta-analysis concepts - Generate correct <code>metafor</code> code - Create forest plots - Perform sensitivity analyses</p>
+<p><strong>Result</strong>: Completed analysis with proper methodology.</p>
+</section>
+<section id="case-study-4-spatial-epidemiology-mapping" class="level3" data-number="3.8.4">
+<h3 data-number="3.8.4" class="anchored" data-anchor-id="case-study-4-spatial-epidemiology-mapping"><span class="header-section-number">3.8.4</span> Case Study 4: Spatial Epidemiology Mapping</h3>
+<p><strong>Challenge</strong>: Creating disease maps with proper spatial statistics.</p>
+<p><strong>AI Solution</strong>: AI generated: - <code>sf</code> package code for spatial data handling - <code>ggplot2</code> code for choropleth maps - Spatial clustering analysis code</p>
+<p><strong>Result</strong>: Publication-quality maps with proper statistical methods.</p>
+</section>
+</section>
+<section id="best-practices-for-using-ai-in-epidemiological-computing" class="level2" data-number="3.9">
+<h2 data-number="3.9" class="anchored" data-anchor-id="best-practices-for-using-ai-in-epidemiological-computing"><span class="header-section-number">3.9</span> Best Practices for Using AI in Epidemiological Computing</h2>
+<section id="verify-ai-generated-code" class="level3" data-number="3.9.1">
+<h3 data-number="3.9.1" class="anchored" data-anchor-id="verify-ai-generated-code"><span class="header-section-number">3.9.1</span> 1. Verify AI-Generated Code</h3>
+<ul>
+<li><strong>Always test</strong>: Run code on sample data first</li>
+<li><strong>Check assumptions</strong>: Ensure statistical methods are appropriate</li>
+<li><strong>Review logic</strong>: Understand what the code does</li>
+</ul>
+</section>
+<section id="use-ai-as-a-learning-tool" class="level3" data-number="3.9.2">
+<h3 data-number="3.9.2" class="anchored" data-anchor-id="use-ai-as-a-learning-tool"><span class="header-section-number">3.9.2</span> 2. Use AI as a Learning Tool</h3>
+<ul>
+<li><strong>Ask for explanations</strong>: “Why does this code work?”</li>
+<li><strong>Request alternatives</strong>: “Show me another way to do this”</li>
+<li><strong>Learn patterns</strong>: Study AI suggestions to improve your coding</li>
+</ul>
+</section>
+<section id="maintain-code-quality" class="level3" data-number="3.9.3">
+<h3 data-number="3.9.3" class="anchored" data-anchor-id="maintain-code-quality"><span class="header-section-number">3.9.3</span> 3. Maintain Code Quality</h3>
+<ul>
+<li><strong>Follow style guides</strong>: Use <code>styler</code> package for R code formatting</li>
+<li><strong>Add comments</strong>: Even if AI generates code, add your own comments</li>
+<li><strong>Version control</strong>: Use Git to track changes</li>
+</ul>
+</section>
+<section id="be-aware-of-limitations" class="level3" data-number="3.9.4">
+<h3 data-number="3.9.4" class="anchored" data-anchor-id="be-aware-of-limitations"><span class="header-section-number">3.9.4</span> 4. Be Aware of Limitations</h3>
+<ul>
+<li><strong>Context matters</strong>: AI may not understand your specific research question</li>
+<li><strong>Statistical correctness</strong>: Verify that methods are appropriate for your data</li>
+<li><strong>Package versions</strong>: AI may suggest outdated syntax</li>
+</ul>
+</section>
+<section id="combine-ai-tools" class="level3" data-number="3.9.5">
+<h3 data-number="3.9.5" class="anchored" data-anchor-id="combine-ai-tools"><span class="header-section-number">3.9.5</span> 5. Combine AI Tools</h3>
+<ul>
+<li><strong>Use Cursor for</strong>: Complex code generation and explanations</li>
+<li><strong>Use Copilot for</strong>: Quick completions while typing</li>
+<li><strong>Use ChatGPT for</strong>: Learning concepts and debugging</li>
+</ul>
+</section>
+</section>
+<section id="ethical-considerations" class="level2" data-number="3.10">
+<h2 data-number="3.10" class="anchored" data-anchor-id="ethical-considerations"><span class="header-section-number">3.10</span> Ethical Considerations</h2>
+<section id="data-privacy" class="level3" data-number="3.10.1">
+<h3 data-number="3.10.1" class="anchored" data-anchor-id="data-privacy"><span class="header-section-number">3.10.1</span> 1. Data Privacy</h3>
+<ul>
+<li><strong>Be cautious</strong>: Don’t paste sensitive health data into AI tools</li>
+<li><strong>Use local models</strong>: Consider tools like TabNine for sensitive projects</li>
+<li><strong>Review terms</strong>: Understand how AI services handle your code</li>
+</ul>
+</section>
+<section id="attribution" class="level3" data-number="3.10.2">
+<h3 data-number="3.10.2" class="anchored" data-anchor-id="attribution"><span class="header-section-number">3.10.2</span> 2. Attribution</h3>
+<ul>
+<li><strong>Document AI use</strong>: Note when AI was used in your research</li>
+<li><strong>Verify results</strong>: AI is a tool, not a replacement for expertise</li>
+<li><strong>Maintain responsibility</strong>: You are responsible for your analysis</li>
+</ul>
+</section>
+<section id="reproducibility" class="level3" data-number="3.10.3">
+<h3 data-number="3.10.3" class="anchored" data-anchor-id="reproducibility"><span class="header-section-number">3.10.3</span> 3. Reproducibility</h3>
+<ul>
+<li><strong>Save prompts</strong>: Document what you asked AI to generate</li>
+<li><strong>Version control</strong>: Track AI-generated code in Git</li>
+<li><strong>Share workflows</strong>: Include AI usage in your methods section</li>
+</ul>
+</section>
+</section>
+<section id="future-directions" class="level2" data-number="3.11">
+<h2 data-number="3.11" class="anchored" data-anchor-id="future-directions"><span class="header-section-number">3.11</span> Future Directions</h2>
+<p>The integration of AI in epidemiological computing is rapidly evolving:</p>
+<ol type="1">
+<li><strong>Specialized Models</strong>: AI models trained specifically on epidemiological code</li>
+<li><strong>Domain-Specific Assistants</strong>: AI that understands epidemiological concepts</li>
+<li><strong>Automated Quality Checks</strong>: AI that validates statistical methods</li>
+<li><strong>Natural Language to Code</strong>: Describe analyses in plain English</li>
+<li><strong>Collaborative AI</strong>: Multiple AI agents working together on complex analyses</li>
+</ol>
+</section>
+<section id="summary" class="level2" data-number="3.12">
+<h2 data-number="3.12" class="anchored" data-anchor-id="summary"><span class="header-section-number">3.12</span> Summary</h2>
+<p>AI has fundamentally transformed epidemiological computing by: - <strong>Accelerating development</strong>: Faster code generation and debugging - <strong>Lowering barriers</strong>: Making R more accessible to beginners - <strong>Improving quality</strong>: Catching errors and suggesting best practices - <strong>Enhancing learning</strong>: Providing explanations and alternatives</p>
+<p>Tools like Cursor and GitHub Copilot are now essential for modern epidemiological research, enabling researchers to focus on scientific questions rather than syntax details.</p>
+</section>
+<section id="next-steps" class="level2" data-number="3.13">
+<h2 data-number="3.13" class="anchored" data-anchor-id="next-steps"><span class="header-section-number">3.13</span> Next Steps</h2>
+<p>In the following chapters, you’ll apply these AI tools as you learn: - Sampling and survey methods - Statistical modeling techniques - Data visualization - Reproducible research workflows</p>
+<p>Remember: AI is a powerful assistant, but your epidemiological expertise and critical thinking remain essential for producing high-quality research.</p>
+</section>
+<section id="references" class="level2" data-number="3.14">
+<h2 data-number="3.14" class="anchored" data-anchor-id="references"><span class="header-section-number">3.14</span> References</h2>
+<ol type="1">
+<li><p>Batra, N., et al.&nbsp;The Epidemiologist R Handbook. Applied Epi Incorporated, 2021. Available at: https://www.epirhandbook.com/en/</p></li>
+<li><p>Jordan RA, Celeste RK, Bernabe E, Schwendicke F. Big Data in Epidemiology: Brave New World? J Dent Res. 2024 Oct;103(11):1047-1050. doi: 10.1177/00220345241272034. Epub 2024 Oct 2. PMID: 39359106; PMCID: PMC11653310.</p></li>
+<li><p>Mazzella, A. R4SME: R for Statistical Methods in Epidemiology. Available at: https://github.com/andreamazzella/R4SME</p></li>
+<li><p>Mazzella, A. R4ASME: R for Advanced Statistical Methods in Epidemiology. Available at: https://github.com/andreamazzella/r4asme</p></li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./sme_r_chapter_01.html" class="pagination-link" aria-label="SME Chapter 1: Introduction to R and Epidemiology">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">SME Chapter 1: Introduction to R and Epidemiology</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./sme_r_chapter_03.html" class="pagination-link" aria-label="SME Chapter 3: Sampling">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">SME Chapter 3: Sampling</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
