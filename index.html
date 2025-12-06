@@ -67,11 +67,13 @@
                 </div>
             </div>
             <div class="card-footer">
-                <a href="http://projects.upei.ca/mer/files/2015/04/mer_data_stata.zip" class="download-btn-premium" download>
-                    <i class="bi bi-download"></i>
-                    <span>Download Datasets</span>
-                    <div class="btn-effect"></div>
-                </a>
+                <div class="button-container">
+                    <a href="http://projects.upei.ca/mer/files/2015/04/mer_data_stata.zip" class="download-btn-premium" download>
+                        <i class="bi bi-download"></i>
+                        <span>Download Datasets</span>
+                        <div class="btn-effect"></div>
+                    </a>
+                </div>
             </div>
             <div class="card-corner"></div>
         </div>
@@ -103,11 +105,13 @@
                 </div>
             </div>
             <div class="card-footer">
-                <a href="https://files.upei.ca/avc/MER_all.zip" class="download-btn-premium" download>
-                    <i class="bi bi-download"></i>
-                    <span>Download Textbook</span>
-                    <div class="btn-effect"></div>
-                </a>
+                <div class="button-container">
+                    <a href="https://files.upei.ca/avc/MER_all.zip" class="download-btn-premium" download>
+                        <i class="bi bi-download"></i>
+                        <span>Download Textbook</span>
+                        <div class="btn-effect"></div>
+                    </a>
+                </div>
             </div>
             <div class="card-corner"></div>
         </div>
@@ -707,6 +711,74 @@
     background-clip: text;
 }
 
+/* Fix for download card structure */
+.download-card-premium {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 350px; /* Ensure minimum height */
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    position: relative;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.card-footer {
+    margin-top: auto; /* Push button to bottom */
+    padding-top: 15px;
+    width: 100%;
+}
+
+.button-container {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Fix button overflow */
+.download-btn-premium {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #195697 0%, #2a5298 100%);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box; /* Include padding in width calculation */
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* Fix for button text overflow */
+.download-btn-premium span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: calc(100% - 40px); /* Account for icon space */
+}
+
+/* Ensure downloads grid has proper spacing */
+.downloads-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 800px;
+    margin: 0 auto;
+    align-items: stretch; /* Make cards equal height */
+}
+
 /* Keep the rest of the CSS from previous version */
 /* A4 Document Styling */
 .content {
@@ -879,24 +951,6 @@
     font-size: 1rem;
 }
 
-.downloads-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.download-card-premium {
-    background: white;
-    border-radius: 12px;
-    padding: 25px;
-    position: relative;
-    border: 1px solid #e2e8f0;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-}
-
 .download-card-premium:hover {
     transform: translateY(-5px);
     box-shadow: 0 20px 40px rgba(25, 86, 151, 0.15);
@@ -974,28 +1028,6 @@
 
 .feature i {
     color: #48bb78;
-}
-
-.card-footer {
-    text-align: center;
-}
-
-.download-btn-premium {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    background: linear-gradient(135deg, #195697 0%, #2a5298 100%);
-    color: white;
-    padding: 14px 30px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    width: 100%;
 }
 
 .download-btn-premium:hover {
@@ -1373,6 +1405,27 @@
     }
 }
 
+/* Responsive adjustments for downloads */
+@media (max-width: 768px) {
+    .downloads-grid {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+    }
+    
+    .download-card-premium {
+        min-height: 320px;
+    }
+    
+    .download-btn-premium {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+    
+    .download-btn-premium span {
+        font-size: 0.9rem;
+    }
+}
+
 @media (max-width: 640px) {
     .document-title {
         font-size: 2rem;
@@ -1385,10 +1438,6 @@
     .document-metadata {
         flex-direction: column;
         gap: 10px;
-    }
-    
-    .downloads-grid {
-        grid-template-columns: 1fr;
     }
     
     .chapters-row {
@@ -1409,6 +1458,38 @@
     
     .chapter-action {
         display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .download-btn-premium {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+    }
+    
+    .download-btn-premium span {
+        font-size: 0.85rem;
+    }
+    
+    .download-card-premium {
+        padding: 20px;
+    }
+    
+    .card-body {
+        margin-bottom: 20px;
+    }
+}
+
+/* Add minimum width constraint for very small screens */
+@media (max-width: 380px) {
+    .download-btn-premium {
+        white-space: normal;
+        padding: 10px;
+    }
+    
+    .download-btn-premium span {
+        white-space: normal;
+        line-height: 1.3;
     }
 }
 
