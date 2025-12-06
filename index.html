@@ -1,1234 +1,1389 @@
 <main class="content" id="quarto-document-content">
-
-<!-- Animated Background Elements -->
-<div class="bg-animations">
-    <div class="bg-particle" style="left: 5%; top: 10%; width: 40px; height: 40px; animation-delay: 0s;"></div>
-    <div class="bg-particle" style="left: 90%; top: 20%; width: 30px; height: 30px; animation-delay: 0.3s;"></div>
-    <div class="bg-particle" style="left: 15%; top: 80%; width: 50px; height: 50px; animation-delay: 0.6s;"></div>
-    <div class="bg-particle" style="left: 85%; top: 70%; width: 35px; height: 35px; animation-delay: 0.9s;"></div>
+<header id="title-block-header" class="quarto-title-block default enhanced-document-header">
+<div class="quarto-title">
+<h1 class="title document-title">Statistical Methods in Epidemiology</h1>
+<p class="document-subtitle">A Step-by-Step R Tutorial Journey</p>
 </div>
-
-<header id="title-block-header" class="quarto-title-block default enhanced-title">
-    <div class="title-gradient-wrapper">
-        <div class="title-sparkle"></div>
-        <div class="quarto-title">
-            <h1 class="title">
-                <span class="title-text-glow">Statistical Methods in Epidemiology</span>
-                <span class="title-subtext">A Step-by-Step R Tutorial Journey</span>
-            </h1>
-        </div>
-        <div class="title-decoration">
-            <div class="decoration-line"></div>
-            <div class="decoration-dot"></div>
-            <div class="decoration-line"></div>
-        </div>
+<div class="quarto-title-meta">
+    <div class="document-metadata">
+        <span class="meta-item"><i class="bi bi-calendar3"></i> Updated: 2024</span>
+        <span class="meta-item"><i class="bi bi-journal"></i> 22 Chapters</span>
+        <span class="meta-item"><i class="bi bi-code-slash"></i> R + Stata</span>
     </div>
-    
-    <!-- Interactive Stats Badge -->
-    <div class="stats-badge">
-        <div class="stats-item">
-            <div class="stats-number" data-count="22">0</div>
-            <div class="stats-label">Chapters</div>
-        </div>
-        <div class="stats-item">
-            <div class="stats-number" data-count="6">0</div>
-            <div class="stats-label">Modules</div>
-        </div>
-        <div class="stats-item">
-            <div class="stats-number" data-count="100">0</div>
-            <div class="stats-label">% Practical</div>
-        </div>
-    </div>
+</div>
 </header>
 
-<!-- Hero Downloads Section -->
-<div class="hero-section">
-    <div class="hero-content">
-        <div class="hero-text">
-            <div class="hero-badge">
-                <i class="bi bi-star-fill"></i>
-                <span>Complete Learning Package</span>
-            </div>
-            <h2 class="hero-title">Your Epidemiologic<br>Toolkit Awaits</h2>
-            <p class="hero-description">Everything you need to master statistical epidemiology in one place. Download the resources and start your journey today.</p>
+<!-- Document Background Effect -->
+<div class="document-bg-effect"></div>
+
+<!-- Executive Summary -->
+<div class="executive-summary">
+    <div class="summary-card">
+        <div class="summary-icon">
+            <i class="bi bi-mortarboard"></i>
         </div>
-        
-        <div class="download-cards-grid">
-            <div class="download-card deluxe">
-                <div class="card-glow"></div>
-                <div class="card-inner">
-                    <div class="download-icon">
-                        <div class="icon-wrapper">
-                            <i class="bi bi-database-fill"></i>
-                        </div>
-                        <div class="icon-rings"></div>
-                    </div>
-                    <div class="download-content">
-                        <h3 class="download-card-title">
-                            <span class="title-highlight">Stata Datasets</span>
-                        </h3>
-                        <p class="download-card-desc">Complete collection of real-world datasets for hands-on practice with both Stata and R.</p>
-                        <div class="file-info">
-                            <span class="file-size"><i class="bi bi-hdd"></i> ~50MB ZIP</span>
-                            <span class="file-type"><i class="bi bi-file-earmark-zip"></i> Stata + CSV</span>
-                        </div>
-                    </div>
-                    <a href="http://projects.upei.ca/mer/files/2015/04/mer_data_stata.zip" class="download-btn premium" download>
-                        <span class="btn-text">Download Datasets</span>
-                        <span class="btn-icon">
-                            <i class="bi bi-download"></i>
-                            <i class="bi bi-arrow-down-right"></i>
-                        </span>
-                        <div class="btn-shine"></div>
-                    </a>
+        <div class="summary-content">
+            <h3>Complete Learning Pathway</h3>
+            <p>This comprehensive tutorial follows the A4 academic format, providing structured learning from basic R programming to advanced epidemiological methods. Each chapter includes practical examples with downloadable datasets.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced Downloads Section -->
+<div class="enhanced-downloads">
+    <div class="downloads-header">
+        <h2><i class="bi bi-cloud-arrow-down"></i> Essential Resources</h2>
+        <p class="downloads-subtitle">Download these core materials to begin your learning journey</p>
+    </div>
+    
+    <div class="downloads-grid">
+        <div class="download-card-premium">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="bi bi-database-fill"></i>
+                    <div class="icon-badge">ZIP</div>
+                </div>
+                <div class="card-title">
+                    <h3>Stata Datasets</h3>
+                    <span class="card-subtitle">Complete Dataset Collection</span>
                 </div>
             </div>
-            
-            <div class="download-card deluxe">
-                <div class="card-glow"></div>
-                <div class="card-inner">
-                    <div class="download-icon">
-                        <div class="icon-wrapper">
-                            <i class="bi bi-journal-text"></i>
-                        </div>
-                        <div class="icon-rings"></div>
-                    </div>
-                    <div class="download-content">
-                        <h3 class="download-card-title">
-                            <span class="title-highlight">MER Textbook</span>
-                        </h3>
-                        <p class="download-card-desc">Complete Methods in Epidemiologic Research textbook to guide your learning journey.</p>
-                        <div class="file-info">
-                            <span class="file-size"><i class="bi bi-hdd"></i> ~25MB ZIP</span>
-                            <span class="file-type"><i class="bi bi-file-earmark-pdf"></i> PDF Format</span>
-                        </div>
-                    </div>
-                    <a href="https://files.upei.ca/avc/MER_all.zip" class="download-btn premium" download>
-                        <span class="btn-text">Download Textbook</span>
-                        <span class="btn-icon">
-                            <i class="bi bi-download"></i>
-                            <i class="bi bi-arrow-down-right"></i>
-                        </span>
-                        <div class="btn-shine"></div>
-                    </a>
+            <div class="card-body">
+                <p class="card-description">Download the complete collection of datasets used throughout all 22 chapters for hands-on practice with both Stata and R statistical software.</p>
+                <div class="card-features">
+                    <span class="feature"><i class="bi bi-check-circle"></i> Real-world data</span>
+                    <span class="feature"><i class="bi bi-check-circle"></i> Stata + CSV formats</span>
+                    <span class="feature"><i class="bi bi-check-circle"></i> ~50MB package</span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="http://projects.upei.ca/mer/files/2015/04/mer_data_stata.zip" class="download-btn-premium" download>
+                    <i class="bi bi-download"></i>
+                    <span>Download Datasets</span>
+                    <div class="btn-effect"></div>
+                </a>
+            </div>
+            <div class="card-corner"></div>
+        </div>
+        
+        <div class="download-card-premium">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="bi bi-journal-text"></i>
+                    <div class="icon-badge">PDF</div>
+                </div>
+                <div class="card-title">
+                    <h3>MER Textbook</h3>
+                    <span class="card-subtitle">Complete Reference Guide</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="card-description">Get the complete Methods in Epidemiologic Research textbook as your primary reference throughout all 22 chapters of this tutorial.</p>
+                <div class="card-features">
+                    <span class="feature"><i class="bi bi-check-circle"></i> Full textbook</span>
+                    <span class="feature"><i class="bi bi-check-circle"></i> 22 chapters</span>
+                    <span class="feature"><i class="bi bi-check-circle"></i> ~25MB package</span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="https://files.upei.ca/avc/MER_all.zip" class="download-btn-premium" download>
+                    <i class="bi bi-download"></i>
+                    <span>Download Textbook</span>
+                    <div class="btn-effect"></div>
+                </a>
+            </div>
+            <div class="card-corner"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Document Chapters Grid -->
+<div class="document-chapters">
+    <div class="chapters-header">
+        <div class="header-left">
+            <h2><i class="bi bi-list-task"></i> Complete Chapter Index</h2>
+            <p>Click any chapter to begin learning. Progress is automatically tracked.</p>
+        </div>
+        <div class="header-right">
+            <div class="progress-indicator">
+                <div class="progress-text">Completion: <strong>100%</strong></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%;"></div>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- Quick Stats -->
-    <div class="quick-stats">
-        <div class="stat-circle">
-            <div class="circle-progress" data-value="22"></div>
-            <div class="circle-content">
-                <span class="circle-number">22</span>
-                <span class="circle-label">Chapters</span>
-            </div>
-        </div>
-        <div class="stat-item">
-            <i class="bi bi-cpu"></i>
-            <div>
-                <span class="stat-value">100%</span>
-                <span class="stat-name">Reproducible</span>
-            </div>
-        </div>
-        <div class="stat-item">
-            <i class="bi bi-code-slash"></i>
-            <div>
-                <span class="stat-value">R & AI</span>
-                <span class="stat-name">Modern Tech</span>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Enhanced Roadmap -->
-<div class="roadmap-master">
-    <div class="roadmap-header-modern">
-        <div class="roadmap-header-content">
-            <h2 class="roadmap-master-title">
-                <span class="title-part-1">Your Learning</span>
-                <span class="title-part-2">Roadmap</span>
-            </h2>
-            <p class="roadmap-master-subtitle">Follow this structured path from fundamentals to advanced epidemiological methods</p>
-            <div class="timeline-track">
-                <div class="track-line"></div>
-                <div class="track-progress"></div>
-                <div class="track-marker" style="left: 0%;">Start</div>
-                <div class="track-marker" style="left: 33%;">Core</div>
-                <div class="track-marker" style="left: 66%;">Advanced</div>
-                <div class="track-marker" style="left: 100%;">Master</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Interactive Roadmap Chapters -->
-    <div class="roadmap-chapters-container">
-        <div class="module-section" data-module="1">
-            <div class="module-header">
-                <div class="module-badge">
-                    <span class="module-number">01</span>
-                    <span class="module-name">Foundation</span>
-                </div>
-                <div class="module-progress">
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 100%;"></div>
-                    </div>
-                    <span class="progress-text">Complete</span>
+    <!-- Chapter Grid in A4-style layout -->
+    <div class="chapters-grid-a4">
+        <!-- Module 1: Foundation -->
+        <div class="module-section-a4">
+            <div class="module-header-a4">
+                <span class="module-number">01</span>
+                <h3 class="module-title">Foundation</h3>
+                <div class="module-status">
+                    <span class="status-badge completed">✓ Complete</span>
+                    <span class="chapter-count">2 Chapters</span>
                 </div>
             </div>
-            <div class="chapters-grid-modern">
-                <a href="./sme_r_chapter_01.html" class="chapter-card-modern hover-lift">
-                    <div class="chapter-card-inner">
-                        <div class="chapter-card-front">
-                            <div class="chapter-number-modern">
-                                <span class="chapter-digit">01</span>
-                                <div class="number-glow"></div>
-                            </div>
-                            <div class="chapter-content-modern">
-                                <h3 class="chapter-title-modern">Introduction to R and Epidemiology</h3>
-                                <p class="chapter-desc-modern">R fundamentals and epidemiological concepts for advanced statistical analysis.</p>
-                                <div class="chapter-meta">
-                                    <span class="meta-item"><i class="bi bi-clock"></i> 2-3 hours</span>
-                                    <span class="meta-item"><i class="bi bi-file-code"></i> 15 exercises</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="chapter-card-back">
-                            <div class="start-chapter-btn">
-                                <i class="bi bi-play-circle"></i>
-                                <span>Start Learning</span>
-                            </div>
-                        </div>
-                        <div class="chapter-card-glow"></div>
+            <div class="chapters-row">
+                <a href="./sme_r_chapter_01.html" class="chapter-card-a4 hover-3d">
+                    <div class="chapter-number-a4">
+                        <span>01</span>
+                        <div class="number-glow"></div>
                     </div>
+                    <div class="chapter-content-a4">
+                        <h4 class="chapter-title-a4">Introduction to R and Epidemiology</h4>
+                        <p class="chapter-desc-a4">Begin your journey with R programming fundamentals and epidemiological concepts, setting the foundation for advanced statistical analysis.</p>
+                        <div class="chapter-meta-a4">
+                            <span class="meta-item"><i class="bi bi-clock"></i> 2-3h</span>
+                            <span class="meta-item"><i class="bi bi-file-code"></i> 15 exercises</span>
+                        </div>
+                    </div>
+                    <div class="chapter-action">
+                        <i class="bi bi-arrow-right-circle"></i>
+                    </div>
+                    <div class="chapter-hover-effect"></div>
                 </a>
                 
-                <a href="./sme_r_chapter_02.html" class="chapter-card-modern hover-lift">
-                    <div class="chapter-card-inner">
-                        <div class="chapter-card-front">
-                            <div class="chapter-number-modern">
-                                <span class="chapter-digit">02</span>
-                                <div class="number-glow"></div>
-                            </div>
-                            <div class="chapter-content-modern">
-                                <h3 class="chapter-title-modern">AI in R Epidemiologic Computing</h3>
-                                <p class="chapter-desc-modern">AI integration and machine learning for epidemiological computing.</p>
-                                <div class="chapter-meta">
-                                    <span class="meta-item"><i class="bi bi-clock"></i> 3-4 hours</span>
-                                    <span class="meta-item"><i class="bi bi-robot"></i> AI Focus</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="chapter-card-back">
-                            <div class="start-chapter-btn">
-                                <i class="bi bi-play-circle"></i>
-                                <span>Start Learning</span>
-                            </div>
-                        </div>
-                        <div class="chapter-card-glow"></div>
+                <a href="./sme_r_chapter_02.html" class="chapter-card-a4 hover-3d">
+                    <div class="chapter-number-a4">
+                        <span>02</span>
+                        <div class="number-glow"></div>
                     </div>
+                    <div class="chapter-content-a4">
+                        <h4 class="chapter-title-a4">AI in R Epidemiologic Computing</h4>
+                        <p class="chapter-desc-a4">Explore cutting-edge AI integration in epidemiological computing, leveraging machine learning within the R ecosystem.</p>
+                        <div class="chapter-meta-a4">
+                            <span class="meta-item"><i class="bi bi-clock"></i> 3-4h</span>
+                            <span class="meta-item"><i class="bi bi-robot"></i> AI Focus</span>
+                        </div>
+                    </div>
+                    <div class="chapter-action">
+                        <i class="bi bi-arrow-right-circle"></i>
+                    </div>
+                    <div class="chapter-hover-effect"></div>
                 </a>
             </div>
         </div>
         
         <!-- Module 2: Sampling & Basic Methods -->
-        <div class="module-section" data-module="2">
-            <div class="module-header">
-                <div class="module-badge">
-                    <span class="module-number">02</span>
-                    <span class="module-name">Sampling & Basic Methods</span>
-                </div>
-                <div class="module-progress">
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 100%;"></div>
-                    </div>
-                    <span class="progress-text">Complete</span>
+        <div class="module-section-a4">
+            <div class="module-header-a4">
+                <span class="module-number">02</span>
+                <h3 class="module-title">Sampling & Basic Methods</h3>
+                <div class="module-status">
+                    <span class="status-badge completed">✓ Complete</span>
+                    <span class="chapter-count">4 Chapters</span>
                 </div>
             </div>
-            <div class="chapters-grid-modern">
-                <!-- Chapters 3-6 would continue here with same structure -->
-                <!-- I'm showing a condensed version for brevity -->
-                <a href="./sme_r_chapter_03.html" class="chapter-card-modern hover-lift">
-                    <div class="chapter-card-inner">
-                        <div class="chapter-card-front">
-                            <div class="chapter-number-modern">
-                                <span class="chapter-digit">03</span>
-                                <div class="number-glow"></div>
-                            </div>
-                            <div class="chapter-content-modern">
-                                <h3 class="chapter-title-modern">Sampling Techniques</h3>
-                                <p class="chapter-desc-modern">Master sampling for representative populations in epidemiological studies.</p>
-                                <div class="chapter-meta">
-                                    <span class="meta-item"><i class="bi bi-clock"></i> 2-3 hours</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="chapter-card-back">
-                            <div class="start-chapter-btn">
-                                <i class="bi bi-play-circle"></i>
-                                <span>Start Learning</span>
-                            </div>
-                        </div>
-                        <div class="chapter-card-glow"></div>
+            <div class="chapters-row">
+                <a href="./sme_r_chapter_03.html" class="chapter-card-a4 hover-3d">
+                    <div class="chapter-number-a4">
+                        <span>03</span>
+                        <div class="number-glow"></div>
                     </div>
+                    <div class="chapter-content-a4">
+                        <h4 class="chapter-title-a4">Sampling</h4>
+                        <p class="chapter-desc-a4">Master sampling techniques and understand how to select representative populations for robust epidemiological studies.</p>
+                        <div class="chapter-meta-a4">
+                            <span class="meta-item"><i class="bi bi-clock"></i> 2-3h</span>
+                            <span class="meta-item"><i class="bi bi-graph-up"></i> Statistics</span>
+                        </div>
+                    </div>
+                    <div class="chapter-action">
+                        <i class="bi bi-arrow-right-circle"></i>
+                    </div>
+                    <div class="chapter-hover-effect"></div>
                 </a>
-                <!-- Add more chapters as needed -->
+                
+                <a href="./sme_r_chapter_04.html" class="chapter-card-a4 hover-3d">
+                    <div class="chapter-number-a4">
+                        <span>04</span>
+                        <div class="number-glow"></div>
+                    </div>
+                    <div class="chapter-content-a4">
+                        <h4 class="chapter-title-a4">Confidence Intervals and Standardization</h4>
+                        <p class="chapter-desc-a4">Learn to quantify uncertainty and standardize rates for meaningful population comparisons.</p>
+                        <div class="chapter-meta-a4">
+                            <span class="meta-item"><i class="bi bi-clock"></i> 2-3h</span>
+                            <span class="meta-item"><i class="bi bi-calculator"></i> Calculations</span>
+                        </div>
+                    </div>
+                    <div class="chapter-action">
+                        <i class="bi bi-arrow-right-circle"></i>
+                    </div>
+                    <div class="chapter-hover-effect"></div>
+                </a>
+                
+                <a href="./sme_r_chapter_05.html" class="chapter-card-a4 hover-3d">
+                    <div class="chapter-number-a4">
+                        <span>05</span>
+                        <div class="number-glow"></div>
+                    </div>
+                    <div class="chapter-content-a4">
+                        <h4 class="chapter-title-a4">Precision, Agreement, and Diagnostic Accuracy</h4>
+                        <p class="chapter-desc-a4">Evaluate measurement quality and diagnostic test performance using key statistical metrics.</p>
+                        <div class="chapter-meta-a4">
+                            <span class="meta-item"><i class="bi bi-clock"></i> 3-4h</span>
+                            <span class="meta-item"><i class="bi bi-clipboard-check"></i> Diagnostics</span>
+                        </div>
+                    </div>
+                    <div class="chapter-action">
+                        <i class="bi bi-arrow-right-circle"></i>
+                    </div>
+                    <div class="chapter-hover-effect"></div>
+                </a>
+                
+                <a href="./sme_r_chapter_06.html" class="chapter-card-a4 hover-3d">
+                    <div class="chapter-number-a4">
+                        <span>06</span>
+                        <div class="number-glow"></div>
+                    </div>
+                    <div class="chapter-content-a4">
+                        <h4 class="chapter-title-a4">Measures of Association</h4>
+                        <p class="chapter-desc-a4">Quantify relationships between exposures and outcomes through risk ratios, odds ratios, and more.</p>
+                        <div class="chapter-meta-a4">
+                            <span class="meta-item"><i class="bi bi-clock"></i> 3-4h</span>
+                            <span class="meta-item"><i class="bi bi-link-45deg"></i> Associations</span>
+                        </div>
+                    </div>
+                    <div class="chapter-action">
+                        <i class="bi bi-arrow-right-circle"></i>
+                    </div>
+                    <div class="chapter-hover-effect"></div>
+                </a>
             </div>
         </div>
         
-        <!-- Continue with other modules similarly -->
+        <!-- Module 3: Sensitivity & Confounding -->
+        <div class="module-section-a4">
+            <div class="module-header-a4">
+                <span class="module-number">03</span>
+                <h3 class="module-title">Sensitivity & Confounding</h3>
+                <div class="module-status">
+                    <span class="status-badge completed">✓ Complete</span>
+                    <span class="chapter-count">2 Chapters</span>
+                </div>
+            </div>
+            <div class="chapters-row">
+                <a href="./sme_r_chapter_07.html" class="chapter-card-a4 hover-3d">
+                    <div class="chapter-number-a4">
+                        <span>07</span>
+                        <div class="number-glow"></div>
+                    </div>
+                    <div class="chapter-content-a4">
+                        <h4 class="chapter-title-a4">Sensitivity Analyses for Bias</h4>
+                        <p class="chapter-desc-a4">Assess the robustness of your findings by examining how sensitive results are to potential biases.</p>
+                        <div class="chapter-meta-a4">
+                            <span class="meta-item"><i class="bi bi-clock"></i> 2-3h</span>
+                            <span class="meta-item"><i class="bi bi-shield-check"></i> Validation</span>
+                        </div>
+                    </div>
+                    <div class="chapter-action">
+                        <i class="bi bi-arrow-right-circle"></i>
+                    </div>
+                    <div class="chapter-hover-effect"></div>
+                </a>
+                
+                <a href="./sme_r_chapter_08.html" class="chapter-card-a4 hover-3d">
+                    <div class="chapter-number-a4">
+                        <span>08</span>
+                        <div class="number-glow"></div>
+                    </div>
+                    <div class="chapter-content-a4">
+                        <h4 class="chapter-title-a4">Confounding and Propensity Scores</h4>
+                        <p class="chapter-desc-a4">Control for confounding variables and balance treatment groups using propensity score methods.</p>
+                        <div class="chapter-meta-a4">
+                            <span class="meta-item"><i class="bi bi-clock"></i> 3-4h</span>
+                            <span class="meta-item"><i class="bi bi-sliders"></i> Controls</span>
+                        </div>
+                    </div>
+                    <div class="chapter-action">
+                        <i class="bi bi-arrow-right-circle"></i>
+                    </div>
+                    <div class="chapter-hover-effect"></div>
+                </a>
+            </div>
+        </div>
         
-        <!-- Progress Visualization -->
-        <div class="progress-visualization">
-            <div class="progress-circle">
-                <svg width="120" height="120">
-                    <circle class="progress-bg" cx="60" cy="60" r="54"></circle>
-                    <circle class="progress-bar" cx="60" cy="60" r="54" style="stroke-dasharray: 339.292, 339.292; stroke-dashoffset: 67.8584;"></circle>
-                </svg>
-                <div class="progress-content">
-                    <span class="progress-percent">80%</span>
-                    <span class="progress-label">Coverage</span>
+        <!-- Module 4: Regression & Model Building -->
+        <div class="module-section-a4">
+            <div class="module-header-a4">
+                <span class="module-number">04</span>
+                <h3 class="module-title">Regression & Model Building</h3>
+                <div class="module-status">
+                    <span class="status-badge completed">✓ Complete</span>
+                    <span class="chapter-count">4 Chapters</span>
                 </div>
             </div>
-            <div class="progress-stats">
-                <div class="progress-stat">
-                    <div class="stat-value">22/22</div>
-                    <div class="stat-label">Chapters Ready</div>
-                </div>
-                <div class="progress-stat">
-                    <div class="stat-value">100+</div>
-                    <div class="stat-label">Code Examples</div>
-                </div>
-                <div class="progress-stat">
-                    <div class="stat-value">∞</div>
-                    <div class="stat-label">Learning Paths</div>
+            <div class="chapters-row">
+                <a href="./sme_r_chapter_09.html" class="chapter-card-a4 hover-3d">
+                    <div class="chapter-number-a4">
+                        <span>09</span>
+                        <div class="number-glow"></div>
+                    </div>
+                    <div class="chapter-content-a4">
+                        <h4 class="chapter-title-a4">Linear Regression</h4>
+                        <p class="chapter-desc-a4">Model continuous outcomes and understand relationships between predictors and responses.</p>
+                        <div class="chapter-meta-a4">
+                            <span class="meta-item"><i class="bi bi-clock"></i> 3-4h</span>
+                            <span class="meta-item"><i class="bi bi-graph-up"></i> Modeling</span>
+                        </div>
+                    </div>
+                    <div class="chapter-action">
+                        <i class="bi bi-arrow-right-circle"></i>
+                    </div>
+                    <div class="chapter-hover-effect"></div>
+                </a>
+                
+                <a href="./sme_r_chapter_10.html" class="chapter-card-a4 hover-3d">
+                    <div class="chapter-number-a4">
+                        <span>10</span>
+                        <div class="number-glow"></div>
+                    </div>
+                    <div class="chapter-content-a4">
+                        <h4 class="chapter-title-a4">Model Building</h4>
+                        <p class="chapter-desc-a4">Develop strategic approaches to variable selection and model specification for optimal predictive performance.</p>
+                        <div class="chapter-meta-a4">
+                            <span class="meta-item"><i class="bi bi-clock"></i> 2-3h</span>
+                            <span class="meta-item"><i class="bi bi-gear"></i> Strategy</span>
+                        </div>
+                    </div>
+                    <div class="chapter-action">
+                        <i class="bi bi-arrow-right-circle"></i>
+                    </div>
+                    <div class="chapter-hover-effect"></div>
+                </a>
+                
+                <a href="./sme_r_chapter_11.html" class="chapter-card-a4 hover-3d">
+                    <div class="chapter-number-a4">
+                        <span>11</span>
+                        <div class="number-glow"></div>
+                    </div>
+                    <div class="chapter-content-a4">
+                        <h4 class="chapter-title-a4">Logistic Regression</h4>
+                        <p class="chapter-desc-a4">Analyze binary outcomes and estimate odds ratios for disease risk factors.</p>
+                        <div class="chapter-meta-a4">
+                            <span class="meta-item"><i class="bi bi-clock"></i> 3-4h</span>
+                            <span class="meta-item"><i class="bi bi-diagram-2"></i> Binary Data</span>
+                        </div>
+                    </div>
+                    <div class="chapter-action">
+                        <i class="bi bi-arrow-right-circle"></i>
+                    </div>
+                    <div class="chapter-hover-effect"></div>
+                </a>
+                
+                <a href="./sme_r_chapter_12.html" class="chapter-card-a4 hover-3d">
+                    <div class="chapter-number-a4">
+                        <span>12</span>
+                        <div class="number-glow"></div>
+                    </div>
+                    <div class="chapter-content-a4">
+                        <h4 class="chapter-title-a4">Ordinal and Multinomial Logistic Regression</h4>
+                        <p class="chapter-desc-a4">Extend logistic regression to ordered and categorical outcomes with multiple levels.</p>
+                        <div class="chapter-meta-a4">
+                            <span class="meta-item"><i class="bi bi-clock"></i> 4-5h</span>
+                            <span class="meta-item"><i class="bi bi-layers"></i> Categories</span>
+                        </div>
+                    </div>
+                    <div class="chapter-action">
+                        <i class="bi bi-arrow-right-circle"></i>
+                    </div>
+                    <div class="chapter-hover-effect"></div>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Module 5: Count, Survival & Clustered Data -->
+        <div class="module-section-a4">
+            <div class="module-header-a4">
+                <span class="module-number">05</span>
+                <h3 class="module-title">Count, Survival & Clustered Data</h3>
+                <div class="module-status">
+                    <span class="status-badge completed">✓ Complete</span>
+                    <span class="chapter-count">6 Chapters</span>
                 </div>
             </div>
+            <div class="chapters-row">
+                <a href="./sme_r_chapter_13.html" class="chapter-card-a4 hover-3d">
+                    <div class="chapter-number-a4">
+                        <span>13</span>
+                        <div class="number-glow"></div>
+                    </div>
+                    <div class="chapter-content-a4">
+                        <h4 class="chapter-title-a4">Modelling Count Data</h4>
+                        <p class="chapter-desc-a4">Apply Poisson and negative binomial regression for disease counts and rare events.</p>
+                        <div class="chapter-meta-a4">
+                            <span class="meta-item"><i class="bi bi-clock"></i> 3-4h</span>
+                            <span class="meta-item"><i class="bi bi-hash"></i> Count Data</span>
+                        </div>
+                    </div>
+                    <div class="chapter-action">
+                        <i class="bi bi-arrow-right-circle"></i>
+                    </div>
+                    <div class="chapter-hover-effect"></div>
+                </a>
+                
+                <a href="./sme_r_chapter_14.html" class="chapter-card-a4 hover-3d">
+                    <div class="chapter-number-a4">
+                        <span>14</span>
+                        <div class="number-glow"></div>
+                    </div>
+                    <div class="chapter-content-a4">
+                        <h4 class="chapter-title-a4">Modelling Survival Data</h4>
+                        <p class="chapter-desc-a4">Analyze time-to-event data using Kaplan-Meier curves and Cox proportional hazards models.</p>
+                        <div class="chapter-meta-a4">
+                            <span class="meta-item"><i class="bi bi-clock"></i> 4-5h</span>
+                            <span class="meta-item"><i class="bi bi-hourglass"></i> Time Series</span>
+                        </div>
+                    </div>
+                    <div class="chapter-action">
+                        <i class="bi bi-arrow-right-circle"></i>
+                    </div>
+                    <div class="chapter-hover-effect"></div>
+                </a>
+                
+                <a href="./sme_r_chapter_15.html" class="chapter-card-a4 hover-3d">
+                    <div class="chapter-number-a4">
+                        <span>15</span>
+                        <div class="number-glow"></div>
+                    </div>
+                    <div class="chapter-content-a4">
+                        <h4 class="chapter-title-a4">Introduction to Clustered Data</h4>
+                        <p class="chapter-desc-a4">Understand the challenges of hierarchical and grouped data structures in epidemiological research.</p>
+                        <div class="chapter-meta-a4">
+                            <span class="meta-item"><i class="bi bi-clock"></i> 2-3h</span>
+                            <span class="meta-item"><i class="bi bi-collection"></i> Groups</span>
+                        </div>
+                    </div>
+                    <div class="chapter-action">
+                        <i class="bi bi-arrow-right-circle"></i>
+                    </div>
+                    <div class="chapter-hover-effect"></div>
+                </a>
+                
+                <a href="./sme_r_chapter_16.html" class="chapter-card-a4 hover-3d">
+                    <div class="chapter-number-a4">
+                        <span>16</span>
+                        <div class="number-glow"></div>
+                    </div>
+                    <div class="chapter-content-a4">
+                        <h4 class="chapter-title-a4">Multilevel and Mixed Models</h4>
+                        <p class="chapter-desc-a4">Account for clustering and random effects in complex study designs with nested data.</p>
+                        <div class="chapter-meta-a4">
+                            <span class="meta-item"><i class="bi bi-clock"></i> 4-5h</span>
+                            <span class="meta-item"><i class="bi bi-diagram-3"></i> Hierarchical</span>
+                        </div>
+                    </div>
+                    <div class="chapter-action">
+                        <i class="bi bi-arrow-right-circle"></i>
+                    </div>
+                    <div class="chapter-hover-effect"></div>
+                </a>
+                
+                <a href="./sme_r_chapter_17.html" class="chapter-card-a4 hover-3d">
+                    <div class="chapter-number-a4">
+                        <span>17</span>
+                        <div class="number-glow"></div>
+                    </div>
+                    <div class="chapter-content-a4">
+                        <h4 class="chapter-title-a4">Mixed Models for Discrete Data</h4>
+                        <p class="chapter-desc-a4">Extend mixed models to binary and count outcomes with random effects.</p>
+                        <div class="chapter-meta-a4">
+                            <span class="meta-item"><i class="bi bi-clock"></i> 3-4h</span>
+                            <span class="meta-item"><i class="bi bi-puzzle"></i> Discrete</span>
+                        </div>
+                    </div>
+                    <div class="chapter-action">
+                        <i class="bi bi-arrow-right-circle"></i>
+                    </div>
+                    <div class="chapter-hover-effect"></div>
+                </a>
+                
+                <a href="./sme_r_chapter_18.html" class="chapter-card-a4 hover-3d">
+                    <div class="chapter-number-a4">
+                        <span>18</span>
+                        <div class="number-glow"></div>
+                    </div>
+                    <div class="chapter-content-a4">
+                        <h4 class="chapter-title-a4">Repeated Measures Data</h4>
+                        <p class="chapter-desc-a4">Analyze longitudinal data with multiple observations per subject over time.</p>
+                        <div class="chapter-meta-a4">
+                            <span class="meta-item"><i class="bi bi-clock"></i> 4-5h</span>
+                            <span class="meta-item"><i class="bi bi-arrow-repeat"></i> Repeated</span>
+                        </div>
+                    </div>
+                    <div class="chapter-action">
+                        <i class="bi bi-arrow-right-circle"></i>
+                    </div>
+                    <div class="chapter-hover-effect"></div>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Module 6: Bayesian, Spatial & Meta-analysis -->
+        <div class="module-section-a4">
+            <div class="module-header-a4">
+                <span class="module-number">06</span>
+                <h3 class="module-title">Bayesian, Spatial & Meta-analysis</h3>
+                <div class="module-status">
+                    <span class="status-badge completed">✓ Complete</span>
+                    <span class="chapter-count">4 Chapters</span>
+                </div>
+            </div>
+            <div class="chapters-row">
+                <a href="./sme_r_chapter_19.html" class="chapter-card-a4 hover-3d">
+                    <div class="chapter-number-a4">
+                        <span>19</span>
+                        <div class="number-glow"></div>
+                    </div>
+                    <div class="chapter-content-a4">
+                        <h4 class="chapter-title-a4">Bayesian Analysis</h4>
+                        <p class="chapter-desc-a4">Incorporate prior knowledge and update beliefs using Bayesian inference frameworks.</p>
+                        <div class="chapter-meta-a4">
+                            <span class="meta-item"><i class="bi bi-clock"></i> 4-5h</span>
+                            <span class="meta-item"><i class="bi bi-lightbulb"></i> Inference</span>
+                        </div>
+                    </div>
+                    <div class="chapter-action">
+                        <i class="bi bi-arrow-right-circle"></i>
+                    </div>
+                    <div class="chapter-hover-effect"></div>
+                </a>
+                
+                <a href="./sme_r_chapter_20.html" class="chapter-card-a4 hover-3d">
+                    <div class="chapter-number-a4">
+                        <span>20</span>
+                        <div class="number-glow"></div>
+                    </div>
+                    <div class="chapter-content-a4">
+                        <h4 class="chapter-title-a4">Spatial Data Visualisation</h4>
+                        <p class="chapter-desc-a4">Map disease patterns and visualize geographic clustering for public health insights.</p>
+                        <div class="chapter-meta-a4">
+                            <span class="meta-item"><i class="bi bi-clock"></i> 3-4h</span>
+                            <span class="meta-item"><i class="bi bi-geo-alt"></i> Spatial</span>
+                        </div>
+                    </div>
+                    <div class="chapter-action">
+                        <i class="bi bi-arrow-right-circle"></i>
+                    </div>
+                    <div class="chapter-hover-effect"></div>
+                </a>
+                
+                <a href="./sme_r_chapter_21.html" class="chapter-card-a4 hover-3d">
+                    <div class="chapter-number-a4">
+                        <span>21</span>
+                        <div class="number-glow"></div>
+                    </div>
+                    <div class="chapter-content-a4">
+                        <h4 class="chapter-title-a4">Meta-analysis</h4>
+                        <p class="chapter-desc-a4">Synthesize evidence across multiple studies to derive pooled effect estimates.</p>
+                        <div class="chapter-meta-a4">
+                            <span class="meta-item"><i class="bi bi-clock"></i> 4-5h</span>
+                            <span class="meta-item"><i class="bi bi-bar-chart"></i> Synthesis</span>
+                        </div>
+                    </div>
+                    <div class="chapter-action">
+                        <i class="bi bi-arrow-right-circle"></i>
+                    </div>
+                    <div class="chapter-hover-effect"></div>
+                </a>
+                
+                <a href="./sme_r_chapter_22.html" class="chapter-card-a4 hover-3d">
+                    <div class="chapter-number-a4">
+                        <span>22</span>
+                        <div class="number-glow"></div>
+                    </div>
+                    <div class="chapter-content-a4">
+                        <h4 class="chapter-title-a4">Confounding Detection and Control</h4>
+                        <p class="chapter-desc-a4">Master advanced techniques for identifying and adjusting for confounding in complex analyses.</p>
+                        <div class="chapter-meta-a4">
+                            <span class="meta-item"><i class="bi bi-clock"></i> 3-4h</span>
+                            <span class="meta-item"><i class="bi bi-filter"></i> Adjustment</span>
+                        </div>
+                    </div>
+                    <div class="chapter-action">
+                        <i class="bi bi-arrow-right-circle"></i>
+                    </div>
+                    <div class="chapter-hover-effect"></div>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Document Footer -->
+    <div class="document-footer">
+        <div class="footer-stats">
+            <div class="stat-item">
+                <div class="stat-value">22</div>
+                <div class="stat-label">Chapters</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">6</div>
+                <div class="stat-label">Modules</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">100+</div>
+                <div class="stat-label">Exercises</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">∞</div>
+                <div class="stat-label">Possibilities</div>
+            </div>
+        </div>
+        <div class="footer-note">
+            <i class="bi bi-info-circle"></i>
+            <span>All chapters are fully reproducible with complete R code examples and downloadable datasets.</span>
         </div>
     </div>
 </div>
 
-<!-- Enhanced CSS -->
 <style>
-/* Enhanced Title */
-.enhanced-title {
+/* A4 Document Styling */
+.content {
+    max-width: 210mm; /* A4 width */
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+/* Enhanced Header */
+.enhanced-document-header {
     text-align: center;
     margin-bottom: 60px;
+    padding-bottom: 40px;
+    border-bottom: 2px solid #e2e8f0;
     position: relative;
 }
 
-.title-gradient-wrapper {
-    position: relative;
-    display: inline-block;
-    padding: 0 40px;
-}
-
-.title-sparkle {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 0%, transparent 70%);
-    animation: sparkle 4s ease-in-out infinite;
-}
-
-.title-text-glow {
-    font-size: 3.5rem;
-    font-weight: 900;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #667eea 75%, #764ba2 100%);
-    background-size: 300% 300%;
+.document-title {
+    font-size: 2.8rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: gradientShift 8s ease infinite;
-    display: block;
     margin-bottom: 15px;
-    text-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    line-height: 1.2;
+    text-shadow: 0 2px 10px rgba(30, 60, 114, 0.1);
 }
 
-.title-subtext {
+.document-subtitle {
     font-size: 1.3rem;
-    color: #a0aec0;
+    color: #4a5568;
     font-weight: 300;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    display: block;
-    margin-top: 10px;
+    letter-spacing: 1px;
+    margin-bottom: 30px;
+    position: relative;
+    display: inline-block;
+    padding: 0 20px;
 }
 
-.title-decoration {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 30px;
-}
-
-.decoration-line {
-    width: 80px;
-    height: 2px;
+.document-subtitle::before,
+.document-subtitle::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 40px;
+    height: 1px;
     background: linear-gradient(90deg, transparent, #667eea, transparent);
 }
 
-.decoration-dot {
-    width: 8px;
-    height: 8px;
-    background: #667eea;
-    border-radius: 50%;
-    margin: 0 20px;
-    position: relative;
-    animation: pulseDot 2s ease-in-out infinite;
+.document-subtitle::before {
+    right: 100%;
 }
 
-/* Stats Badge */
-.stats-badge {
+.document-subtitle::after {
+    left: 100%;
+}
+
+.document-metadata {
     display: flex;
     justify-content: center;
-    gap: 40px;
-    margin-top: 40px;
-}
-
-.stats-item {
-    text-align: center;
-    padding: 20px;
-    position: relative;
-}
-
-.stats-number {
-    font-size: 2.5rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #667eea, #f093fb);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    position: relative;
-}
-
-.stats-label {
-    font-size: 0.9rem;
-    color: #a0aec0;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 5px;
-}
-
-/* Hero Section */
-.hero-section {
-    background: linear-gradient(135deg, rgba(10, 14, 39, 0.95), rgba(26, 31, 58, 0.95));
-    padding: 60px;
-    border-radius: 30px;
-    margin: 40px auto;
-    position: relative;
-    overflow: hidden;
-    border: 1px solid rgba(102, 126, 234, 0.2);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-.hero-content {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 60px;
-    align-items: center;
-}
-
-.hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
-    border: 1px solid rgba(102, 126, 234, 0.3);
-    border-radius: 50px;
-    padding: 12px 24px;
-    margin-bottom: 30px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #a0aec0;
-    backdrop-filter: blur(10px);
-}
-
-.hero-badge i {
-    color: #f093fb;
-    animation: spinSlow 10s linear infinite;
-}
-
-.hero-title {
-    font-size: 3rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #f7fafc 0%, #cbd5e0 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1.1;
-    margin-bottom: 20px;
-}
-
-.hero-description {
-    font-size: 1.1rem;
-    color: #a0aec0;
-    line-height: 1.6;
-    max-width: 400px;
-}
-
-/* Deluxe Download Cards */
-.download-cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 30px;
+    margin-top: 20px;
 }
 
-.download-card.deluxe {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-    border-radius: 24px;
-    padding: 30px;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: #718096;
+    font-weight: 500;
 }
 
-.download-card.deluxe:hover {
-    transform: translateY(-10px);
-    border-color: rgba(102, 126, 234, 0.5);
+.meta-item i {
+    color: #667eea;
 }
 
-.card-glow {
+/* Background Effect */
+.document-bg-effect {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 100%;
-    background: radial-gradient(circle at 50% 0%, rgba(102, 126, 234, 0.2), transparent 70%);
-    opacity: 0;
-    transition: opacity 0.4s ease;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
 }
 
-.download-card.deluxe:hover .card-glow {
-    opacity: 1;
+/* Executive Summary */
+.executive-summary {
+    margin-bottom: 40px;
 }
 
-.download-icon {
-    position: relative;
-    width: 80px;
-    height: 80px;
-    margin-bottom: 30px;
+.summary-card {
+    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+    border-left: 4px solid #667eea;
+    padding: 30px;
+    border-radius: 8px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
-.icon-wrapper {
-    width: 100%;
-    height: 100%;
+.summary-icon {
     background: linear-gradient(135deg, #667eea, #764ba2);
-    border-radius: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
-    color: white;
-    position: relative;
-    z-index: 2;
-}
-
-.icon-rings {
-    position: absolute;
-    top: -10px;
-    left: -10px;
-    right: -10px;
-    bottom: -10px;
-    border: 2px solid rgba(102, 126, 234, 0.3);
-    border-radius: 30px;
-    animation: pulseRing 2s ease-in-out infinite;
-}
-
-.download-card-title {
     font-size: 1.5rem;
-    font-weight: 700;
-    color: #f7fafc;
-    margin-bottom: 15px;
+    color: white;
+    flex-shrink: 0;
 }
 
-.title-highlight {
-    background: linear-gradient(135deg, #667eea, #f093fb);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+.summary-content h3 {
+    font-size: 1.3rem;
+    color: #2d3748;
+    margin-bottom: 10px;
+    font-weight: 600;
 }
 
-.download-card-desc {
-    color: #cbd5e0;
-    font-size: 0.95rem;
+.summary-content p {
+    color: #4a5568;
     line-height: 1.6;
+    font-size: 1rem;
+}
+
+/* Enhanced Downloads */
+.enhanced-downloads {
+    margin-bottom: 60px;
+}
+
+.downloads-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.downloads-header h2 {
+    font-size: 2rem;
+    color: #2d3748;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.downloads-header h2 i {
+    color: #667eea;
+}
+
+.downloads-subtitle {
+    color: #718096;
+    font-size: 1rem;
+}
+
+.downloads-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.download-card-premium {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    position: relative;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.download-card-premium:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.15);
+    border-color: #667eea;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.card-icon {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.icon-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #48bb78;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.card-title h3 {
+    font-size: 1.2rem;
+    color: #2d3748;
+    margin-bottom: 5px;
+}
+
+.card-subtitle {
+    font-size: 0.9rem;
+    color: #718096;
+}
+
+.card-body {
     margin-bottom: 25px;
 }
 
-.file-info {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 30px;
+.card-description {
+    color: #4a5568;
+    line-height: 1.6;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
 }
 
-.file-size, .file-type {
+.card-features {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.feature {
     display: flex;
     align-items: center;
     gap: 8px;
     font-size: 0.85rem;
-    color: #a0aec0;
+    color: #718096;
 }
 
-.download-btn.premium {
-    display: flex;
+.feature i {
+    color: #48bb78;
+}
+
+.card-footer {
+    text-align: center;
+}
+
+.download-btn-premium {
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 10px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 18px 30px;
-    border-radius: 15px;
+    padding: 14px 30px;
+    border-radius: 8px;
     text-decoration: none;
     font-weight: 600;
     font-size: 1rem;
+    transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-.download-btn.premium:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
-}
-
-.btn-shine {
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    transform: rotate(45deg);
-    animation: shine 3s ease-in-out infinite;
-}
-
-/* Quick Stats */
-.quick-stats {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    margin-top: 50px;
-    padding-top: 40px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.stat-circle {
-    position: relative;
-    width: 120px;
-    height: 120px;
-}
-
-.progress-bg {
-    fill: none;
-    stroke: rgba(255, 255, 255, 0.1);
-    stroke-width: 6;
-}
-
-.progress-bar {
-    fill: none;
-    stroke: #667eea;
-    stroke-width: 6;
-    stroke-linecap: round;
-    transform: rotate(-90deg);
-    transform-origin: 50% 50%;
-    transition: stroke-dashoffset 1s ease;
-}
-
-.circle-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-}
-
-.circle-number {
-    font-size: 2rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #667eea, #f093fb);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    display: block;
-}
-
-.circle-label {
-    font-size: 0.8rem;
-    color: #a0aec0;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.stat-item {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.stat-item i {
-    font-size: 2rem;
-    color: #667eea;
-}
-
-.stat-value {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #f7fafc;
-    display: block;
-}
-
-.stat-name {
-    font-size: 0.9rem;
-    color: #a0aec0;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-/* Modern Roadmap */
-.roadmap-master {
-    margin-top: 80px;
-}
-
-.roadmap-header-modern {
-    text-align: center;
-    margin-bottom: 60px;
-}
-
-.roadmap-master-title {
-    font-size: 3rem;
-    font-weight: 900;
-    margin-bottom: 20px;
-}
-
-.title-part-1 {
-    background: linear-gradient(135deg, #f7fafc 0%, #a0aec0 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.title-part-2 {
-    background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.roadmap-master-subtitle {
-    font-size: 1.1rem;
-    color: #a0aec0;
-    max-width: 600px;
-    margin: 0 auto 40px;
-}
-
-.timeline-track {
-    position: relative;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 2px;
-    margin: 60px auto;
-    max-width: 800px;
-}
-
-.track-line {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
-    border-radius: 2px;
     width: 100%;
 }
 
-.track-progress {
+.download-btn-premium:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    color: white;
+}
+
+.btn-effect {
     position: absolute;
     top: 0;
-    left: 0;
+    left: -100%;
+    width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, #667eea, #f093fb);
-    border-radius: 2px;
-    width: 80%;
-    animation: progressWidth 3s ease-in-out infinite alternate;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: 0.5s;
 }
 
-.track-marker {
+.download-btn-premium:hover .btn-effect {
+    left: 100%;
+}
+
+.card-corner {
     position: absolute;
-    top: -25px;
-    transform: translateX(-50%);
-    font-size: 0.8rem;
-    color: #a0aec0;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-top: 20px solid #667eea;
+    border-left: 20px solid transparent;
+    border-radius: 0 12px 0 0;
 }
 
-/* Module Sections */
-.module-section {
-    margin-bottom: 60px;
+/* Document Chapters */
+.document-chapters {
+    position: relative;
+    z-index: 1;
 }
 
-.module-header {
+.chapters-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 40px;
-    padding: 20px 30px;
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e2e8f0;
 }
 
-.module-badge {
+.header-left h2 {
+    font-size: 1.8rem;
+    color: #2d3748;
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
 }
 
-.module-number {
-    font-size: 2rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+.header-left p {
+    color: #718096;
+    font-size: 1rem;
 }
 
-.module-name {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #f7fafc;
+.progress-indicator {
+    text-align: right;
 }
 
-.module-progress {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+.progress-text {
+    font-size: 0.9rem;
+    color: #718096;
+    margin-bottom: 8px;
+}
+
+.progress-text strong {
+    color: #48bb78;
 }
 
 .progress-bar {
     width: 200px;
     height: 6px;
-    background: rgba(255, 255, 255, 0.1);
+    background: #e2e8f0;
     border-radius: 3px;
     overflow: hidden;
 }
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #667eea, #f093fb);
+    background: linear-gradient(90deg, #48bb78, #38a169);
     border-radius: 3px;
 }
 
-.progress-text {
-    font-size: 0.9rem;
+/* A4 Chapters Grid */
+.chapters-grid-a4 {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.module-section-a4 {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.module-header-a4 {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.module-number {
+    font-size: 2rem;
+    font-weight: 800;
     color: #667eea;
+    min-width: 40px;
+}
+
+.module-title {
+    font-size: 1.5rem;
+    color: #2d3748;
+    font-weight: 600;
+    flex: 1;
+}
+
+.module-status {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.status-badge {
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
     font-weight: 600;
 }
 
-/* Modern Chapter Cards */
-.chapters-grid-modern {
+.status-badge.completed {
+    background: #c6f6d5;
+    color: #22543d;
+}
+
+.chapter-count {
+    font-size: 0.9rem;
+    color: #718096;
+}
+
+.chapters-row {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 25px;
-}
-
-.chapter-card-modern {
-    text-decoration: none;
-    display: block;
-}
-
-.hover-lift {
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.hover-lift:hover {
-    transform: translateY(-10px);
-}
-
-.chapter-card-inner {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    padding: 30px;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    height: 220px;
-}
-
-.chapter-card-modern:hover .chapter-card-inner {
-    border-color: rgba(102, 126, 234, 0.5);
-    box-shadow: 0 20px 60px rgba(102, 126, 234, 0.2);
-}
-
-.chapter-card-front {
-    position: relative;
-    z-index: 2;
-    height: 100%;
-    display: flex;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
 }
 
-.chapter-number-modern {
+/* Chapter Cards A4 */
+.chapter-card-a4 {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background: #f7fafc;
+    border-radius: 8px;
+    text-decoration: none;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
     position: relative;
-    min-width: 60px;
+    overflow: hidden;
 }
 
-.chapter-digit {
+.chapter-card-a4:hover {
+    background: white;
+    border-color: #667eea;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+    transform: translateY(-3px);
+}
+
+.chapter-number-a4 {
+    position: relative;
+    min-width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.number-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.3), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.chapter-card-a4:hover .number-glow {
+    opacity: 1;
+}
+
+.chapter-content-a4 {
+    flex: 1;
+}
+
+.chapter-title-a4 {
+    font-size: 1.1rem;
+    color: #2d3748;
+    margin-bottom: 8px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.chapter-desc-a4 {
+    color: #718096;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.chapter-meta-a4 {
+    display: flex;
+    gap: 15px;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8rem;
+    color: #718096;
+}
+
+.chapter-action {
+    color: #667eea;
+    font-size: 1.2rem;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+}
+
+.chapter-card-a4:hover .chapter-action {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.chapter-hover-effect {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.05), transparent);
+    transition: 0.5s;
+}
+
+.chapter-card-a4:hover .chapter-hover-effect {
+    left: 100%;
+}
+
+/* Document Footer */
+.document-footer {
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 1px solid #e2e8f0;
+    text-align: center;
+}
+
+.footer-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 30px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
     font-size: 2.5rem;
     font-weight: 800;
     background: linear-gradient(135deg, #667eea, #764ba2);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    display: block;
-    line-height: 1;
-}
-
-.number-glow {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80px;
-    height: 80px;
-    background: radial-gradient(circle, rgba(102, 126, 234, 0.2), transparent 70%);
-    z-index: -1;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-}
-
-.chapter-card-modern:hover .number-glow {
-    opacity: 1;
-}
-
-.chapter-content-modern {
-    flex: 1;
-}
-
-.chapter-title-modern {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: #f7fafc;
-    margin-bottom: 10px;
-    line-height: 1.3;
-}
-
-.chapter-desc-modern {
-    color: #cbd5e0;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    margin-bottom: 20px;
-}
-
-.chapter-meta {
-    display: flex;
-    gap: 15px;
-    margin-top: auto;
-}
-
-.meta-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.8rem;
-    color: #a0aec0;
-}
-
-.chapter-card-back {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-}
-
-.chapter-card-modern:hover .chapter-card-back {
-    opacity: 1;
-}
-
-.start-chapter-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    padding: 15px 25px;
-    border-radius: 50px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: white;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.start-chapter-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: scale(1.05);
-}
-
-.chapter-card-glow {
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle at 50% 50%, rgba(102, 126, 234, 0.1), transparent 70%);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-}
-
-.chapter-card-modern:hover .chapter-card-glow {
-    opacity: 1;
-}
-
-/* Progress Visualization */
-.progress-visualization {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 60px;
-    padding: 60px;
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 30px;
-    margin-top: 80px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.progress-stats {
-    display: flex;
-    gap: 40px;
-}
-
-.progress-stat {
-    text-align: center;
-    padding: 20px;
-}
-
-.stat-value {
-    font-size: 2rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #667eea, #f093fb);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    display: block;
     margin-bottom: 5px;
 }
 
 .stat-label {
     font-size: 0.9rem;
-    color: #a0aec0;
+    color: #718096;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
-/* Animations */
-@keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+.footer-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #718096;
+    font-size: 0.9rem;
+    padding: 20px;
+    background: #f7fafc;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
-@keyframes sparkle {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 0.8; }
+.footer-note i {
+    color: #667eea;
+    flex-shrink: 0;
 }
 
-@keyframes pulseDot {
-    0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
-    50% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(102, 126, 234, 0); }
+/* 3D Hover Effect */
+.hover-3d {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-@keyframes spinSlow {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.hover-3d:hover {
+    transform: perspective(1000px) rotateX(2deg) rotateY(2deg);
+    box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.1),
+                -20px -20px 60px rgba(255, 255, 255, 0.8);
 }
 
-@keyframes pulseRing {
-    0% { transform: scale(1); opacity: 0.5; }
-    100% { transform: scale(1.1); opacity: 0; }
+/* Responsive Design for A4 */
+@media (max-width: 210mm) {
+    .content {
+        max-width: 100%;
+        margin: 0;
+        border-radius: 0;
+        padding: 15px;
+    }
 }
 
-@keyframes shine {
-    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-}
-
-@keyframes progressWidth {
-    0% { width: 75%; }
-    100% { width: 85%; }
-}
-
-/* Responsive Design */
 @media (max-width: 968px) {
-    .hero-content {
-        grid-template-columns: 1fr;
-        gap: 40px;
-    }
-    
-    .title-text-glow {
-        font-size: 2.5rem;
-    }
-    
-    .hero-title {
-        font-size: 2.5rem;
-    }
-    
-    .chapters-grid-modern {
-        grid-template-columns: 1fr;
-    }
-    
-    .progress-visualization {
-        flex-direction: column;
-        gap: 40px;
-    }
-    
-    .module-header {
+    .chapters-header {
         flex-direction: column;
         gap: 20px;
         text-align: center;
     }
     
+    .header-right {
+        width: 100%;
+    }
+    
+    .progress-indicator {
+        text-align: center;
+    }
+    
     .progress-bar {
-        width: 150px;
+        width: 100%;
+    }
+    
+    .chapters-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-stats {
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+    
+    .module-header-a4 {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+    
+    .module-status {
+        flex-direction: column;
+        gap: 10px;
     }
 }
 
 @media (max-width: 640px) {
-    .hero-section {
-        padding: 30px;
-    }
-    
-    .title-text-glow {
+    .document-title {
         font-size: 2rem;
     }
     
-    .stats-badge {
-        flex-direction: column;
-        gap: 20px;
+    .document-subtitle {
+        font-size: 1.1rem;
     }
     
-    .download-cards-grid {
+    .document-metadata {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .downloads-grid {
         grid-template-columns: 1fr;
     }
     
-    .quick-stats {
+    .chapters-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .chapter-card-a4 {
         flex-direction: column;
-        align-items: center;
-        gap: 30px;
+        text-align: center;
+        gap: 15px;
+    }
+    
+    .chapter-number-a4 {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+    
+    .chapter-action {
+        display: none;
     }
 }
 
-/* Background Animations */
-.bg-animations {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    pointer-events: none;
-    z-index: -1;
-}
-
-.bg-particle {
-    position: absolute;
-    background: radial-gradient(circle, rgba(102, 126, 234, 0.1), transparent 70%);
-    border-radius: 50%;
-    animation: float 15s ease-in-out infinite;
-}
-
-@keyframes float {
-    0%, 100% { transform: translate(0, 0) rotate(0deg); }
-    25% { transform: translate(20px, -20px) rotate(90deg); }
-    50% { transform: translate(0, -40px) rotate(180deg); }
-    75% { transform: translate(-20px, -20px) rotate(270deg); }
+/* Print Styles for A4 */
+@media print {
+    .content {
+        max-width: 210mm;
+        margin: 0;
+        padding: 15mm;
+        box-shadow: none;
+        border: none;
+        background: white;
+    }
+    
+    .download-btn-premium,
+    .chapter-action,
+    .hover-3d:hover {
+        box-shadow: none !important;
+        transform: none !important;
+    }
+    
+    .document-bg-effect {
+        display: none;
+    }
+    
+    .chapter-card-a4 {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
 }
 </style>
 
-<!-- JavaScript for Interactive Elements -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Animate counters
-    const counters = document.querySelectorAll('.stats-number');
-    counters.forEach(counter => {
-        const target = parseInt(counter.getAttribute('data-count'));
-        const duration = 2000;
-        const step = target / (duration / 16);
-        let current = 0;
-        
-        const updateCounter = () => {
-            current += step;
-            if (current < target) {
-                counter.textContent = Math.floor(current);
-                requestAnimationFrame(updateCounter);
-            } else {
-                counter.textContent = target;
-            }
-        };
-        
-        updateCounter();
-    });
+    // Add click effects to chapter cards
+    const chapterCards = document.querySelectorAll('.chapter-card-a4');
     
-    // Add hover effects to cards
-    const cards = document.querySelectorAll('.chapter-card-modern');
-    cards.forEach(card => {
-        card.addEventListener('mouseenter', function(e) {
-            const rect = this.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const glow = this.querySelector('.chapter-card-glow');
-            if (glow) {
-                glow.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(102, 126, 234, 0.2), transparent 70%)`;
-            }
-        });
-        
-        card.addEventListener('mousemove', function(e) {
-            const rect = this.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const glow = this.querySelector('.chapter-card-glow');
-            if (glow) {
-                glow.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(102, 126, 234, 0.2), transparent 70%)`;
-            }
-        });
-    });
-    
-    // Progress animation
-    const progressBar = document.querySelector('.track-progress');
-    if (progressBar) {
-        let direction = 1;
-        let width = 80;
-        
-        function animateProgress() {
-            width += direction;
-            if (width >= 85) direction = -1;
-            if (width <= 75) direction = 1;
-            progressBar.style.width = `${width}%`;
-            requestAnimationFrame(animateProgress);
-        }
-        
-        animateProgress();
-    }
-    
-    // Add ripple effect to download buttons
-    const downloadButtons = document.querySelectorAll('.download-btn');
-    downloadButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
+    chapterCards.forEach(card => {
+        card.addEventListener('click', function(e) {
+            // Create ripple effect
             const ripple = document.createElement('span');
             const rect = this.getBoundingClientRect();
             const size = Math.max(rect.width, rect.height);
@@ -1238,7 +1393,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ripple.style.cssText = `
                 position: absolute;
                 border-radius: 50%;
-                background: rgba(255, 255, 255, 0.3);
+                background: rgba(102, 126, 234, 0.2);
                 transform: scale(0);
                 animation: ripple 0.6s linear;
                 width: ${size}px;
@@ -1246,6 +1401,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 top: ${y}px;
                 left: ${x}px;
                 pointer-events: none;
+                z-index: 1;
             `;
             
             this.appendChild(ripple);
@@ -1254,20 +1410,66 @@ document.addEventListener('DOMContentLoaded', function() {
                 ripple.remove();
             }, 600);
         });
+        
+        // Add keyboard navigation
+        card.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                this.click();
+            }
+        });
     });
     
     // Add CSS for ripple animation
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes ripple {
-            to {
-                transform: scale(4);
-                opacity: 0;
+    if (!document.querySelector('#ripple-style')) {
+        const style = document.createElement('style');
+        style.id = 'ripple-style';
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
             }
-        }
-    `;
-    document.head.appendChild(style);
+        `;
+        document.head.appendChild(style);
+    }
+    
+    // Add hover sound effect simulation
+    const downloadButtons = document.querySelectorAll('.download-btn-premium');
+    
+    downloadButtons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            // Visual feedback only
+            const icon = this.querySelector('i');
+            icon.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                icon.style.transform = 'scale(1)';
+            }, 200);
+        });
+    });
+    
+    // Add scroll animation for chapter cards
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+    
+    // Observe all chapter cards
+    chapterCards.forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        observer.observe(card);
+    });
 });
 </script>
-
 </main> <!-- /main -->
